@@ -43,11 +43,11 @@ public class Test {
 //		}
 		
 		
-//		try {
-//			Validate.notBlank("", "queryString不能为空");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			Validate.notBlank("", "queryString不能为空");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 		

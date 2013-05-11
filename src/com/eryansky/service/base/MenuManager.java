@@ -8,14 +8,13 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.googlecode.ehcache.annotations.Cacheable;
-import com.googlecode.ehcache.annotations.TriggersRemove;
-import com.googlecode.ehcache.annotations.When;
 import com.eryansky.common.exception.DaoException;
 import com.eryansky.common.exception.ServiceException;
 import com.eryansky.common.exception.SystemException;
@@ -31,7 +30,7 @@ import com.eryansky.utils.CacheConstants;
 
 /**
  * 菜单Menu管理 Service层实现类.
- * <br>树形菜单使用缓存 当保存、删除操作时清楚缓存
+ * <br>使用Spring原生缓存注解,树形菜单使用缓存 当保存、删除操作时清楚缓存
  * @author 尔演&Eryan eryanwcp@gmail.com
  * @date 2012-10-11 下午4:26:46
  */
@@ -61,8 +60,8 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 * 保存或修改.
 	 */
 	//清除缓存
-	@TriggersRemove(cacheName = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
+			CacheConstants.MENU_TREE },allEntries = true)
 	public void saveOrUpdate(Menu entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
@@ -73,8 +72,8 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 * 自定义删除方法.
 	 */
 	//清除缓存
-	@TriggersRemove(cacheName = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
+			CacheConstants.MENU_TREE },allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException, SystemException,
 			ServiceException {
 		if(!Collections3.isEmpty(ids)){
@@ -204,7 +203,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 * @throws ServiceException
 	 */
 	//使用缓存
-	@Cacheable(cacheName = CacheConstants.MENU_NAVTREE)
+	@Cacheable(value = { CacheConstants.MENU_NAVTREE })
 	public List<TreeNode> getNavTree(Long userId) throws DaoException,
 			SystemException, ServiceException {
 		// Assert.notNull(userId, "参数[userId]为空!");
@@ -280,7 +279,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 * @throws ServiceException
 	 */
 	//缓存数据
-	@Cacheable(cacheName = CacheConstants.MENU_TREE)
+	@Cacheable(value = { CacheConstants.MENU_TREE })
 	public List<TreeNode> getTree() throws DaoException, SystemException,
 			ServiceException {
 		logger.debug("缓存:{}", CacheConstants.MENU_TREE);

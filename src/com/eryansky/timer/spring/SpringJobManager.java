@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author 尔演&Eryan eryanwcp@gmail.com
  * @date 2013-2-21 上午09:08:18
  */
-@Component
+//@Component
 public class SpringJobManager {
 
 	private static final Logger logger = LoggerFactory
@@ -20,6 +20,10 @@ public class SpringJobManager {
 //    @Scheduled(cron="*/10 * * * * *") 
     public void s10(){
     	logger.info("==== 十秒执行一次=======10s");
+    }
+    
+    public void xmlTest(){
+    	logger.info("xmlTest");
     }
     
 }

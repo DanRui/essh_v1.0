@@ -5,3 +5,5 @@
 
 2013-05-11 
     1、修正修正Struts二次绑定对象(根据ID查找对象)导致Hibernate乐观锁失效bug.
+    2、拆分Spring配置文件、支持Spring原生缓存注解,将MenuManager缓存修改为Spring原生注重方式(演示用).
+    3、添加spring任务调度xml配置方式示例.
