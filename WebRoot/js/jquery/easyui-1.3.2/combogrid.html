@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>下拉框搜索列表实例</title>
+<link rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="themes/icon.css" />
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="jquery.easyui.min.js"></script>
+<script type="text/javascript" src="easyui-lang-zh_CN.js"></script>
+	<script>
+		$(function(){
+			
+			$('#combogrid').combogrid({
+				panelWidth:450,
+				//value:'006', //默认值
+				idField:'orgCode',
+				textField:'bizName',
+				url:'/fzhr/hr/b-member!datagrid.action?pageType=2',
+				mode: 'remote',
+				fitColumns: true,  
+                striped: true,  
+                editable:true,  
+                pagination : true,//是否分页  
+                rownumbers:true,//序号  
+                collapsible:false,//是否可折叠的  
+                fit: true,//自动大小  
+                pageSize: 10,//每页显示的记录条数，默认为10  
+                pageList: [10,20,30,50,100],//可以设置每页记录条数的列表  
+                method:'post',
+				columns:[[
+					{field:'orgCode',title:'组织机构代码',width:100,align:'center',align:'right'},  
+	                {field:'bizName',title:'单位名称',width:260}
+				]],
+				keyHandler : {
+					enter: function() {
+						console.log('enter');
+						var name = $('#combogrid').combogrid('getText');
+						var dg = $('#combogrid').combogrid("grid");
+						dg.datagrid("reload", {'pageType':2,'filter_LIKES_bizName_OR_orgCode':name});
+					},
+					query : function(q) {
+						/* var name = $('#combogrid').combogrid('getText');
+						$('#combogrid').combogrid("grid").datagrid("reload", {'pageType':2,'filter_LIKES_bizName_OR_orgCode':name})
+						$('#combogrid').combogrid("setValue", q); */
+				    }
+				}
+			});
+			
+			$('#combobox').combobox({
+				
+			});
+			$('#dd').datebox('disable');
+			/* $('#combogrid').combogrid('disable');
+			$('#dd').datebox('disable');
+			$('#ii').attr('disabled',true); */
+		});
+	</script>
+</head>
+<body>
+	
+	<input id="combobox" style="width:250px;"></input>
+	<input id="combogrid" style="width:250px;"></input>
+	<input id="dd" class="easyui-datebox" style="width:250px;"></input>
+	<input id="ii" style="width:250px;"></input>
+</body>
+</html>
