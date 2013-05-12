@@ -1,3 +1,5 @@
+package test;
+
 /**
  * 多态示例.
  * @author 尔演&Eryan eryanwcp@gmail.com
