@@ -1,10 +1,5 @@
 <%@ page language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <%@ include file="/common/taglibs.jsp"%>
-<script type="text/javascript">
-$(function() {
-	
-});
-</script>
 <div>
 	<div align="center">
 	    <h3>${title}</h3>
