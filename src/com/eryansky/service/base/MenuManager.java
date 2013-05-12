@@ -30,7 +30,7 @@ import com.eryansky.utils.CacheConstants;
 
 /**
  * 菜单Menu管理 Service层实现类.
- * <br>使用Spring原生缓存注解,树形菜单使用缓存 当保存、删除操作时清楚缓存
+ * <br>树形菜单使用缓存 当保存、删除操作时清楚缓存
  * @author 尔演&Eryan eryanwcp@gmail.com
  * @date 2012-10-11 下午4:26:46
  */
@@ -61,7 +61,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 */
 	//清除缓存
 	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE },allEntries = true)
+			CacheConstants.MENU_TREE })
 	public void saveOrUpdate(Menu entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
@@ -73,7 +73,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 */
 	//清除缓存
 	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE },allEntries = true)
+			CacheConstants.MENU_TREE })
 	public void deleteByIds(List<Long> ids) throws DaoException, SystemException,
 			ServiceException {
 		if(!Collections3.isEmpty(ids)){

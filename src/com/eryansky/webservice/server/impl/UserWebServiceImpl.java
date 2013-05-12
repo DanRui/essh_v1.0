@@ -46,7 +46,7 @@ public class UserWebServiceImpl implements UserWebService {
 		//获取用户
 		try {
 
-			User entity = userManager.findUniqueByProperty("loginName", loginName);
+			User entity = userManager.findUniqueBy("loginName", loginName);
 
 			GetUserResult result = new GetUserResult();
 			result.setUser(entity);

@@ -5,12 +5,13 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 /**
  * Spring JDBC模板.
@@ -18,13 +19,18 @@ import org.springframework.util.Assert;
  *
  */
 @SuppressWarnings("unchecked")
-public class SimpleJdbcTemplate {
+@Transactional
+public class SimpleJdbcDao {
 	
-	protected final Log logger = LogFactory.getLog(getClass());
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	protected JdbcTemplate jdbcTemplate;
 	protected SimpleJdbcInsert simpleJdbcInsert;
-	public SimpleJdbcTemplate(DataSource dataSource){
+	
+	public SimpleJdbcDao(){
+	}
+	
+	public SimpleJdbcDao(DataSource dataSource){
 		jdbcTemplate= new JdbcTemplate(dataSource);
 		simpleJdbcInsert=new SimpleJdbcInsert(dataSource);
 	}
@@ -36,6 +42,7 @@ public class SimpleJdbcTemplate {
 	 * @param parameters参数集合(key为参数名，value为参数值)
 	 * @return bean对象集合
 	 */
+	@Transactional(readOnly = true)
 	public List find(final String sql,Class clazz,Map parameters){
 		try{
 			Assert.hasText(sql,"sql语句不正确!");
@@ -57,6 +64,7 @@ public class SimpleJdbcTemplate {
 	 * @param parameters参数集合(key为参数名，value为参数值)
 	 * @return bean对象
 	 */
+	@Transactional(readOnly = true)
 	public Object findForObject(final String sql,Class clazz,Map parameters){
 		try{
 			Assert.hasText(sql,"sql语句不正确!");
@@ -77,6 +85,7 @@ public class SimpleJdbcTemplate {
 	 * @param parameters参数集合(key为参数名，value为参数值)
 	 * @return bean对象
 	 */
+	@Transactional(readOnly = true)
 	public long findForLong(final String sql,Map parameters){
 		try{
 			Assert.hasText(sql,"sql语句不正确!");
@@ -96,6 +105,7 @@ public class SimpleJdbcTemplate {
 	 * @param parameters参数集合(key为参数名，value为参数值)
 	 * @return bean对象
 	 */
+	@Transactional(readOnly = true)
 	public Map findForMap(final String sql,Map parameters){
 		try{
 			Assert.hasText(sql,"sql语句不正确!");
@@ -116,6 +126,7 @@ public class SimpleJdbcTemplate {
 	 * @param parameters参数集合(key为参数名，value为参数值)
 	 * @return bean对象
 	 */
+	@Transactional(readOnly = true)
 	public List<Map<String,Object>> findForListMap(final String sql,Map parameters){
 		try{
 			Assert.hasText(sql,"sql语句不正确!");

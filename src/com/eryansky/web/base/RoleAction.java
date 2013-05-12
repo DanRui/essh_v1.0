@@ -61,7 +61,7 @@ public class RoleAction extends StrutsAction<Role> {
 		Result result;
 		try {
 			// 名称重复校验
-			Role role = roleManager.findUniqueByProperty("name", model.getName());
+			Role role = roleManager.findUniqueBy("name", model.getName());
             if (role != null && !role.getId().equals(model.getId())) {
             	result = new Result(Result.WARN,"名称为["+model.getName()+"]已存在,请修正!", "name");
                 logger.debug(result.toString());

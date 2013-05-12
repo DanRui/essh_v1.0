@@ -7,12 +7,14 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -117,7 +119,7 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public void update(final T entity) {
 		Assert.notNull(entity, "entity不能为空");
-		getSession().clear();
+		clear();
 		getSession().update(entity);
 		logger.debug("update entity: {}", entity);
 	}
@@ -127,7 +129,7 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public void saveOrUpdate(final T entity) {
 		Assert.notNull(entity, "entity不能为空");
-		getSession().clear();
+		clear();
 		getSession().saveOrUpdate(entity);
 		logger.debug("saveOrUpdate entity: {}", entity);
 	}
@@ -298,7 +300,7 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	public <X> List<X> find(final String hql, final Map<String, ?> values) {
 		return createQuery(hql, values).list();
 	}
-
+	
 	/**
 	 * 按HQL查询唯一对象.
 	 * 
@@ -336,7 +338,7 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	public int batchExecute(final String hql, final Map<String, ?> values) {
 		return createQuery(hql, values).executeUpdate();
 	}
-
+	
 	/**
 	 * 根据查询HQL与参数列表创建Query对象.
 	 * 与find()函数可进行更加灵活的操作.
@@ -472,11 +474,47 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		Object object = findUniqueBy(propertyName, newValue);
 		return (object == null);
 	}
+	//原生SQL
+	/**
+	 * 根据查询SQL与参数列表创建SQLQuery对象.
+	 * 
+	 * @param values 数量可变的参数,按顺序绑定.
+	 */
+	public SQLQuery createSQLQuery(final String sql, final Object... values) {
+		Assert.hasText(sql, "sql不能为空");
+		SQLQuery sqlQuery = getSession().createSQLQuery(sql);
+		if (values != null) {
+			for (int i = 0; i < values.length; i++) {
+				sqlQuery.setParameter(i, values[i]);
+			}
+		}
+		return sqlQuery;
+	}
+	
+	/**
+	 * 根据查询SQL与参数列表创建SQLQuery对象.
+	 * 
+	 * @param sql
+	 * @param values 命名参数,按名称绑定.
+	 * @return
+	 */
+	public SQLQuery createSQLQuery(final String sql,final Map<String, ?> values) {
+		Assert.hasText(sql, "sql不能为空");
+		SQLQuery sqlQuery = getSession().createSQLQuery(sql);
+		if (values != null) {
+			Set<String> set = values.keySet();
+			for(String s:set){
+				sqlQuery.setParameter(s,values.get(s));
+			}
+		}
+		return sqlQuery;
+	}
 	
 	/**
 	 * 执行原生sql.
 	 */
-	public void executeJdbcUpdate(String sql) {
+	public void executeJdbcUpdate(String sql) throws DaoException{
+		Assert.hasText(sql, "sql不能为空");
 		try {
 			getConnection().prepareStatement(sql).execute();
 		} catch (SQLException e) {
@@ -487,7 +525,8 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	/**
 	 * 执行原生sql查询.
 	 */
-	public ResultSet executeJdbcQuery(String sql) {
+	public ResultSet executeJdbcQuery(String sql) throws DaoException{
+		Assert.hasText(sql, "sql不能为空");
 		try {
 			return getConnection().prepareStatement(sql).executeQuery();
 		} catch (SQLException e) {

@@ -11,7 +11,6 @@ import org.springframework.util.Assert;
 import com.eryansky.common.exception.DaoException;
 import com.eryansky.common.exception.ServiceException;
 import com.eryansky.common.exception.SystemException;
-import com.eryansky.common.orm.dbutils.DbUtilsDao;
 import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.orm.hibernate.HibernateDao;
 import com.eryansky.entity.base.Role;
@@ -30,8 +29,6 @@ import com.googlecode.ehcache.annotations.When;
 public class RoleManager extends EntityManager<Role, Long> {
 
 	private HibernateDao<Role, Long> roleDao;
-	@Autowired
-	private DbUtilsDao dbUtilsDao;
 
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
@@ -42,16 +39,6 @@ public class RoleManager extends EntityManager<Role, Long> {
 	@Override
 	protected HibernateDao<Role, Long> getEntityDao() {
 		return roleDao;
-	}
-	@Transactional(readOnly = false)
-	public void update() {
-		for(int i = 0;i<2;i++){
-			if(i == 10){
-				throw new ServiceException("抛异常了.");
-			}
-			int count = dbUtilsDao.update("update T_BASE_ROLE set name = ? where id = ?",new Object[]{""+i,1});
-			System.out.println(count);
-		}
 	}
 	
 	/**

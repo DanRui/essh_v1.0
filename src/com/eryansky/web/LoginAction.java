@@ -6,7 +6,6 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.eryansky.common.model.Result;
-import com.eryansky.common.orm.dbutils.DbUtilsDao;
 import com.eryansky.common.utils.SysConstants;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.utils.encode.Encrypt;

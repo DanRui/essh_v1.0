@@ -16,6 +16,7 @@ import com.eryansky.common.exception.ServiceException;
 import com.eryansky.common.exception.SystemException;
 import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
+import com.eryansky.common.orm.PropertyFilter.MatchType;
 import com.eryansky.common.utils.collections.Collections3;
 
 /**
@@ -202,7 +203,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	
 	
 	/**
-	 * 自定义属性查找唯一值.
+	 * 自定义属性查找.
 	 * @param propertyName 属性名称
 	 * @param propertyValue 属性值
 	 * @return
@@ -211,29 +212,40 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	 * @throws ServiceException
 	 */
 	@Transactional(readOnly = true)	
-	public List<T> findByProperty(String propertyName,
+	public List<T> findBy(String propertyName,
             Object propertyValue) throws DaoException,SystemException,ServiceException{
         Assert.hasText(propertyName, "参数[entityName]为空!");
         return getEntityDao().findBy(propertyName, propertyValue);
     }
 	
-	
 	/**
-	 * 自定义属性查找唯一值.
+     * 自定义属性查找唯一值.
+     * @param propertyName
+     * @param value
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    @Transactional(readOnly = true)
+    public T findUniqueBy(String propertyName, Object value) throws DaoException,SystemException,ServiceException{
+            return getEntityDao().findUniqueBy(propertyName, value);
+    }
+    
+	/**
+	 * 自定义属性查找(like全匹配方式)
 	 * @param propertyName 属性名称
-	 * @param propertyValue 属性值
+	 * @param value 属性值(无需加+"%")
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	@Transactional(readOnly = true)	
-	public T findUniqueByProperty(String propertyName,
-            Object propertyValue) throws DaoException,SystemException,ServiceException{
-        Assert.hasText(propertyName, "参数[entityName]为空!");
-        return getEntityDao().findUniqueBy(propertyName, propertyValue);
+    @Transactional(readOnly = true)
+    public List<T> findByLike(String propertyName, String value) throws DaoException,SystemException,ServiceException{
+            return getEntityDao().findBy(propertyName, value,MatchType.LIKE);
     }
-
+    
 	/**
 	 * 
 	 * @param 按id获取对象
@@ -276,6 +288,19 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	public List<T> getAll() throws DaoException, SystemException,
 			ServiceException {
 		return getEntityDao().getAll();
+	}
+	/**
+	 * 查询所有(排序).
+	 * @param orderByProperty 排序属性
+	 * @param isAsc 是够升序
+	 * @return
+	 * @throws DaoException
+	 * @throws SystemException
+	 * @throws ServiceException
+	 */
+	public List<T> getAll(String orderByProperty, boolean isAsc) throws DaoException, SystemException,
+			ServiceException {
+		return getEntityDao().getAll(orderByProperty,isAsc);
 	}
 
 	/**
@@ -444,7 +469,6 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			throws DaoException, SystemException, ServiceException {
 		return getEntityDao().isUnique(entity, uniquePropertyNames);
 	}
-	
 	
 	/**
 	 * 将PropertyFilter列表转化为Criterion数组.

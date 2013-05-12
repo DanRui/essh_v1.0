@@ -62,9 +62,9 @@ public class JpaDao<T, ID extends Serializable> {
 	 * @param values
 	 *            数量可变的参数,按顺序绑定.
 	 */
-	public <X> List<X> find(final String hql, final Object... values) {
-		logger.debug("find hql: {} # param: {}", hql, values);
-		return createQuery(hql, values).getResultList();
+	public <X> List<X> find(final String jpql, final Object... values) {
+		logger.debug("find jpql: {} # param: {}", jpql, values);
+		return createQuery(jpql, values).getResultList();
 	}
 
 	/**
@@ -73,9 +73,9 @@ public class JpaDao<T, ID extends Serializable> {
 	 * @param values
 	 *            命名参数,按名称绑定.
 	 */
-	public <X> List<X> find(final String hql, final Map<String, ?> values) {
-		logger.debug("find hql: {} # param: {}", hql, values);
-		return createQuery(hql, values).getResultList();
+	public <X> List<X> find(final String jpql, final Map<String, ?> values) {
+		logger.debug("find jpql: {} # param: {}", jpql, values);
+		return createQuery(jpql, values).getResultList();
 	}
 
 	/**
@@ -84,14 +84,14 @@ public class JpaDao<T, ID extends Serializable> {
 	 * @param values
 	 *            数量可变的参数,按顺序绑定.
 	 */
-	public <X> X findUnique(final String hql, final Object... values) {
-		logger.debug("findUnique hql: {} # param: {}", hql, values);
-		return (X) createQuery(hql, values).getSingleResult();
+	public <X> X findUnique(final String jpql, final Object... values) {
+		logger.debug("findUnique jpql: {} # param: {}", jpql, values);
+		return (X) createQuery(jpql, values).getSingleResult();
 	}
 
-	public Long count(final String hql, final Object... values) {
+	public Long count(final String jpql, final Object... values) {
 
-		return (Long) createQuery(hql, values).getSingleResult();
+		return (Long) createQuery(jpql, values).getSingleResult();
 	}
 
 	/**
@@ -100,9 +100,9 @@ public class JpaDao<T, ID extends Serializable> {
 	 * @param values
 	 *            命名参数,按名称绑定.
 	 */
-	public <X> X findUnique(final String hql, final Map<String, ?> values) {
-		logger.debug("findUnique hql: {} # param: {}", hql, values);
-		return (X) createQuery(hql, values).getSingleResult();
+	public <X> X findUnique(final String jpql, final Map<String, ?> values) {
+		logger.debug("findUnique jpql: {} # param: {}", jpql, values);
+		return (X) createQuery(jpql, values).getSingleResult();
 	}
 
 	/**
@@ -112,9 +112,9 @@ public class JpaDao<T, ID extends Serializable> {
 	 *            数量可变的参数,按顺序绑定.
 	 * @return 更新记录数.
 	 */
-	public int batchExecute(final String hql, final Object... values) {
-		logger.debug("batchExecute hql: {} # param: {}", hql, values);
-		return createQuery(hql, values).executeUpdate();
+	public int batchExecute(final String jpql, final Object... values) {
+		logger.debug("batchExecute jpql: {} # param: {}", jpql, values);
+		return createQuery(jpql, values).executeUpdate();
 	}
 
 	/**
@@ -124,9 +124,9 @@ public class JpaDao<T, ID extends Serializable> {
 	 *            命名参数,按名称绑定.
 	 * @return 更新记录数.
 	 */
-	public int batchExecute(final String hql, final Map<String, ?> values) {
-		logger.debug("batchExecute hql: {} # param: {}", hql, values);
-		return createQuery(hql, values).executeUpdate();
+	public int batchExecute(final String jpql, final Map<String, ?> values) {
+		logger.debug("batchExecute jpql: {} # param: {}", jpql, values);
+		return createQuery(jpql, values).executeUpdate();
 	}
 
 	/**
@@ -192,19 +192,19 @@ public class JpaDao<T, ID extends Serializable> {
 	 * 
 	 * @param pageRequest
 	 *            分页参数.
-	 * @param hql
-	 *            hql语句.
+	 * @param jpql
+	 *            jpql语句.
 	 * @param values
 	 *            数量可变的查询参数,按顺序绑定.
 	 * 
 	 * @return 分页查询结果, 附带结果列表及所有查询输入参数.
 	 */
-	public Page<T> findPage(final Page<T> page, String hql,
+	public Page<T> findPage(final Page<T> page, String jpql,
 			final Object... values) {
 		Validate.notNull(page, "page不能为空");
-		long totalCount = countHqlResult(hql, values);
-		hql = setOrderParameterToHql(hql, page);
-		Query q = createQuery(hql, values);
+		long totalCount = countJpqlResult(jpql, values);
+		jpql = setOrderParameterToJpql(jpql, page);
+		Query q = createQuery(jpql, values);
 		setPageParameterToQuery(q, page);
 		page.setResult(q.getResultList());
 		page.setTotalCount(totalCount);
@@ -214,10 +214,10 @@ public class JpaDao<T, ID extends Serializable> {
 	/**
 	 * 在JPQL的后面添加分页参数定义的orderBy, 辅助函数.
 	 */
-	protected String setOrderParameterToHql(final String hql, final Page<T> page) {
+	protected String setOrderParameterToJpql(final String jpql, final Page<T> page) {
 		if (page.getOrderBy() == null)
-			return hql;
-		StringBuilder builder = new StringBuilder(hql);
+			return jpql;
+		StringBuilder builder = new StringBuilder(jpql);
 		builder.append(" order by ");
 
 		if (page.isOrderBySetted()) {
@@ -251,53 +251,53 @@ public class JpaDao<T, ID extends Serializable> {
 	}
 
 	/**
-	 * 执行count查询获得本次Hql查询所能获得的对象总数.
+	 * 执行count查询获得本次Jpql查询所能获得的对象总数.
 	 * 
-	 * 本函数只能自动处理简单的hql语句,复杂的hql查询请另行编写count语句查询.
+	 * 本函数只能自动处理简单的jpql语句,复杂的jpql查询请另行编写count语句查询.
 	 */
-	protected Long countHqlResult(final String hql, final Object... values) {
-		String countHql = prepareCountHql(hql);
+	protected Long countJpqlResult(final String jpql, final Object... values) {
+		String countJpql = prepareCountJpql(jpql);
 		try {
-			Long count = count(countHql, values);
+			Long count = count(countJpql, values);
 			return count;
 		} catch (Exception e) {
-			throw new RuntimeException("hql can't be auto count, hql is:"
-					+ countHql, e);
+			throw new RuntimeException("jpql can't be auto count, jpql is:"
+					+ countJpql, e);
 		}
 	}
 
 	/**
-	 * 执行count查询获得本次Hql查询所能获得的对象总数.
+	 * 执行count查询获得本次Jpql查询所能获得的对象总数.
 	 * 
-	 * 本函数只能自动处理简单的hql语句,复杂的hql查询请另行编写count语句查询.
+	 * 本函数只能自动处理简单的jpql语句,复杂的jpql查询请另行编写count语句查询.
 	 */
-	protected long countHqlResult(final String hql, final Map<String, ?> values) {
-		String countHql = prepareCountHql(hql);
+	protected long countJpqlResult(final String jpql, final Map<String, ?> values) {
+		String countJpql = prepareCountJpql(jpql);
 
 		try {
-			Long count = findUnique(countHql, values);
+			Long count = findUnique(countJpql, values);
 			return count;
 		} catch (Exception e) {
-			throw new RuntimeException("hql can't be auto count, hql is:"
-					+ countHql, e);
+			throw new RuntimeException("jpql can't be auto count, jpql is:"
+					+ countJpql, e);
 		}
 	}
 
-	private String prepareCountHql(String orgHql) {
-		String countHql = "select count (*) "
-				+ removeSelect(removeOrders(orgHql));
-		return countHql;
+	private String prepareCountJpql(String orgJpql) {
+		String countJpql = "select count (*) "
+				+ removeSelect(removeOrders(orgJpql));
+		return countJpql;
 	}
 
-	private static String removeSelect(String hql) {
-		int beginPos = hql.toLowerCase().indexOf("from");
-		return hql.substring(beginPos);
+	private static String removeSelect(String jpql) {
+		int beginPos = jpql.toLowerCase().indexOf("from");
+		return jpql.substring(beginPos);
 	}
 
-	private static String removeOrders(String hql) {
+	private static String removeOrders(String jpql) {
 		Pattern p = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*",
 				Pattern.CASE_INSENSITIVE);
-		Matcher m = p.matcher(hql);
+		Matcher m = p.matcher(jpql);
 		StringBuffer sb = new StringBuffer();
 		while (m.find()) {
 			m.appendReplacement(sb, "");

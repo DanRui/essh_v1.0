@@ -44,7 +44,7 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 		Result result = null;
 		try {
 			// 名称是否重复校验
-			Dictionary dictionaryType = dictionaryManager.findUniqueByProperty(
+			Dictionary dictionaryType = dictionaryManager.findUniqueBy(
 					"name", model.getName());
 			if (dictionaryType != null
 					&& !dictionaryType.getId().equals(model.getId())) {

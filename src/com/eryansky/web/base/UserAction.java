@@ -51,7 +51,7 @@ public class UserAction extends StrutsAction<User> {
 		Result result = null;
 		try {
 			 // 名称重复校验
-			User user = userManager.findUniqueByProperty("loginName", model.getLoginName());
+			User user = userManager.findUniqueBy("loginName", model.getLoginName());
             if (user != null && !user.getId().equals(model.getId())) {
             	result = new Result(Result.WARN,"登录名为["+model.getName()+"]已存在,请修正!", "loginName");
                 logger.debug(result.toString());

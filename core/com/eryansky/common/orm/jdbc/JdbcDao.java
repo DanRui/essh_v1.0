@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.eryansky.common.exception.DaoException;
 import com.eryansky.common.orm.PageSqlUtils;
 import com.eryansky.common.utils.reflection.MyBeanUtils;
 
@@ -22,9 +24,11 @@ import com.eryansky.common.utils.reflection.MyBeanUtils;
  * @date 2013-2-12 下午9:36:42
  */
 @Repository
-public class JdbcDao extends SimpleJdbcTemplate{
+@Transactional
+public class JdbcDao extends SimpleJdbcDao{
 	
-	
+	public JdbcDao(){
+	}
 	
 	@Autowired
 	public JdbcDao(DataSource dataSource) {
@@ -39,6 +43,7 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	 * @return bean对象集合
 	 */
 	@SuppressWarnings("rawtypes")
+	@Transactional(readOnly = true)
 	public List find(String sql,Class clazz,Map parameters){
 		return super.find(sql,clazz,parameters);
 	}
@@ -51,6 +56,7 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	 * @return bean对象
 	 */
 	@SuppressWarnings("rawtypes")
+	@Transactional(readOnly = true)
 	public Object findForObject(String sql,Class clazz,Map parameters){
 		return super.findForObject(sql, clazz, parameters);
 	}
@@ -62,6 +68,7 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	 * @return bean对象
 	 */
 	@SuppressWarnings("rawtypes")
+	@Transactional(readOnly = true)
 	public long findForLong(String sql,Map parameters){
 		return super.findForLong(sql, parameters);
 	}
@@ -73,6 +80,7 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	 * @return bean对象
 	 */
 	@SuppressWarnings("rawtypes")
+	@Transactional(readOnly = true)
 	public Map findForMap(String sql,Map parameters){
 		return super.findForMap(sql, parameters);
 	}
@@ -85,6 +93,7 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	 * @return bean对象
 	 */
 	@SuppressWarnings("rawtypes")
+	@Transactional(readOnly = true)
 	public List<Map<String,Object>> findForListMap(String sql,Map parameters){
 		return super.findForListMap(sql, parameters);
 	}
@@ -123,13 +132,14 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	/**
 	 * 使用指定的检索标准检索数据并分页返回数据
 	 */
+	@Transactional(readOnly = true)
 	public List<Map<String, Object>> findForJdbc(String sql, int page, int rows) {
 		//封装分页SQL
 		sql = PageSqlUtils.createPageSql(sql,page,rows);
 		return this.jdbcTemplate.queryForList(sql);
 	}
 	
-	
+	@Transactional(readOnly = true)
 	public List<Map<String, Object>> findForJdbc(String sql, Object... objs) {
 		return this.jdbcTemplate.queryForList(sql,objs);
 	}
@@ -140,6 +150,7 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
+	@Transactional(readOnly = true)
 	public List<T> findObjForJdbc(String sql, int page, int rows,Class<T> clazz) {
 		List<T> rsList = new ArrayList<T>();
 		//封装分页SQL
@@ -168,12 +179,14 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	 * @return
 	 * @throws DataAccessException
 	 */
+	@Transactional(readOnly = true)
 	public  List<Map<String, Object>>  findForJdbcParam(String  sql,  int page, int rows,Object... objs){
 		//封装分页SQL
 		sql = PageSqlUtils.createPageSql(sql,page,rows);
 		return jdbcTemplate.queryForList(sql,objs);
 	}
 	
+	@Transactional(readOnly = true)
 	public Map<String, Object> findOneForJdbc(String sql, Object... objs) {
 		try{ 
 			return this.jdbcTemplate.queryForMap(sql, objs);
@@ -185,6 +198,7 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	/**
 	 * 使用指定的检索标准检索数据并分页返回数据For JDBC
 	 */
+	@Transactional(readOnly = true)
 	public Long getCountForJdbc(String  sql) {
 		return  jdbcTemplate.queryForLong(sql);
 	}
@@ -192,6 +206,7 @@ public class JdbcDao extends SimpleJdbcTemplate{
 	 * 使用指定的检索标准检索数据并分页返回数据For JDBC-采用预处理方式
 	 * 
 	 */
+	@Transactional(readOnly = true)
 	public Long getCountForJdbcParam(String  sql,Object... objs) {
 		return  jdbcTemplate.queryForLong(sql, objs);
 	}

@@ -49,7 +49,7 @@ public class BugAction extends StrutsAction<Bug> {
 		Result result;
 		try {
 			// 名称重复校验
-			Bug bug = bugManager.findUniqueByProperty("title", model.getTitle());
+			Bug bug = bugManager.findUniqueBy("title", model.getTitle());
             if (bug != null && !bug.getId().equals(model.getId())) {
             	result = new Result(Result.WARN,"标题为["+model.getTitle()+"]已存在,请修正!", "title");
                 logger.debug(result.toString());
