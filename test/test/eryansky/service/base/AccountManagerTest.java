@@ -1,4 +1,4 @@
-package com.eryansky.service.base;
+package test.eryansky.service.base;
 
 import java.util.Iterator;
 import java.util.List;
@@ -17,11 +17,11 @@ import com.google.common.collect.Maps;
 import com.eryansky.common.model.User;
 import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.jdbc.JdbcDao;
-import com.eryansky.common.orm.jpa.JpaDao;
 import com.eryansky.common.utils.io.PropertiesLoader;
 import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Menu;
 import com.eryansky.service.CommonManager;
+import com.eryansky.service.base.MenuManager;
 
 /**
  * Account单元测试
@@ -37,8 +37,6 @@ public class AccountManagerTest {
 	private static MenuManager menuManager;
 	private static CommonManager commonManager;
 	
-	private static JpaDao<User, Long> userJpaDao;
-	
 	@BeforeClass
 	public static void init() throws Exception{
 		ApplicationContext context = new ClassPathXmlApplicationContext("spring-test.xml");
@@ -47,17 +45,6 @@ public class AccountManagerTest {
 		commonManager = (CommonManager)context.getBean("commonManager");
 		
 		pro = new PropertiesLoader("/appconfig.properties").getProperties();
-		userJpaDao = new JpaDao<User, Long>(User.class);
-	}
-	
-	@Test
-    public void jpaPage(){
-		try {
-			Page<User> page = userJpaDao.findPage(new Page<User>(20), "from User u where u.loginName = ?", new Object[]{"admin"});
-			System.out.println(JsonMapper.nonEmptyMapper().toJson(page));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@Test

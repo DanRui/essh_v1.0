@@ -1,4 +1,4 @@
-package com.eryansky.dao;
+package test.eryansky.dao;
 
 import java.util.Properties;
 import org.junit.BeforeClass;
@@ -8,7 +8,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.eryansky.common.model.User;
 import com.eryansky.common.orm.jdbc.JdbcDao;
-import com.eryansky.common.orm.jpa.JpaDao;
 import com.eryansky.common.utils.io.PropertiesLoader;
 import com.eryansky.service.base.RoleManager;
 
@@ -25,7 +24,6 @@ public class DaoTest {
 	
 	private static JdbcDao jdbcDao;
 	
-	private static JpaDao<User, Long> userJpaDao;
 	private static RoleManager roleManager;
 	
 	@BeforeClass
