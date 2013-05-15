@@ -57,7 +57,11 @@ a:hover {
 	color: #416AA3;
 	font-weight: bold;
 }
-
+.toolbar-btn-separator {
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #fff
+    margin: 3px 1px;
+}
 .icon {
 	padding: 2px 9px;
 	background: url(../img/icon/tabicons.png) no-repeat;

@@ -61,7 +61,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 */
 	//清除缓存
 	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE })
+			CacheConstants.MENU_TREE },allEntries = true)
 	public void saveOrUpdate(Menu entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
@@ -73,7 +73,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 */
 	//清除缓存
 	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE })
+			CacheConstants.MENU_TREE },allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException, SystemException,
 			ServiceException {
 		if(!Collections3.isEmpty(ids)){

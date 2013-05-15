@@ -413,13 +413,13 @@ $(function() {
 			</div>
 			<div align="right">
 			    <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserRole()">设置角色</a>
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
+				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
+				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
+				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-lock" plain="true" onclick="editPassword()">修改密码</a>
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
+				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a> 
 			</div>
 		</div>

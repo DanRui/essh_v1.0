@@ -7,44 +7,6 @@
 var eu = $.extend({}, eu);
 
 /**
- * DOM加载完执行.
- */
-$.parser.auto = false;
-$(function() {
-	$.messager.progress({
-		text : '页面加载中...',
-		interval : 100
-	});
-	//不使用任何easyui控件会出问题
-	var a=0;
-    for ( var i = 0; i < $.parser.plugins.length; i++) {  
-        var name = $.parser.plugins[i];// 控件名  
-        // 查找class为easyui-控件名的jq对象，例如，easyui-layout    
-        var rrrr = $(".easyui-" + name,window.document);   
-        if (rrrr.length==0&&$("#indexLayout",window.document).length==0) { 
-             a++;
-        }
-    }
-    if(a>=$.parser.plugins.length-1){
-    	$.messager.progress('close');
-    	return ;
-    }
-	$.parser.parse(window.document);
-	window.setTimeout(function() {
-		$.messager.progress('close');
-		if (self != parent) {
-			window.setTimeout(function() {
-				try {
-					parent.$.messager.progress('close');
-				} catch (e) {
-				}
-			}, 500);
-		}
-	}, 1);
-	$.parser.auto = true;
-});
-
-/**
  * 扩展easyui属性 dategrid表头居中.
  */
 eu.datagridCenter = function() {
@@ -146,6 +108,41 @@ eu.serializeObject = function(form) {
 	});
 	return o;
 };
+
+/**
+ * EasyUi From扩展
+ * getData 获取数据接口
+ * 使用示例:$('#ff').form('getData',true);
+ * @param {Object} jq
+ * @param {Object} params 设置为true的话，会把string型"true"和"false"字符串值转化为boolean型。
+ */
+$.extend($.fn.form.methods, {
+    getData: function(jq, params){
+        var formArray = jq.serializeArray();
+        var oRet = {};
+        for (var i in formArray) {
+            if (typeof(oRet[formArray[i].name]) == 'undefined') {
+                if (params) {
+                    oRet[formArray[i].name] = (formArray[i].value == "true" || formArray[i].value == "false") ? formArray[i].value == "true" : formArray[i].value;
+                }
+                else {
+                    oRet[formArray[i].name] = formArray[i].value;
+                }
+            }
+            else {
+                if (params) {
+                    oRet[formArray[i].name] = (formArray[i].value == "true" || formArray[i].value == "false") ? formArray[i].value == "true" : formArray[i].value;
+                }
+                else {
+                    oRet[formArray[i].name] += "," + formArray[i].value;
+                }
+            }
+        }
+        return oRet;
+    }
+});
+
+
 /**
  * @author 
  * 
@@ -328,10 +325,6 @@ function showMsg(msg) {
         title: '提示信息！',
         msg: msg,
         timeout: 3000,
-//        style:{  
-//            right:'',  
-//            bottom:''  
-//        } ,
         showType: 'slide' //null,slide,fade,show.
     });
 }
@@ -359,6 +352,124 @@ function showProMsg(msg,time) {
 		$.messager.progress('close');
 	},time);
 }
+
+/**  
+ * 扩展EasyUI tabs方法
+ * addIframeTab方法的参数包含以下属性：
+ * 名称	参数类型	描述以及默认值
+ * tab	object	该参数是对象，其属性列表同于tabs自带add方法的入参属性列表
+ * iframe.src	string	目标框架页面的地址，必填项
+ * iframe.height	string	框架标签iframe的高度，默认值为'100%'
+ * iframe.width	string	框架标签iframe的宽度，默认值为'100%'
+ * iframe.frameBorder	number	框架标签iframe的边框宽度，默认值为0
+ * iframe.message	string	加载中效果显示的消息，默认值为'页面加载中...'
+ * update object 该参数是是否刷新,传递该参数表示是刷新tab
+ */  
+$.extend($.fn.tabs.methods, {   
+	/**
+     * 加载iframe内容  
+     * @param  {jq Object} jq     [description]  
+     * @param  {Object} params    params.which:tab的标题或者index;params.iframe:iframe的相关参数  
+     * @return {jq Object}        [description]  
+     */  
+    loadTabIframe:function(jq,params){   
+        return jq.each(function(){   
+            var $tab = $(this).tabs('getTab',params.which);   
+            if($tab==null) return;   
+  
+            var $tabBody = $tab.panel('body');   
+  
+            //销毁已有的iframe   
+            var $frame=$('iframe', $tabBody);   
+            if($frame.length>0){   
+                $frame[0].contentWindow.document.write('');   
+                $frame[0].contentWindow.close();   
+                $frame.remove();   
+                if($.browser.msie){   
+                    CollectGarbage();   
+                }   
+            }   
+            $tabBody.html('');   
+  
+            $tabBody.css({'overflow':'hidden','position':'relative'});      
+            var $mask = $('<div style="position:absolute;z-index:2;width:100%;height:100%;background:#ccc;z-index:1000;opacity:0.3;filter:alpha(opacity=30);"><div>').appendTo($tabBody);      
+            var $maskMessage = $('<div class="mask-message" style="z-index:3;width:auto;height:16px;line-height:16px;position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-92px;border:2px solid #d4d4d4;padding: 12px 5px 10px 30px;background: #ffffff url(\''
+            		+ctx+'/js/jquery/easyui-1.3.3/themes/default/images/loading.gif\') no-repeat scroll 5px center;">' 
+            		+ (params.iframe.message || '页面加载中...') + '</div>').appendTo($tabBody);
+            var $containterMask = $('<div style="position:absolute;width:100%;height:100%;z-index:1;background:#fff;"></div>').appendTo($tabBody);      
+            var $containter = $('<div style="position:absolute;width:100%;height:100%;z-index:0;"></div>').appendTo($tabBody);      
+     
+            var iframe = document.createElement("iframe");      
+            iframe.src = params.iframe.src;      
+            iframe.frameBorder = params.iframe.frameBorder || 0;      
+            iframe.height = params.iframe.height || '100%';      
+            iframe.width = params.iframe.width || '100%';      
+            var finist =function(){
+            	$([$mask[0],$maskMessage[0]]).fadeOut(params.iframe.delay || 'slow',function(){   
+                    $(this).remove();   
+                    if($(this).hasClass('mask-message')){   
+                        $containterMask.fadeOut(params.iframe.delay || 'slow',function(){   
+                            $(this).remove();   
+                        });   
+                    }   
+                }); 
+            }
+            if (iframe.attachEvent){   
+                iframe.attachEvent("onload", finist);   
+            } else {   
+                iframe.onload = finist;   
+            }  
+            $containter[0].appendChild(iframe);   
+        });   
+    },
+    /**
+     * 增加iframe模式的标签页  
+     * @param {[type]} jq     
+     * @param {[type]} params  
+     */  
+    addIframeTab:function(jq,params){   
+        return jq.each(function(){   
+            if(params.tab.href){   
+                delete params.tab.href;   
+            }   
+            if(!params.update){
+            	$(this).tabs('add',params.tab);   
+            }
+            var opts = $(this).tabs('options');   
+            var $tabBody = $(this).tabs('getTab',params.tab.title).panel('body');   
+            $tabBody.css({'overflow':'hidden','position':'relative'});   
+            var $mask = $('<div style="position:absolute;z-index:2;width:100%;height:100%;background:#ccc;z-index:1000;opacity:0.3;filter:alpha(opacity=30);"><div>').appendTo($tabBody);   
+            var $maskMessage = $('<div class="mask-message" style="z-index:3;width:auto;height:16px;line-height:16px;position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-92px;border:2px solid #d4d4d4;padding: 12px 5px 10px 30px;background: #ffffff url(\''
+            		+ctx+'/js/jquery/easyui-1.3.3/themes/default/images/loading.gif\') no-repeat scroll 5px center;">' 
+            		+ (params.iframe.message || '页面加载中...') + '</div>').appendTo($tabBody);   
+            var $containterMask = $('<div style="position:absolute;width:100%;height:100%;z-index:1;background:#fff;"></div>').appendTo($tabBody);   
+            var $containter = $('<div class="easyui-panel" style="position:absolute;width:100%;height:100%;z-index:0;"></div>').appendTo($tabBody);   
+  
+            var iframe = document.createElement("iframe");   
+            iframe.src = params.iframe.src;   
+            iframe.frameBorder = params.iframe.frameBorder || 0;   
+            iframe.height = params.iframe.height || '100%';   
+            iframe.width = params.iframe.width || '100%';   
+            var finist =function(){
+            	$([$mask[0],$maskMessage[0]]).fadeOut(params.iframe.delay || 'slow',function(){   
+                    $(this).remove();   
+                    if($(this).hasClass('mask-message')){   
+                        $containterMask.fadeOut(params.iframe.delay || 'slow',function(){   
+                            $(this).remove();   
+                        });   
+                    }   
+                }); 
+            }
+            if (iframe.attachEvent){   
+                iframe.attachEvent("onload", finist);   
+            } else {   
+                iframe.onload = finist;   
+            }   
+            $containter[0].appendChild(iframe);   
+        });   
+    }   
+});  
+
 /**
  * 添加页面到指定选项卡.
  * @param tabs 选项卡对象,或者选项卡的id
@@ -368,9 +479,9 @@ function showProMsg(msg,time) {
  * @param iconCls 图标
  */
 function addTab(tabs,title,url,closeAble,iconCls){
-	var close = true;
+	var closable = true;
 	if(undefined != typeof closeAble){
-		close = closeAble;
+		closable = closeAble;
 	}
 	//如果tabs是字符串类型则代表选项卡的id
 	if(typeof tabs == 'string'){
@@ -378,36 +489,14 @@ function addTab(tabs,title,url,closeAble,iconCls){
 	}
 	//如果当前title的tab不存在则创建一个tab
 	if(!tabs.tabs('exists',title)){
-		tabs.tabs('add',{
-			title: title,   
-			closable:close,
-			iconCls:iconCls,
-			cache : true,//如果设置为false 则'select'会触发刷新页面
-//			注：使用iframe即可防止同一个页面出现js和css冲突的问题
-			content : '<iframe src="'+url+'" frameborder="0" style="border:0;width:100%;height:100%;" ></iframe>'
-//			href : url
-		});
+		tabs.tabs('addIframeTab',{      
+		    tab:{title:title,closable:closable,iconCls:iconCls,cache:true},      
+		    iframe:{src:url}      
+		});    
 	}else {
 		tabs.tabs('select', title);
     }
 }
-
-/**
- * 刷新选项卡面板
- * tabDivId：选项卡div元素id tabTitle：选项卡面板title url：选项卡面板url
- * @cfg example: {tabDivId:'tabDivId',tabTitle:'tabTitle',url:'refreshUrl'}
- *      如果tabTitle为空，则默认刷新当前选中的tab 如果url为空，则默认以原来的url进行reload
- */  
-function refreshTab(cfg){ 
-	var tab = $('#'+cfg.tabDivId);
-    var refresh_tab = cfg.tabTitle?tab.tabs('getTab',cfg.tabTitle):tab.tabs('getSelected');  
-    if(refresh_tab && refresh_tab.find('iframe').length > 0){  
-    var _refresh_ifram = refresh_tab.find('iframe')[0];  
-    var refresh_url = cfg.url?cfg.url:_refresh_ifram.src;  
-    _refresh_ifram.src = refresh_url;  
-    _refresh_ifram.contentWindow.location.href=refresh_url;  
-    }  
-}  
 
 /**
  * 自定义combotree级联选择（适用于jQuery easyui 1.3.2）
@@ -718,7 +807,8 @@ $.fn.panel.defaults.onBeforeDestroy = function() {
  * 
  * @requires jQuery,EasyUI
  * 
- * 扩展datagrid，添加动态增加或删除Editor的方法
+ * 扩展datagrid，添加动态增加或删除Editor的方法,提示消息、取消提示消息方法
+ * 例如：$('#dg').datagrid('doCellTip',{cls:{'background-color':'red'},delay:1000});
  * 
  * 例子如下，第二个参数可以是数组
  * 
@@ -749,6 +839,112 @@ $.extend($.fn.datagrid.methods, {
 			var e = $(jq).datagrid('getColumnOption', param);
 			e.editor = {};
 		}
+	},
+	/**
+	 * 开打提示功能
+	 * @param {} jq
+	 * @param {} params 提示消息框的样式
+	 * @return {}
+	 */
+	doCellTip : function(jq, params) {
+		function showTip(data, td, e) {
+			if ($(td).text() == "")
+				return;
+			data.tooltip.text($(td).text()).css({
+						top : (e.pageY + 10) + 'px',
+						left : (e.pageX + 20) + 'px',
+						'z-index' : $.fn.window.defaults.zIndex,
+						display : 'block'
+					});
+		};
+		return jq.each(function() {
+			var grid = $(this);
+			var options = $(this).data('datagrid');
+			if (!options.tooltip) {
+				var panel = grid.datagrid('getPanel').panel('panel');
+				var defaultCls = {
+					'border' : '1px solid #333',
+					'padding' : '1px',
+					'color' : '#333',
+					'background' : '#f7f5d1',
+					'position' : 'absolute',
+					'max-width' : '200px',
+					'border-radius' : '4px',
+					'-moz-border-radius' : '4px',
+					'-webkit-border-radius' : '4px',
+					'display' : 'none'
+				}
+				var tooltip = $("<div id='celltip'></div>").appendTo('body');
+				tooltip.css($.extend({}, defaultCls, params.cls));
+				options.tooltip = tooltip;
+				panel.find('.datagrid-body').each(function() {
+					var delegateEle = $(this).find('> div.datagrid-body-inner').length
+							? $(this).find('> div.datagrid-body-inner')[0]
+							: this;
+					$(delegateEle).undelegate('td', 'mouseover').undelegate(
+							'td', 'mouseout').undelegate('td', 'mousemove')
+							.delegate('td', {
+								'mouseover' : function(e) {
+									if (params.delay) {
+										if (options.tipDelayTime)
+											clearTimeout(options.tipDelayTime);
+										var that = this;
+										options.tipDelayTime = setTimeout(
+												function() {
+													showTip(options, that, e);
+												}, params.delay);
+									} else {
+										showTip(options, this, e);
+									}
+
+								},
+								'mouseout' : function(e) {
+									if (options.tipDelayTime)
+										clearTimeout(options.tipDelayTime);
+									options.tooltip.css({
+												'display' : 'none'
+											});
+								},
+								'mousemove' : function(e) {
+									var that = this;
+									if (options.tipDelayTime) {
+										clearTimeout(options.tipDelayTime);
+										options.tipDelayTime = setTimeout(
+												function() {
+													showTip(options, that, e);
+												}, params.delay);
+									} else {
+										showTip(options, that, e);
+									}
+								}
+							});
+				});
+
+			}
+
+		});
+	},
+	/**
+	 * 关闭消息提示功能
+	 * @param {} jq
+	 * @return {}
+	 */
+	cancelCellTip : function(jq) {
+		return jq.each(function() {
+					var data = $(this).data('datagrid');
+					if (data.tooltip) {
+						data.tooltip.remove();
+						data.tooltip = null;
+						var panel = $(this).datagrid('getPanel').panel('panel');
+						panel.find('.datagrid-body').undelegate('td',
+								'mouseover').undelegate('td', 'mouseout')
+								.undelegate('td', 'mousemove')
+					}
+					if (data.tipDelayTime) {
+						clearTimeout(data.tipDelayTime);
+						data.tipDelayTime = null;
+					}
+				});
 	}
 });
 
@@ -1014,7 +1210,42 @@ $.extend($.fn.datagrid.defaults.editors, {
         resize: function(target, width){  
             $(target).numberspinner('resize',width);  
         }  
-    }
+    },
+    password: {
+		init: function(container, options) {
+			var input = $('<input class="datagrid-editable-input" type="password"/>').appendTo(container);
+
+			if(!$.fn.validatebox.defaults.rules.safepass) {
+				$.extend($.fn.validatebox.defaults.rules, {
+					safepass: {
+						validator: function(value, param) {
+							return !(/^(([A-Z]*|[a-z]*|\d*|[-_\~!@#\$%\^&\*\.\(\)\[\]\{\}<>\?\\\/\'\"]*)|.{0,5})$|\s/.test(value));
+						},
+						message: '密码由字母和数字组成，至少6位'
+					}
+				});
+			}
+
+			input.validatebox(options);
+			return input;
+		},
+		getValue: function(target) {
+			alert($(target).val());
+			alert(target.value);
+			return $(target).val();
+		},
+		setValue: function(target, value) {
+			$(target).val(value);
+		},
+		resize: function(target, width) {
+			var input = $(target);
+			if($.boxModel == true) {
+				input.width(width - (input.outerWidth() - input.width()));
+			} else {
+				input.width(width);
+			}
+		}
+	}
 });
 
 /**

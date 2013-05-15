@@ -335,15 +335,15 @@ $(function() {
 	   <div id="dictionary_toolbar">
 			<div style="margin-bottom:5px">    
 		       <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
+				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
+				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a> 
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
+				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="save()">保存</a> 
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
+				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelEdit()">取消编辑</a> 
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
+				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelSelect()">取消选中</a> 
 		    </div>    
 		    <div>   

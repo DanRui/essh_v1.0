@@ -247,11 +247,11 @@ $(function() {
 				</form>
 			</div>
 			<div align="right">
-				<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog();">新增</a>
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
-				<span style="border-left: 1px solid #CCC;border-right: 1px solid white;margin: 2px 1px;"></span>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a> 
+				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="showDialog();">新增</a>
+				<span class="toolbar-btn-separator"></span>
+				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="edit()">编辑</a>
+				<span class="toolbar-btn-separator"></span>
+				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="del()">删除</a> 
 			</div>
 		</div>
 	   <table id="menu_datagrid" toolbar="#menu_datagrid-toolbar" fit="true"></table>

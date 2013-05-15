@@ -4,9 +4,6 @@
 var login_about_dialog;
 var login_password_dialog;
 var login_password_form;
-$(function() {
-	
-});
 function showAbout(){
     //弹出对话窗口
 	login_about_dialog = $('<div/>').dialog({
@@ -108,10 +105,7 @@ function logout() {
 			<div onclick="eu.changeTheme('black');">黑色</div>
 			<div class="menu-sep"></div>
 			<div onclick="eu.changeTheme('bootstrap');">bootstrap</div>
-			<div onclick="eu.changeTheme('metro-blue');">metro-blue</div>
-			<div onclick="eu.changeTheme('metro-gray');">metro-gray</div>
-			<div onclick="eu.changeTheme('metro-green');">metro-green</div>
-			<div onclick="eu.changeTheme('metro-red');">metro-red</div>
+			<div onclick="eu.changeTheme('metro');">metro</div>
 		</div>
 	
 	    <a href="javascript:void(0);" class="easyui-menubutton" menu="#layout_north_kzmbMenu" iconCls="icon-help">控制面板</a> 
