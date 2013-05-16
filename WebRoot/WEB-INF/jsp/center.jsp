@@ -65,7 +65,7 @@ function refresh(selectedTab){
 	} else {/*说明tab是以content方式引入的目标页面*/
 		var panel = tab.panel('panel');
 		var iframe = panel.find('iframe');
-		layout_center_tabs.tabs('loadTabIframe',{      
+		layout_center_tabs.tabs('updateIframeTab',{      
 			which:tab.panel('options').title,
 			iframe:{src:iframe[0].src}
 		}); 

@@ -353,6 +353,7 @@ function showProMsg(msg,time) {
 	},time);
 }
 
+
 /**  
  * 扩展EasyUI tabs方法
  * addIframeTab方法的参数包含以下属性：
@@ -364,9 +365,10 @@ function showProMsg(msg,time) {
  * iframe.frameBorder	number	框架标签iframe的边框宽度，默认值为0
  * iframe.message	string	加载中效果显示的消息，默认值为'页面加载中...'
  * update object 该参数是是否刷新,传递该参数表示是刷新tab
- */  
+ * which string/number 更新方法updateIframeTab tab标题或索引号
+ */ 
 $.extend($.fn.tabs.methods, {   
-	/**
+    /**
      * 加载iframe内容  
      * @param  {jq Object} jq     [description]  
      * @param  {Object} params    params.which:tab的标题或者index;params.iframe:iframe的相关参数  
@@ -396,7 +398,7 @@ $.extend($.fn.tabs.methods, {
             var $maskMessage = $('<div class="mask-message" style="z-index:3;width:auto;height:16px;line-height:16px;position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-92px;border:2px solid #d4d4d4;padding: 12px 5px 10px 30px;background: #ffffff url(\''
             		+ctx+'/js/jquery/easyui-1.3.3/themes/default/images/loading.gif\') no-repeat scroll 5px center;">' 
             		+ (params.iframe.message || '页面加载中...') + '</div>').appendTo($tabBody);
-            var $containterMask = $('<div style="position:absolute;width:100%;height:100%;z-index:1;background:#fff;"></div>').appendTo($tabBody);      
+			var $containterMask = $('<div style="position:absolute;width:100%;height:100%;z-index:1;background:#fff;"></div>').appendTo($tabBody);      
             var $containter = $('<div style="position:absolute;width:100%;height:100%;z-index:0;"></div>').appendTo($tabBody);      
      
             var iframe = document.createElement("iframe");      
@@ -418,56 +420,44 @@ $.extend($.fn.tabs.methods, {
                 iframe.attachEvent("onload", finist);   
             } else {   
                 iframe.onload = finist;   
-            }  
+            }        
             $containter[0].appendChild(iframe);   
         });   
-    },
+    },   
+     /**
+     * 增加iframe模式的标签页    
+     * @param {[type]} jq     [description]    
+     * @param {[type]} params [description]    
+     */     
+    addIframeTab:function(jq,params){      
+        return jq.each(function(){      
+            if(params.tab.href){      
+                delete params.tab.href;      
+            }      
+            $(this).tabs('add',params.tab);     
+            $(this).tabs('loadTabIframe',{'which':params.tab.title,'iframe':params.iframe});         
+        });      
+    },   
     /**
-     * 增加iframe模式的标签页  
-     * @param {[type]} jq     
-     * @param {[type]} params  
+     * 更新tab的iframe内容  
+     * @param  {jq Object} jq     
+     * @param  {Object} params   which:tab标题或索引号
+     * @return {jq Object}     
      */  
-    addIframeTab:function(jq,params){   
-        return jq.each(function(){   
-            if(params.tab.href){   
-                delete params.tab.href;   
+    updateIframeTab:function(jq,params){      
+        return jq.each(function(){     
+            params.iframe = params.iframe || {};   
+            if(!params.iframe.src){   
+                var $tab = $(this).tabs('getTab',params.which);   
+                if($tab==null) return;   
+                var $tabBody = $tab.panel('body');   
+                var $iframe = $tabBody.find('iframe');   
+                if($iframe.length===0) return;   
+                $.extend(params.iframe,{'src':$iframe.attr('src')});   
             }   
-            if(!params.update){
-            	$(this).tabs('add',params.tab);   
-            }
-            var opts = $(this).tabs('options');   
-            var $tabBody = $(this).tabs('getTab',params.tab.title).panel('body');   
-            $tabBody.css({'overflow':'hidden','position':'relative'});   
-            var $mask = $('<div style="position:absolute;z-index:2;width:100%;height:100%;background:#ccc;z-index:1000;opacity:0.3;filter:alpha(opacity=30);"><div>').appendTo($tabBody);   
-            var $maskMessage = $('<div class="mask-message" style="z-index:3;width:auto;height:16px;line-height:16px;position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-92px;border:2px solid #d4d4d4;padding: 12px 5px 10px 30px;background: #ffffff url(\''
-            		+ctx+'/js/jquery/easyui-1.3.3/themes/default/images/loading.gif\') no-repeat scroll 5px center;">' 
-            		+ (params.iframe.message || '页面加载中...') + '</div>').appendTo($tabBody);   
-            var $containterMask = $('<div style="position:absolute;width:100%;height:100%;z-index:1;background:#fff;"></div>').appendTo($tabBody);   
-            var $containter = $('<div class="easyui-panel" style="position:absolute;width:100%;height:100%;z-index:0;"></div>').appendTo($tabBody);   
-  
-            var iframe = document.createElement("iframe");   
-            iframe.src = params.iframe.src;   
-            iframe.frameBorder = params.iframe.frameBorder || 0;   
-            iframe.height = params.iframe.height || '100%';   
-            iframe.width = params.iframe.width || '100%';   
-            var finist =function(){
-            	$([$mask[0],$maskMessage[0]]).fadeOut(params.iframe.delay || 'slow',function(){   
-                    $(this).remove();   
-                    if($(this).hasClass('mask-message')){   
-                        $containterMask.fadeOut(params.iframe.delay || 'slow',function(){   
-                            $(this).remove();   
-                        });   
-                    }   
-                }); 
-            }
-            if (iframe.attachEvent){   
-                iframe.attachEvent("onload", finist);   
-            } else {   
-                iframe.onload = finist;   
-            }   
-            $containter[0].appendChild(iframe);   
-        });   
-    }   
+            $(this).tabs('loadTabIframe',params);         
+        });      
+    }     
 });  
 
 /**
