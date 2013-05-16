@@ -5,7 +5,7 @@
 </h3>
 <ul>
 	<li>essh是一个EasyUI整站示例系统.</li><br />
-	<li>前台由EasyUI1.3.2编写，后台是Java编写，应用框架struts2+spring3+hibernate+ehcache.</li><br />
+	<li>前台由EasyUI1.3.3编写，后台是Java编写，应用框架struts2+spring3+hibernate+ehcache.</li><br />
 </ul> 
 
 <h3 style="margin-left: 12px;">
@@ -61,7 +61,7 @@
 	<br />
 	
 	<li>
-		对象缓存:使用ehcache-spring-annotations，只需简单的注解即可完成对象的缓存、更新，例如对用户菜单的缓存.
+		对象缓存:使用ehcache-spring-annotations以及Spring3.1注解方式，只需简单的注解即可完成对象的缓存、更新，例如对用户菜单的缓存.
 	</li>
 	<br />
 	
