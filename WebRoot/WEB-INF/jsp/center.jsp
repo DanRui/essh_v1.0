@@ -11,7 +11,7 @@ $(function() {
 			var type = $(item.target).attr('type');
 			//刷新
 			if (type === 'refresh') {
-				refresh();
+				refresh(layout_center_tabs.tabs('getTab',curTabTitle));
 				return;
 			}
 			//关闭
@@ -51,16 +51,22 @@ $(function() {
 	});
 });
 //刷新
-function refresh(){
-	var href = layout_center_tabs.tabs('getSelected').panel('options').href;
+function refresh(selectedTab){
+	var tab;
+	if(selectedTab){
+		tab = selectedTab;
+	}else{
+		tab = layout_center_tabs.tabs('getSelected');
+	}
+	var href = tab.panel('options').href;
 	if (href) {/*说明tab是以href方式引入的目标页面*/
-		var index = layout_center_tabs.tabs('getTabIndex', layout_center_tabs.tabs('getSelected'));
+		var index = layout_center_tabs.tabs('getTabIndex', tab);
 		layout_center_tabs.tabs('getTab', index).panel('refresh');
 	} else {/*说明tab是以content方式引入的目标页面*/
-		var panel = layout_center_tabs.tabs('getSelected').panel('panel');
+		var panel = tab.panel('panel');
 		var iframe = panel.find('iframe');
 		layout_center_tabs.tabs('loadTabIframe',{      
-			which:layout_center_tabs.tabs('getSelected').panel('options').title,
+			which:tab.panel('options').title,
 			iframe:{src:iframe[0].src}
 		}); 
 	}
