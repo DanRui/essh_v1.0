@@ -18,6 +18,8 @@ import com.opensymphony.xwork2.Preparable;
  * Struts2中典型CRUD Action的抽象基类.
  * 
  * 主要定义了对Preparable,ModelDriven接口的使用,以及CRUD函数和返回值的命名.
+ * 
+ * <br>注:子类可覆盖相应方法.
  * <br>2013-05-11:修正因二次绑定导致乐观锁失效bug.
  * 
  * @param <T>
@@ -122,6 +124,11 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 		return null;
 	}
 
+	/**
+	 * 数据列表. 子类可覆盖.
+	 * @return
+	 * @throws Exception
+	 */
 	public String datagrid() throws Exception {
 		try {
 			// 自动构造属性过滤器
