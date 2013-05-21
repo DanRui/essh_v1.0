@@ -29,7 +29,7 @@ import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.util.Assert;
 
 import com.eryansky.common.exception.DaoException;
-import com.eryansky.common.orm.annotation.StatusDelete;
+import com.eryansky.common.orm.annotation.Delete;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.common.utils.reflection.ReflectionUtils;
 
@@ -181,10 +181,10 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	public void delete(final T entity) {
 		Assert.notNull(entity, "entity不能为空");
 		
-		StatusDelete statusDelete = ReflectionUtils.getAnnotation(entityClass,StatusDelete.class);
-		if (statusDelete != null) {
-			Object value = ConvertUtils.convertToObject(statusDelete.value(), statusDelete.type().getValue());
-			ReflectionUtils.invokeSetter(entity, statusDelete.propertyName(), value);
+		Delete delete = ReflectionUtils.getAnnotation(entityClass,Delete.class);
+		if (delete != null) {
+			Object value = ConvertUtils.convertToObject(delete.value(), delete.type().getValue());
+			ReflectionUtils.invokeSetter(entity, delete.propertyName(), value);
 			update(entity);
 		} else {
 			getSession().delete(entity);

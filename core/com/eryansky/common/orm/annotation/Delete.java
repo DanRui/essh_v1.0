@@ -14,7 +14,7 @@ import com.eryansky.entity.base.state.StatusState;
  * <pre>
  * &#064;Entity
  * &#064;Table(name="tb_user")
- * &#064;StateDelete(propertyName = "state",type = CategoryType.S,value="1")
+ * &#064;Delete(propertyName = "state",type = CategoryType.S,value="1")
  * public class User{
  * 	private String username;
  * 	private String state;
@@ -35,7 +35,7 @@ import com.eryansky.entity.base.state.StatusState;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface StatusDelete {
+public @interface Delete {
 
 	/**
 	 * 属性名称
