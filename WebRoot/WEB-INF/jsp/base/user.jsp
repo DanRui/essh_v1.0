@@ -99,8 +99,6 @@ $(function() {
 	        		value = parseInt(value, 10);
 	        		if(value == 0){
         				return '启用';
-        			}else if(value == 1){
-        				return eu.fs('<span style="color:red">{0}<span>','删除');
         			}else if(value == 3){
         				return eu.fs('<span style="color:red">{0}<span>','停用');
         			}
