@@ -20,8 +20,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.eryansky.common.model.BaseEntity;
+import com.eryansky.common.orm.PropertyType;
 import com.eryansky.common.orm.annotation.StatusDelete;
-import com.eryansky.common.orm.core.PropertyType;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.entity.base.state.SexState;
 import com.eryansky.utils.AppConstants;

@@ -1,4 +1,4 @@
-package com.eryansky.common.orm.core;
+package com.eryansky.common.orm;
 import java.util.Date;
 
 /**

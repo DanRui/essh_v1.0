@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.eryansky.common.orm.core.PropertyType;
+import com.eryansky.common.orm.PropertyType;
 import com.eryansky.entity.base.state.StatusState;
 
 /**
