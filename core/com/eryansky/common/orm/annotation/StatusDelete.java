@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.eryansky.common.orm.core.PropertyType;
+import com.eryansky.entity.base.state.StatusState;
 
 /**
  * Hibernate状态删除，如果在orm实体配置该注解，将不会物理删除数据，会根据该配置来进行对orm实体的update操作
@@ -13,7 +14,7 @@ import com.eryansky.common.orm.core.PropertyType;
  * <pre>
  * &#064;Entity
  * &#064;Table(name="tb_user")
- * &#064;StateDelete(propertyName = "state",type = CategoryType.S,value="2")
+ * &#064;StateDelete(propertyName = "state",type = CategoryType.S,value="1")
  * public class User{
  * 	private String username;
  * 	private String state;
@@ -45,10 +46,11 @@ public @interface StatusDelete {
 
 	/**
 	 * 要改变的值
+	 * <br> 默认值:"1" 参考 com.eryansky.entity.base.state.StatusState
 	 * 
 	 * @return String
 	 */
-	public String value();
+	public String value() default "1";
 
 	/**
 	 * 改变值的类型
