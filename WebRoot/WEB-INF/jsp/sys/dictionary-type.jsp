@@ -163,7 +163,7 @@ $(function() {
 		//选中的所有行
 		var rows = dictionaryType_datagrid.datagrid('getSelections');
 		//选中的行（第一次选择的行）
-		var row = user_datagrid.datagrid('getSelected');
+		var row = dictionaryType_datagrid.datagrid('getSelected');
 		if (row){
 			if(rows.length>1){
 				row = rows[rows.length-1];
