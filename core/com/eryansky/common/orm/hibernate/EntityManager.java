@@ -396,11 +396,11 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			ServiceException {
 		Assert.notNull(page, "参数[page]为空!");
 		Assert.notNull(rows, "参数[rows]为空!");
-		Assert.notEmpty(filters, "参数[filters]为空!");
+		Assert.notNull(filters, "参数[filters]为空!");
 		Page<T> p = new Page<T>(rows);
 		p.setPageNo(page);
 		//过滤逻辑删除的数据
-		PropertyFilter normal = new PropertyFilter("NEL_status",
+		PropertyFilter normal = new PropertyFilter("NEI_status",
 				StatusState.delete.getValue() + "");
 		filters.add(normal);
 		
@@ -440,12 +440,12 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			throws DaoException, SystemException, ServiceException {
 		Assert.notNull(page, "参数[page]为空!");
 		Assert.notNull(rows, "参数[rows]为空!");
-		Assert.notEmpty(filters, "参数[filters]为空!");
+		Assert.notNull(filters, "参数[filters]为空!");
 		Page<T> p = new Page<T>(rows);
 		p.setPageNo(page);
 		//过滤逻辑删除的数据
 		if (isFilterDelete) {
-			PropertyFilter normal = new PropertyFilter("NEL_status",
+			PropertyFilter normal = new PropertyFilter("NEI_status",
 					StatusState.delete.getValue() + "");
 			filters.add(normal);
 		}

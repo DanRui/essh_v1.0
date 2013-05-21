@@ -180,7 +180,6 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public void delete(final T entity) {
 		Assert.notNull(entity, "entity不能为空");
-		
 		Delete delete = ReflectionUtils.getAnnotation(entityClass,Delete.class);
 		if (delete != null) {
 			Object value = ConvertUtils.convertToObject(delete.value(), delete.type().getValue());
