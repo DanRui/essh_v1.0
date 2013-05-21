@@ -26,7 +26,7 @@ public class PropertyFilter {
 
 	/** 属性比较类型. */
 	public enum MatchType {
-		EQ, LIKE,SLIKE,ELIKE, LT, GT, LE, GE;//等于,全模糊匹配,左匹配、右匹配,小于、大于、小于等于、大于等于
+		NE,EQ, LIKE,SLIKE,ELIKE, LT, GT, LE, GE;//不等于,等于,全模糊匹配,左匹配、右匹配,小于、大于、小于等于、大于等于
 	}
 
 	/** 属性数据类型. */

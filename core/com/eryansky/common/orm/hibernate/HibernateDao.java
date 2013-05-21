@@ -333,6 +333,9 @@ public class HibernateDao<T, PK extends Serializable> extends
 		case EQ:
 			criterion = Restrictions.eq(propertyName, propertyValue);
 			break;
+		case NE:
+			criterion = Restrictions.ne(propertyName, propertyValue);
+			break;
 		case LIKE:
 			// 过滤特殊字符
 			value = (String) propertyValue;

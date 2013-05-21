@@ -41,7 +41,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	protected abstract HibernateDao<T, PK> getEntityDao();
 
 	// CRUD函数 //
-	
+
 	/**
 	 * 保存新增的对象.
 	 * 
@@ -54,7 +54,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			ServiceException {
 		getEntityDao().save(entity);
 	}
-	
+
 	/**
 	 * 保存修改的对象.
 	 * 
@@ -67,7 +67,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			ServiceException {
 		getEntityDao().update(entity);
 	}
-	
+
 	/**
 	 * 保存新增或修改的对象.
 	 * 
@@ -76,12 +76,11 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	public void saveOrUpdate(final T entity) throws DaoException, SystemException,
-			ServiceException {
+	public void saveOrUpdate(final T entity) throws DaoException,
+			SystemException, ServiceException {
 		getEntityDao().saveOrUpdate(entity);
 	}
-	
-	
+
 	/**
 	 * 保存新增或修改的对象集合.
 	 * 
@@ -90,8 +89,8 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	public void saveOrUpdate(final Collection<T> entitys) throws DaoException, SystemException,
-			ServiceException {
+	public void saveOrUpdate(final Collection<T> entitys) throws DaoException,
+			SystemException, ServiceException {
 		getEntityDao().saveOrUpdate(entitys);
 	}
 
@@ -124,6 +123,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 
 	/**
 	 * 删除(根据对象).
+	 * 
 	 * @param entity
 	 * @throws DaoException
 	 * @throws SystemException
@@ -137,6 +137,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 
 	/**
 	 * 删除全部的.
+	 * 
 	 * @param entitys
 	 * @throws DaoException
 	 * @throws SystemException
@@ -144,18 +145,20 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	 */
 	public void deleteAll(final Collection<T> entitys) throws DaoException,
 			SystemException, ServiceException {
-		if(!Collections3.isEmpty(entitys)){
-			for (T entity:entitys) {
+		if (!Collections3.isEmpty(entitys)) {
+			for (T entity : entitys) {
 				getEntityDao().delete(entity);
 			}
-		}else{
+		} else {
 			logger.warn("参数[entitys]为空.");
 		}
 	}
-	
+
 	/**
 	 * 根据id集合删除全部的.
-	 * @param ids id集合
+	 * 
+	 * @param ids
+	 *            id集合
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
@@ -163,11 +166,11 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	@SuppressWarnings("unchecked")
 	public void deleteByIds(final List<Long> ids) throws DaoException,
 			SystemException, ServiceException {
-		if(!Collections3.isEmpty(ids)){
-			for (Long id:ids) {
+		if (!Collections3.isEmpty(ids)) {
+			for (Long id : ids) {
 				getEntityDao().delete((PK) id);
 			}
-		}else{
+		} else {
 			logger.warn("参数[ids]为空.");
 		}
 	}
@@ -187,9 +190,10 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			ServiceException {
 		return getEntityDao().load(id);
 	}
-	
+
 	/**
 	 * 按id获取对象(直接返回实体类).
+	 * 
 	 * @param id
 	 * @return
 	 * @throws DaoException
@@ -201,52 +205,60 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			ServiceException {
 		return getEntityDao().get(id);
 	}
-	
-	
+
 	/**
 	 * 自定义属性查找.
-	 * @param propertyName 属性名称
-	 * @param propertyValue 属性值
+	 * 
+	 * @param propertyName
+	 *            属性名称
+	 * @param propertyValue
+	 *            属性值
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	@Transactional(readOnly = true)	
-	public List<T> findBy(String propertyName,
-            Object propertyValue) throws DaoException,SystemException,ServiceException{
-        Assert.hasText(propertyName, "参数[entityName]为空!");
-        return getEntityDao().findBy(propertyName, propertyValue);
-    }
-	
+	@Transactional(readOnly = true)
+	public List<T> findBy(String propertyName, Object propertyValue)
+			throws DaoException, SystemException, ServiceException {
+		Assert.hasText(propertyName, "参数[entityName]为空!");
+		return getEntityDao().findBy(propertyName, propertyValue);
+	}
+
 	/**
-     * 自定义属性查找唯一值.
-     * @param propertyName
-     * @param value
-     * @return
-     * @throws DaoException
-     * @throws SystemException
-     * @throws ServiceException
-     */
-    @Transactional(readOnly = true)
-    public T findUniqueBy(String propertyName, Object value) throws DaoException,SystemException,ServiceException{
-            return getEntityDao().findUniqueBy(propertyName, value);
-    }
-    
+	 * 自定义属性查找唯一值.
+	 * 
+	 * @param propertyName
+	 * @param value
+	 * @return
+	 * @throws DaoException
+	 * @throws SystemException
+	 * @throws ServiceException
+	 */
+	@Transactional(readOnly = true)
+	public T findUniqueBy(String propertyName, Object value)
+			throws DaoException, SystemException, ServiceException {
+		return getEntityDao().findUniqueBy(propertyName, value);
+	}
+
 	/**
 	 * 自定义属性查找(like全匹配方式)
-	 * @param propertyName 属性名称
-	 * @param value 属性值(无需加+"%")
+	 * 
+	 * @param propertyName
+	 *            属性名称
+	 * @param value
+	 *            属性值(无需加+"%")
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-    @Transactional(readOnly = true)
-    public List<T> findByLike(String propertyName, String value) throws DaoException,SystemException,ServiceException{
-            return getEntityDao().findBy(propertyName, value,MatchType.LIKE);
-    }
-    
+	@Transactional(readOnly = true)
+	public List<T> findByLike(String propertyName, String value)
+			throws DaoException, SystemException, ServiceException {
+		return getEntityDao().findBy(propertyName, value, MatchType.LIKE);
+	}
+
 	/**
 	 * 
 	 * @param 按id获取对象
@@ -290,18 +302,22 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			ServiceException {
 		return getEntityDao().getAll();
 	}
+
 	/**
 	 * 查询所有(排序).
-	 * @param orderByProperty 排序属性
-	 * @param isAsc 是够升序
+	 * 
+	 * @param orderByProperty
+	 *            排序属性
+	 * @param isAsc
+	 *            是够升序
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	public List<T> getAll(String orderByProperty, boolean isAsc) throws DaoException, SystemException,
-			ServiceException {
-		return getEntityDao().getAll(orderByProperty,isAsc);
+	public List<T> getAll(String orderByProperty, boolean isAsc)
+			throws DaoException, SystemException, ServiceException {
+		return getEntityDao().getAll(orderByProperty, isAsc);
 	}
 
 	/**
@@ -358,7 +374,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 
 	/**
 	 * 过滤器分页查询.
-	 * 
+	 * <br>自动过滤逻辑删除的数据.
 	 * @param page
 	 *            第几页
 	 * @param rows
@@ -389,17 +405,24 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			p.setOrder(Page.ASC);
 			p.setOrderBy("id");
 		}
-		return find(page, rows, sort, order, filters, false);
+		return find(page, rows, sort, order, filters, true);
 	}
-	
+
 	/**
 	 * 过滤器分页查询.
-	 * @param page 第几页
-	 * @param rows 页大小
-	 * @param sort 排序字段
-	 * @param order 排序方式 增序:'asc',降序:'desc'
-	 * @param filters 属性过滤器
-	 * @param isOnlyNormal 是否只显示正常状态的数据
+	 * 
+	 * @param page
+	 *            第几页
+	 * @param rows
+	 *            页大小
+	 * @param sort
+	 *            排序字段
+	 * @param order
+	 *            排序方式 增序:'asc',降序:'desc'
+	 * @param filters
+	 *            属性过滤器
+	 * @param isFilterDelete
+	 *            是否过滤逻辑删除的数据
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
@@ -407,15 +430,17 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	 */
 	@Transactional(readOnly = true)
 	private Page<T> find(int page, int rows, String sort, String order,
-			List<PropertyFilter> filters,boolean isOnlyNormal) throws DaoException, SystemException,
-			ServiceException {
+			List<PropertyFilter> filters, boolean isFilterDelete)
+			throws DaoException, SystemException, ServiceException {
 		Assert.notNull(page, "参数[page]为空!");
 		Assert.notNull(rows, "参数[rows]为空!");
 		Page<T> p = new Page<T>(rows);
 		p.setPageNo(page);
-		if(isOnlyNormal){
-			PropertyFilter normal = new PropertyFilter("EQI_status", StatusState.normal.getValue()+"");
-		    filters.add(normal);
+		//过滤逻辑删除的数据
+		if (isFilterDelete) {
+			PropertyFilter normal = new PropertyFilter("NEI_status",
+					StatusState.delete.getValue() + "");
+			filters.add(normal);
 		}
 		if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
 			p.setOrder(order);
@@ -491,7 +516,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		Assert.notNull(criterions, "参数[criterions]为空!");
 		return getEntityDao().find(criterions);
 	}
-	
+
 	/**
 	 * 判断对象某些属性的值在数据库中是否唯一.
 	 * 
@@ -500,21 +525,22 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public boolean isUnique(T entity, String uniquePropertyNames)
 			throws DaoException, SystemException, ServiceException {
 		return getEntityDao().isUnique(entity, uniquePropertyNames);
 	}
-	
+
 	/**
 	 * 将PropertyFilter列表转化为Criterion数组.
+	 * 
 	 * @param filters
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Criterion[] getCriterionsByFilter(List<PropertyFilter> filters)
 			throws DaoException, SystemException, ServiceException {
 		return getEntityDao().buildCriterionByPropertyFilter(filters);
