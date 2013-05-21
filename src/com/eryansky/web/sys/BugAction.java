@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,6 +24,7 @@ import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.sys.Bug;
 import com.eryansky.service.sys.BugManager;
+import com.google.common.collect.Maps;
 
 /**
  * bug管理Action层.
@@ -199,7 +199,7 @@ public class BugAction extends StrutsAction<Bug> {
 	}
 
 	private void uploadError(String err, String msg) {
-		Map<String, Object> m = new HashMap<String, Object>();
+		Map<String, Object> m = Maps.newHashMap();
 		m.put("err", err);
 		m.put("msg", msg);
 		Struts2Utils.renderText(m);
@@ -210,9 +210,9 @@ public class BugAction extends StrutsAction<Bug> {
 	}
 
 	private void uploadSuccess(String newFileName, String fileName, int id) {
-		Map<String, Object> m = new HashMap<String, Object>();
+		Map<String, Object> m = Maps.newHashMap();
 		m.put("err", "");
-		Map<String, Object> nm = new HashMap<String, Object>();
+		Map<String, Object> nm = Maps.newHashMap();
 		nm.put("url", newFileName);
 		nm.put("localfile", fileName);
 		nm.put("id", id);

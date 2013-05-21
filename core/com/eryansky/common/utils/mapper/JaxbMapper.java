@@ -38,7 +38,7 @@ public class JaxbMapper {
 	 * Java Object->Xml without encoding.
 	 */
 	public static String toXml(Object root) {
-		Class clazz = ReflectionUtils.getUserClass(root);
+		Class clazz = ReflectionUtils.getTargetClass(root);
 		return toXml(root, clazz, null);
 	}
 
@@ -46,7 +46,7 @@ public class JaxbMapper {
 	 * Java Object->Xml with encoding.
 	 */
 	public static String toXml(Object root, String encoding) {
-		Class clazz = ReflectionUtils.getUserClass(root);
+		Class clazz = ReflectionUtils.getTargetClass(root);
 		return toXml(root, clazz, encoding);
 	}
 

@@ -18,6 +18,7 @@ import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.PropertyFilter.MatchType;
 import com.eryansky.common.utils.collections.Collections3;
+import com.eryansky.entity.base.state.StatusState;
 
 /**
  * Service层领域对象业务管理类基类.
@@ -381,6 +382,41 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		Assert.notNull(rows, "参数[rows]为空!");
 		Page<T> p = new Page<T>(rows);
 		p.setPageNo(page);
+		if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
+			p.setOrder(order);
+			p.setOrderBy(sort);
+		} else {
+			p.setOrder(Page.ASC);
+			p.setOrderBy("id");
+		}
+		return find(page, rows, sort, order, filters, false);
+	}
+	
+	/**
+	 * 过滤器分页查询.
+	 * @param page 第几页
+	 * @param rows 页大小
+	 * @param sort 排序字段
+	 * @param order 排序方式 增序:'asc',降序:'desc'
+	 * @param filters 属性过滤器
+	 * @param isOnlyNormal 是否只显示正常状态的数据
+	 * @return
+	 * @throws DaoException
+	 * @throws SystemException
+	 * @throws ServiceException
+	 */
+	@Transactional(readOnly = true)
+	private Page<T> find(int page, int rows, String sort, String order,
+			List<PropertyFilter> filters,boolean isOnlyNormal) throws DaoException, SystemException,
+			ServiceException {
+		Assert.notNull(page, "参数[page]为空!");
+		Assert.notNull(rows, "参数[rows]为空!");
+		Page<T> p = new Page<T>(rows);
+		p.setPageNo(page);
+		if(isOnlyNormal){
+			PropertyFilter normal = new PropertyFilter("EQI_status", StatusState.normal.getValue()+"");
+		    filters.add(normal);
+		}
 		if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
 			p.setOrder(order);
 			p.setOrderBy(sort);
