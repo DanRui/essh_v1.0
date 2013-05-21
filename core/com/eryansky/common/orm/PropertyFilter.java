@@ -1,7 +1,6 @@
 package com.eryansky.common.orm;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,21 +26,6 @@ public class PropertyFilter {
 	/** 属性比较类型. */
 	public enum MatchType {
 		NE,EQ, LIKE,SLIKE,ELIKE, LT, GT, LE, GE;//不等于,等于,全模糊匹配,左匹配、右匹配,小于、大于、小于等于、大于等于
-	}
-
-	/** 属性数据类型. */
-	public enum PropertyType {
-		S(String.class), I(Integer.class), L(Long.class), N(Double.class), D(Date.class), B(Boolean.class);
-
-		private Class<?> clazz;
-
-		private PropertyType(Class<?> clazz) {
-			this.clazz = clazz;
-		}
-
-		public Class<?> getValue() {
-			return clazz;
-		}
 	}
 
 	private MatchType matchType = null;
