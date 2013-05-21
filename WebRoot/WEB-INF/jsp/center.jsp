@@ -83,7 +83,7 @@ function cancel(){
 }
 </script>
 <div id="layout_center_tabs" data-options="tools:'#layout_center_tabs-tools'" style="overflow: hidden;">
-	<div title="首页" data-options="href:'${ctx}/fileRedirect.action?toPage=portal.jsp',iconCls:'icon-application'"></div>
+	<div title="首页" data-options="href:'portal.html',iconCls:'icon-application'"></div>
 </div>
 <div id="layout_center_tabsMenu" style="width: 120px;display:none;">
 	<div type="refresh" data-options="iconCls:'icon-reload'">刷新</div>
