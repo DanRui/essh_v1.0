@@ -54,7 +54,7 @@ public @interface StatusDelete {
 
 	/**
 	 * 改变值的类型
-	 * 
+	 * <br>默认值:Integer
 	 * @return {@link PropertyType}
 	 */
 	public PropertyType type() default PropertyType.I;
