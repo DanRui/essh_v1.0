@@ -19,7 +19,7 @@ function refreshCheckCode() {
 	var url = '${ctx}/servlet/ValidateCodeServlet?'+ new Date().getTime();
     $('#validateCode_img').attr('src',url); 
 }
-//登录
+// 登录
 function login() { 
 	if(loginForm.form('validate')){
 		login_linkbutton = $('#login_linkbutton').linkbutton({  
@@ -60,7 +60,7 @@ function login() {
 				    <input type="password" name="password" placeholder="请输入密码..."  class="easyui-validatebox" required="true" onkeydown="if(event.keyCode==13)login()" style="width: 200px" value="password" data-options="validType:'minLength[3]',missingMessage:'请输入密码!'" />
 				</td>
 			</tr>
-			<!-- 
+			<%-- 
 			<tr>
 				<td align="right">验证码：</td>
 				<td align="left">
@@ -69,7 +69,7 @@ function login() {
 	                <a href="javascript:void(0)" onclick="refreshCheckCode();" > 看不清,换一个</a>
 				</td>
 			</tr> 
-			 -->
+			 --%>
 			<tr>
 				<td align="center" colspan="2">
 				<a id="login_linkbutton" href="#" class="easyui-linkbutton" onclick="login()" >登录</a>

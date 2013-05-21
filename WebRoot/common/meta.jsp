@@ -10,10 +10,10 @@
 
 <link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.3/portal/portal.css">
 
-<!-- 引入jQuery -->
+<%-- 引入jQuery --%>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery-1.9.1.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery-migrate-1.2.1.min.js" charset="utf-8"></script>
-<!-- 引入bootstrap -->
+<%-- 引入bootstrap --%>
 <%-- <link href="${ctx}/js/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
 <script type="text/javascript" src="${ctx}/js/bootstrap-2.3.1/js/bootstrap.min.js" charset="utf-8"></script>
  --%>

@@ -12,21 +12,21 @@
 			<img src="${ctx}/img/noscript.gif" alt='请开启脚本支持!' />
 		</div>
 	</noscript>
-	<!-- north顶部Logo区域 -->
+	<%-- north顶部Logo区域 --%>
 	<div data-options="region:'north',border:false,split:false,href:'${ctx}/fileRedirect.action?toPage=north.jsp'"
 		style="height: 72px;overflow: hidden;">
 	</div>
 
-	<!-- west菜单栏 -->
+	<%-- west菜单栏 --%>
 	<div data-options="region:'west',title:'导航菜单',split:false,href:'${ctx}/fileRedirect.action?toPage=west.jsp'"
 		style="width: 160px;overflow: hidden;">
 	</div>
 
-	<!-- center主面板 -->
+	<%-- center主面板 --%>
 	<div data-options="region:'center',split:false,href:'${ctx}/fileRedirect.action?toPage=center.jsp'" style="overflow: hidden;">
 	</div>
 	
-	<!-- south底部 -->
+	<%-- south底部 --%>
 	<div data-options="region:'south',border:false,split:false,href:'${ctx}/fileRedirect.action?toPage=south.jsp'"
 		style="height: 20px;overflow: hidden;">
 	</div>
