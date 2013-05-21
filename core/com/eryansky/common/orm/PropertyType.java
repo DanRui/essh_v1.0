@@ -2,10 +2,11 @@ package com.eryansky.common.orm;
 import java.util.Date;
 
 /**
- * 属性数据类型
+ * 属性数据类型.
  * S代表String,I代表Integer,L代表Long, N代表Double, D代表Date,B代表Boolean
- * @author vincent
- * 
+ * @author 尔演&Eryan eryanwcp@gmail.com
+ * @date 2013-5-21 下午7:36:33 
+ * @version 1.0
  */
 public enum PropertyType {
 
