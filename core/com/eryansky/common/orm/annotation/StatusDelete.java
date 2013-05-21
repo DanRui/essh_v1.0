@@ -46,7 +46,7 @@ public @interface StatusDelete {
 
 	/**
 	 * 要改变的值
-	 * <br> 默认值:"1" 参考 com.eryansky.entity.base.state.StatusState
+	 * <br> 默认值:"1" @link StatusState
 	 * 
 	 * @return String
 	 */
