@@ -24,7 +24,6 @@ import com.eryansky.common.orm.annotation.StatusDelete;
 import com.eryansky.common.orm.core.PropertyType;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.entity.base.state.SexState;
-import com.eryansky.entity.base.state.StatusState;
 import com.eryansky.utils.AppConstants;
 import com.eryansky.utils.CacheConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -43,7 +42,7 @@ import com.google.common.collect.Lists;
 //jackson标记不生成json对象的属性 
 @JsonIgnoreProperties (value = { "hibernateLazyInitializer" ,"roles","organs"})
 //逻辑删除, 注解标记
-@StatusDelete(propertyName = "status",value = "1",type = PropertyType.I)
+@StatusDelete(propertyName = "status",type = PropertyType.I)
 public class User
         extends BaseEntity
         implements Serializable {
