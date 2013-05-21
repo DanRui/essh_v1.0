@@ -251,7 +251,7 @@ $(function() {
 	<div data-options="region:'center',split:false,border:false" 
 		style="padding: 0px; height: 100%;width:100%; overflow-y: hidden;">
 		
-		<!-- 列表右键 --%>
+		<%-- 列表右键 --%>
 		<div id="dictionaryType_menu" class="easyui-menu" style="width:120px;display: none;">
 			<div onclick="add();" data-options="iconCls:'icon-add'">新增</div>
 			<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
