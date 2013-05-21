@@ -84,7 +84,7 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 	}
 
 	/**
-	 * Action函数,新增或修改Entity. 建议return RELOAD.
+	 * Action函数,新增或修改Entity. 
 	 */
 	public String save() throws Exception {
 		try {
@@ -97,7 +97,7 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 	}
 
 	/**
-	 * Action函数,删除Entity. 建议return RELOAD.
+	 * Action函数,删除Entity. 
 	 */
 	public String delete() throws Exception {
 		try {
@@ -110,7 +110,7 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 	}
 
 	/**
-	 * Action函数,删除Entity.
+	 * Action函数,批量删除Entity.
 	 */
 	public String remove() throws Exception {
 		try {
