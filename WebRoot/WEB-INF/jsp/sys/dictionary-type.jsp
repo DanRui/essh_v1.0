@@ -247,18 +247,18 @@ $(function() {
 </script>
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
 	
-	<!-- 中间部分 列表 -->
+	<%-- 中间部分 列表 --%>
 	<div data-options="region:'center',split:false,border:false" 
 		style="padding: 0px; height: 100%;width:100%; overflow-y: hidden;">
 		
-		<!-- 列表右键 -->
+		<!-- 列表右键 --%>
 		<div id="dictionaryType_menu" class="easyui-menu" style="width:120px;display: none;">
 			<div onclick="add();" data-options="iconCls:'icon-add'">新增</div>
 			<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
 			<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
 		</div>
 		
-	   <!-- 工具栏 操作按钮 -->
+	   <%-- 工具栏 操作按钮 --%>
 	   <div id="dictionaryType_toolbar">
 			<div style="margin-bottom:5px">    
 		       <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>

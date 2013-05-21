@@ -390,7 +390,7 @@ $(function() {
 			user_datagrid.datagrid('load',eu.serializeObject(user_search_form));
 		}
 </script>
-<!-- 列表右键 -->
+<%-- 列表右键 --%>
 <div id="user_datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
     <div onclick="editUserRole();" data-options="iconCls:'icon-group'">设置角色</div>
 	<div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
@@ -398,12 +398,12 @@ $(function() {
 	<div onclick="editPassword();" data-options="iconCls:'icon-lock'">修改密码</div>
 	<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
 </div>
-<!-- easyui-layout布局 -->
+<%-- easyui-layout布局 --%>
 <div class="easyui-layout" fit="true" style="overflow: hidden;">
 	<!-- 中间部分 列表 -->
 	<div data-options="region:'center',split:true" style="overflow: hidden;">
 		    
-	   <!-- 工具栏 操作按钮 -->
+	   <%-- 工具栏 操作按钮 --%>
 	   <div id="user_datagrid-toolbar">
 	        <div style="margin-left:10px; float: left;">
 		         <form id="user_search_form" style="padding: 0px;">

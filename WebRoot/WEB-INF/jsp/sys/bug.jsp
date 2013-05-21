@@ -166,14 +166,14 @@ $(function() {
 		}
 		
 </script>
-<!-- 列表右键 -->
+<%-- 列表右键 --%>
 <div id="bug_datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
 	<div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
 	<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
 	<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
 </div>
 		
-<!-- 工具栏 操作按钮 -->
+<%-- 工具栏 操作按钮 --%>
 <div id="bug_datagrid-toolbar">
     <div style="margin-left:10px; float: left;">
         <form id="bug_search_form" style="padding: 0px;">
@@ -183,7 +183,6 @@ $(function() {
 		</form>
 	</div>
 	<div align="right">
-	    <!-- <a href="#" class="easyui-linkbutton" iconCls="icon-mini-edit" plain="true" onclick="instal()">菜单设置</a> -->
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
 		<span class="toolbar-btn-separator"></span>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
