@@ -52,7 +52,7 @@ $(function() {
 					options : {
 						url:'${ctx}/sys/dictionary-type!combobox.action',
 						required : true,
-						missingMessage:'请选择字典类型(如果不存在,可以选择新增字典类型)！',
+						missingMessage:'请选择字典类型(如果不存在,可以选择[字典类型管理]按钮,添加字典类型)！',
 						editable:false,//是否可编辑
 						valueField:'value',
 				        displayField:'text',
@@ -203,6 +203,13 @@ $(function() {
         displayField:'text'
     });
 });
+
+    //字典类型管理
+    function dictionaryType(){
+    	//parent.layout_center_tabs 指向父级layout_center_tabs选项卡(center.jsp)
+    	addTab(parent.layout_center_tabs,"字典类型管理","${ctx}/sys/dictionary-type.action",true,"icon-folder");
+    }
+    
 	//设置排序默认值
 	function setSortValue(target) {
 		$.get('${ctx}/sys/dictionary!maxSort.action', function(data) {
@@ -327,6 +334,7 @@ $(function() {
 		
 		<%-- 列表右键 --%>
 		<div id="dictionary_menu" class="easyui-menu" style="width:120px;display: none;">
+		    <div onclick="dictionaryType();" data-options="iconCls:'icon-folder'">字典类型管理</div>
 			<div onclick="add();" data-options="iconCls:'icon-add'">新增</div>
 			<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
 			<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
@@ -335,7 +343,9 @@ $(function() {
 	   <%-- 工具栏 操作按钮 --%>
 	   <div id="dictionary_toolbar">
 			<div style="margin-bottom:5px">    
-		       <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-folder" plain="true" onclick="dictionaryType()">字典类型管理</a>
+				<span class="toolbar-btn-separator"></span>
+		        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>
 				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
 				<span class="toolbar-btn-separator"></span>
