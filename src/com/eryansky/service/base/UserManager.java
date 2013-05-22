@@ -17,6 +17,7 @@ import com.eryansky.common.utils.SysConstants;
 import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.User;
+import com.eryansky.entity.base.state.StatusState;
 
 /**
  * 用户管理User Service层实现类.
@@ -51,6 +52,12 @@ public class UserManager extends EntityManager<User, Long> {
 				}
 				User user = userDao.get(id);
 				if(user != null){
+					//设置角色为空
+					user.setRoles(null);
+					//逻辑删除
+					//手工方式(此处不使用 由注解方式实现逻辑删除)
+//					user.setStatus(StatusState.delete.getValue());
+					//注解方式 由注解设置用户状态
 					userDao.delete(user);
 				}
 			}
