@@ -7,7 +7,7 @@
 [主要技术]
     后台:
     Struts2.3.8
-	Spring3.1.14
+	Spring3.1.4
 	Hibernate3.6.10
 	Jackson
 	EhCache(ehcache-spring-annotations)
