@@ -63,6 +63,10 @@
 	background:url('icons/mini_refresh.png') no-repeat center center;
 }
 /* 自定义新增图标 */
+.icon-gears
+{
+	background:url('icons/extjs_icons/gears.png') no-repeat center center;
+}
 .icon-application{
 	background:url('icons/extjs_icons/application/application.png') no-repeat center center;
 }

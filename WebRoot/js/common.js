@@ -477,6 +477,9 @@ function addTab(tabs,title,url,closeAble,iconCls){
 	if(typeof tabs == 'string'){
 		tabs = $('#'+tabs).tabs();
 	}
+	if(iconCls == 'undefined'){
+		iconCls = '';
+	}
 	//如果当前title的tab不存在则创建一个tab
 	if(!tabs.tabs('exists',title)){
 		tabs.tabs('addIframeTab',{      
