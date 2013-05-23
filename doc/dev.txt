@@ -9,7 +9,6 @@
 
 * 2013-05-22
 
-
    1.新编自定义查询PropertyFilter与QBC说明.
 
    2.doc下新加EasyUI、jQuery、JPA注解文档.
