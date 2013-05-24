@@ -103,8 +103,6 @@ public abstract class BaseEntity extends AutoEntity implements Serializable,
 
 	/**
 	 * 
-	 * @param id
-	 *            主键ID
 	 * @param status
 	 *            记录状态标志位 正常(0) 已删除(1) 待审核(2) 锁定(3)
 	 * @param updateUser
