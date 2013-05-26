@@ -9,7 +9,7 @@
     
     2.分离jQuery、EasyUI扩展，部分名称调整，小幅度重构.
     
-    3.EasyUI form方法扩展：获取表单数据 getData、启用或禁用表单是够可编辑readonly.
+    3.EasyUI form方法扩展：获取表单数据 getData、启用或禁用表单是否可编辑readonly.
     
     4.jstl jar升级.
 
