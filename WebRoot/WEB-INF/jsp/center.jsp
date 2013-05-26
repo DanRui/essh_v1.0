@@ -41,14 +41,33 @@ $(function() {
 	layout_center_tabs.tabs({
 		fit : true,
 		border : false,
-		onContextMenu : function(e, title) {
+		onContextMenu : function(e, title,index) {
 			e.preventDefault();
 			layout_center_tabsMenu.menu('show', {
 				left : e.pageX,
 				top : e.pageY
 			}).data('tabTitle', title);
-		} 
+		},
+		onAdd:function(title,index){
+			//tip标题提示
+			var tab = $(this).tabs('getTab',index).panel('options').tab;
+			tab.unbind('mouseenter').bind('mouseenter',function(e){  
+				$(this).tooltip({  
+	                position: 'top',  
+	                content: title 
+	            }).tooltip('show',e); 
+	        });
+		}
 	});
+	
+	//首页tip标题提示
+	var indexTitle = "首页";
+	layout_center_tabs.tabs('getTab',indexTitle).panel('options').tab.unbind('mouseenter').bind('mouseenter',function(e){  
+		$(this).tooltip({  
+            position: 'top',  
+            content: indexTitle 
+        }).tooltip('show',e); 
+    });
 });
 //刷新
 function refresh(selectedTab){
@@ -83,7 +102,7 @@ function cancel(){
 }
 </script>
 <div id="layout_center_tabs" data-options="tools:'#layout_center_tabs-tools'" style="overflow: hidden;">
-	<div title="首页" data-options="href:'${ctx}/fileRedirect.action?toPage=portal.jsp',iconCls:'icon-application'"></div>
+	<div id="layout_center_tabs_index" title="首页" data-options="href:'${ctx}/fileRedirect.action?toPage=portal.jsp',iconCls:'icon-application'"></div>
 </div>
 <div id="layout_center_tabsMenu" style="width: 120px;display:none;">
 	<div type="refresh" data-options="iconCls:'icon-reload'">刷新</div>
