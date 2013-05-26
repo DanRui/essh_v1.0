@@ -5,7 +5,7 @@
 
 * 2013-05-26
 
-    1.datagrid tooltip提示扩展.
+    1.datagrid tooltip提示扩展. 
     
     2.分离jQuery、EasyUI扩展，部分名称调整，小幅度重构.
     
