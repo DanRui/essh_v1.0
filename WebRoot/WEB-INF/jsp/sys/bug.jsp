@@ -16,6 +16,7 @@ $(function() {
 	    rownumbers:true,//显示行数
 	    fitColumns:true,//自适应列宽
 	    striped:true,//显示条纹
+	    nowrap : true,
 	    pageSize:10,//每页记录数
 	    sortName:'id',//默认排序字段
 		sortOrder:'asc',//默认排序方式 'desc' 'asc'
@@ -23,14 +24,10 @@ $(function() {
 		frozenColumns:[[ 
               {field:'ck',checkbox:true},
               {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
-              {field:'title',title:'bug标题',width:360,formatter:function(value,rowData,rowIndex){    
-         	      var title = eu.fs("<span title='{0}'>{1}</span>",value, value);
-         	      return title;
-                  }
-              },
+              {field:'title',title:'bug标题',width:360 },
               {field:'operater',title:'操作',align:'center',width:80,formatter:function(value,rowData,rowIndex){ 
-            	  var url = eu.fs('${ctx}/sys/bug!view.action?id={0}',rowData.id);
-         	      var title = eu.fs("<a href='javascript:addTab(window.parent.layout_center_tabs, \"{0}\",\"{1}\", true)' title='{2}'>{3}</a>",rowData.title,url,'查看', '查看');
+            	  var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
+         	      var title = $.formatString("<a href='javascript:eu.addTab(window.parent.layout_center_tabs, \"{0}\",\"{1}\", true)' >{2}</a>",rowData.title,url,'查看');
          	      return title;
               }}
 		    ]],
@@ -40,6 +37,8 @@ $(function() {
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
 	    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
+	    	//鼠标移动提示列表信息tooltip
+			$(this).datagrid('showTooltip');
 		},
 	    onRowContextMenu : function(e, rowIndex, rowData) {
 			e.preventDefault();
@@ -66,7 +65,7 @@ $(function() {
 					if (json.code ==1){
 						bug_dialog.dialog('destroy');//销毁对话框 
 						bug_datagrid.datagrid('reload');//重新加载列表数据
-						showMsg(json.msg);//操作结果提示
+						eu.showMsg(json.msg);//操作结果提示
 					}else if(json.code == 2){
 						$.messager.alert('提示信息！', json.msg, 'warning',function(){
 							if(json.obj){
@@ -74,7 +73,7 @@ $(function() {
 							}
 						});
 					}else {
-						showAlertMsg(json.msg,'error');
+						eu.showAlertMsg(json.msg,'error');
 					}
 				}
 			});
@@ -125,11 +124,11 @@ $(function() {
 			if (row){
 				if(rows.length>1){
 					row = rows[rows.length-1];
-					showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+					eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
 				}
 				showDialog(row);
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		
@@ -147,22 +146,22 @@ $(function() {
 						$.post('${ctx}/sys/bug!remove.action',{ids:ids},function(data){
 							if (data.code==1){
 								bug_datagrid.datagrid('load');	// reload the user data
-								showMsg(data.msg);//操作结果提示
+								eu.showMsg(data.msg);//操作结果提示
 							} else {
-								showAlertMsg(data.msg,'error');
+								eu.showAlertMsg(data.msg,'error');
 							}
 						},'json');      
 						
 					}
 				});
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		
 		//搜索
 		function search(){
-			bug_datagrid.datagrid('load',eu.serializeObject(bug_search_form));
+			bug_datagrid.datagrid('load',$.serializeObject(bug_search_form));
 		}
 		
 </script>

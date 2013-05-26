@@ -23,13 +23,16 @@ $(function() {
 			field : 'loginName',
 			width : 100,
 			formatter : function(value, rowData, rowIndex) {
-				var title = eu.fs('登录名:{0},登录IP:{1},登录时间:{2}.', value, rowData.ip,rowData.loginTime);
-				return eu.fs('<span title="{0}">{1}</span>', title, value);
+				var title = $.formatString('登录名:{0},登录IP:{1},登录时间:{2}.', value, rowData.ip,rowData.loginTime);
+				return $.formatString('<span title="{0}" class="easyui-tooltip">{1}</span>', title, value);
 			}
 		},{
 			title : '登录时间',
 			field : 'loginTime',
-			width : 100
+			width : 100,
+			formatter:function(value, rowData, rowIndex){
+				return value.substring(5,value.length);
+			}
 		}
 		] ],
 		onClickRow : function(rowIndex, rowData) {
@@ -43,16 +46,18 @@ $(function() {
 				afterPageText : '{pages}',
 				displayMsg : ''
 			});
+			//鼠标移动提示列表信息tooltip
+			$(this).datagrid('showTooltip',{fields:['loginTime']});
+			//用于解析列表tooltip提示样式
+			$.parser.parse(); 
 		}
 	});
 	
-	
-	$.parser.parse(); 
 	$('#layout_east_onlinePanel').panel({
 		tools : [ {
 			iconCls : 'icon-reload',
 			handler : function() {
-				$('#layout_east_onlineDatagrid').datagrid('load', {});
+				$('#layout_east_onlineDatagrid').datagrid('load');
 			}
 		} ]
 	});

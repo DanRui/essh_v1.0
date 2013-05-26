@@ -64,7 +64,7 @@ $(function() {
             {field:'roleNames',title:'关联角色',width:200,
             	formatter:function(value,rowData,rowIndex){
             		if(isSuperOwner(rowData.id)){
-            			return eu.fs('<span  style="color:red">{0}</span>','超级管理员(无需设置角色)');
+            			return $.formatString('<span  style="color:red">{0}</span>','超级管理员(无需设置角色)');
             		}
             		return value;
         		}
@@ -72,7 +72,7 @@ $(function() {
 	        {field:'loginName',title:'登录名',width:100,sortable:true,
             	formatter:function(value,rowData,rowIndex){
             		if(isSuperOwner(rowData.id)){
-            			return eu.fs('<span  style="color:red">{0}</span>',value);
+            			return $.formatString('<span  style="color:red">{0}</span>',value);
             		}
             		return value;
         		}
@@ -100,7 +100,7 @@ $(function() {
 	        		if(value == 0){
         				return '启用';
         			}else if(value == 3){
-        				return eu.fs('<span style="color:red">{0}<span>','停用');
+        				return $.formatString('<span style="color:red">{0}<span>','停用');
         			}
 			}}
 	    ]],
@@ -132,7 +132,7 @@ $(function() {
 					if (json.code ==1){
 						user_dialog.dialog('destroy');//销毁对话框 
 						user_datagrid.datagrid('reload');//重新加载列表数据
-						showMsg(json.msg);//操作结果提示
+						eu.showMsg(json.msg);//操作结果提示
 					}else if(json.code == 2){
 						$.messager.alert('提示信息！', json.msg, 'warning',function(){
 							if(json.obj){
@@ -140,7 +140,7 @@ $(function() {
 							}
 						});
 					}else {
-						showAlertMsg(json.msg,'error');
+						eu.showAlertMsg(json.msg,'error');
 					}
 				}
 			});
@@ -199,17 +199,17 @@ $(function() {
 			if (row){
 				if(rows.length>1){
 					row = rows[rows.length-1];
-					showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+					eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
 				}
 				//判断是否允许操作
 				if(isOpeated(row.id) == false){
-					showMsg("超级管理员用户信息不允许被其他人修改！");
+					eu.showMsg("超级管理员用户信息不允许被其他人修改！");
 					return;
 				}
 				
 				showDialog(row);
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		//初始化修改密码表单 
@@ -225,9 +225,9 @@ $(function() {
 					if (json.code == 1){
 						user_password_dialog.dialog('destroy');//销毁对话框 
 						user_datagrid.datagrid('reload');	// reload the user data
-						showMsg(json.msg);//操作结果提示
+						eu.showMsg(json.msg);//操作结果提示
 					}else {
-						showAlertMsg(json.msg,'error');
+						eu.showAlertMsg(json.msg,'error');
 					}
 				}
 			});
@@ -241,11 +241,11 @@ $(function() {
 			var row = user_datagrid.datagrid('getSelected');
 			if (row){
 				if(rows.length>1){
-					showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+					eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
 				}
 				//判断是否允许操作
 				if(isOpeated(row.id) == false){
-					showMsg("超级管理员用户信息不允许被其他人修改！");
+					eu.showMsg("超级管理员用户信息不允许被其他人修改！");
 					return;
 				}
 				
@@ -279,7 +279,7 @@ $(function() {
 				}).dialog('open');
 				
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		
@@ -295,9 +295,9 @@ $(function() {
 					if (json.code == 1){
 						user_role_dialog.dialog('destroy');//销毁对话框 
 						user_datagrid.datagrid('reload');	// reload the user data
-						showMsg(json.msg);//操作结果提示
+						eu.showMsg(json.msg);//操作结果提示
 					}else {
-						showAlertMsg(json.msg,'error');
+						eu.showAlertMsg(json.msg,'error');
 					}
 				}
 			});
@@ -311,16 +311,16 @@ $(function() {
 			var row = user_datagrid.datagrid('getSelected');
 			if (row){
 				if(rows.length>1){
-					showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+					eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
 				}
 				//判断是否允许操作
 				if(isOpeated(row.id) == false){
-					showMsg("超级管理员用户信息不允许被其他人修改！");
+					eu.showMsg("超级管理员用户信息不允许被其他人修改！");
 					return;
 				}
 				//判断是否允许操作
 				if(row.id == 1){
-					showMsg("超级管理员无需设置角色！");
+					eu.showMsg("超级管理员无需设置角色！");
 					return;
 				}
 				//弹出对话窗口
@@ -354,7 +354,7 @@ $(function() {
 				}).dialog('open');
 				
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		
@@ -372,22 +372,22 @@ $(function() {
 						$.post('${ctx}/base/user!remove.action',{ids:ids},function(data){
 							if (data.code==1){
 								user_datagrid.datagrid('load');	// reload the user data
-								showMsg(data.msg);//操作结果提示
+								eu.showMsg(data.msg);//操作结果提示
 							} else {
-								showAlertMsg(data.msg,'error');
+								eu.showAlertMsg(data.msg,'error');
 							}
 						},'json');      
 						
 					}
 				});
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		
 		//搜索
 		function search(){
-			user_datagrid.datagrid('load',eu.serializeObject(user_search_form));
+			user_datagrid.datagrid('load',$.serializeObject(user_search_form));
 		}
 </script>
 <%-- 列表右键 --%>

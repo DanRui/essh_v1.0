@@ -54,7 +54,7 @@ $(function() {
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80}, 
             {field:'ico',title:'菜单图标',width:60,align:'center',formatter:function(value,rowData,rowIndex){    
 	            	// return "<span class='tree-icon tree-file " + row+"' ></span> ";
-	            	return eu.fs('<span class="tree-icon tree-file {0}"></span>', value);
+	            	return $.formatString('<span class="tree-icon tree-file {0}"></span>', value);
 		           // return "<div style='text-align:center;'><img src='${ctx}/img/menu/"+value +"' border='0' width='20px' height='20px'></div>";
 	            }
             },
@@ -75,6 +75,8 @@ $(function() {
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
 	    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
+	    	//鼠标移动提示列表信息tooltip
+			$(this).datagrid('showTooltip');
 		},
 	    onRowContextMenu : function(e, rowIndex, rowData) {
 			e.preventDefault();
@@ -110,7 +112,7 @@ $(function() {
 						menu_dialog.dialog('destroy');//销毁对话框 
 						menu_tree.tree('reload'); //重新加载树
 						menu_datagrid.datagrid('reload');//重新加载列表数据
-						showMsg(json.msg);//操作结果提示
+						eu.showMsg(json.msg);//操作结果提示
 					}else if(json.code == 2){
 						$.messager.alert('提示信息！', json.msg, 'warning',function(){
 							if(json.obj){
@@ -118,7 +120,7 @@ $(function() {
 							}
 						});
 					}else {
-						showAlertMsg(json.msg,'error');
+						eu.showAlertMsg(json.msg,'error');
 					}
 				}
 			});
@@ -126,8 +128,8 @@ $(function() {
 		//显示弹出窗口 新增：row为空 编辑:row有值 
 		function showDialog(row){
 			//弹出对话窗口
-			menu_dialog = $('<div/>').dialog({//基于父对象的对话框(全屏遮罩的效果)
-			//menu_dialog = $('<div/>').dialog({//基于中心面板
+			//menu_dialog = parent.$('<div/>').dialog({//基于父对象的对话框(全屏遮罩的效果)
+			menu_dialog = $('<div/>').dialog({//基于中心面板
 				title:'菜单详细信息',
 				width : 500,
 				height : 360,
@@ -158,7 +160,7 @@ $(function() {
 						$("input[name=status]:eq(0)").attr("checked",'checked');//状态 初始化值
 						setSortValue();
 					}
-					
+					menu_form.form('readonly');
 				}
 			}).dialog('open');
 		}
@@ -172,11 +174,11 @@ $(function() {
 			if (row){
 				if(rows.length>1){
 					row = rows[rows.length-1];
-					showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+					eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
 				}
 				showDialog(row);
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		//删除
@@ -193,16 +195,16 @@ $(function() {
 							if (data.code==1){
 								menu_tree.tree('reload');  //重新加载树
 								menu_datagrid.datagrid('load');//重新加载列表数据
-								showMsg(data.msg);//操作结果提示
+								eu.showMsg(data.msg);//操作结果提示
 							} else {
-								showAlertMsg(data.msg,'error');
+								eu.showAlertMsg(data.msg,'error');
 							}
 						},'json');      
 						
 					}
 				});
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		
@@ -215,7 +217,7 @@ $(function() {
         		id = node.id; //搜索 id:主键 即是通过左边菜单树点击得到搜索结果
         	}
         	//将整个表单的数据作为查询条件 
-        	//menu_datagrid.datagrid('load',eu.serializeObject(menu_search_form));
+        	//menu_datagrid.datagrid('load',$.serializeObject(menu_search_form));
         	menu_datagrid.datagrid('load',{filter_EQL_id_OR_parentMenu__id:id,filter_LIKES_name:name});
 		}
 </script>

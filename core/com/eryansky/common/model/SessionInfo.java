@@ -188,7 +188,7 @@ public class SessionInfo implements java.io.Serializable {
 	 * 登录时间
 	 */
 	// 设定JSON序列化时的日期格式
-	@JsonFormat(pattern = "MM-dd HH:mm:ss", timezone = "GMT+08:00")
+	@JsonFormat(pattern = BaseEntity.DATE_TIME_FORMAT, timezone = "GMT+08:00")
 	public Date getLoginTime() {
 		return loginTime;
 	}

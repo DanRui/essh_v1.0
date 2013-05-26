@@ -37,7 +37,7 @@ function showAbout(){
 			var json = eval('('+ data+')');  
 			if (json.code == 1){
 				login_about_dialog.dialog('close');	
-				showMsg(json.msg);//操作结果提示
+				eu.showMsg(json.msg);//操作结果提示
 			} else if(json.code == 2){
 				$.messager.alert('提示信息！', json.msg, 'warning',function(){
 					var userId = $('#login_password_form_id').val();
@@ -48,7 +48,7 @@ function showAbout(){
 					}
 				});
 			}else {
-				showAlertMsg(json.msg,'error');
+				eu.showAlertMsg(json.msg,'error');
 			}
 		}
 	});
@@ -94,17 +94,16 @@ function logout() {
 </script>
 <div style="background-image: url('${ctx}/img/top_bg.png'); background-repeat: repeat-x;">
     <div style="float: left: ;">
-	    <img alt="essh" title="永远的小女儿" src="${ctx}/img/essh_logo.png">
+	    <img alt="essh" title="永远的小女儿" class="easyui-tooltip" data-options="position:'right'" src="${ctx}/img/essh_logo.png">
 	</div>
 	<div style="float: right; position: absolute; bottom: 20px; right: 10px">
 	    <div style="text-align: right;">您好,<span style="color: red;">${user.loginName}</span>[${user.roleNames}] 欢迎您！</div>
 		<a href="javascript:void(0);" class="easyui-menubutton" menu="#layout_north_pfMenu" iconCls="icon-user_red">更换皮肤</a> 
 		<div id="layout_north_pfMenu" style="width: 120px; display: none;">
-			<div onclick="eu.changeTheme('default');">默认</div>
+			<div onclick="eu.changeTheme('bootstrap');">bootstrap</div>
+			<div onclick="eu.changeTheme('default');">蓝色</div>
 			<div onclick="eu.changeTheme('gray');">灰色</div>
 			<div onclick="eu.changeTheme('black');">黑色</div>
-			<div class="menu-sep"></div>
-			<div onclick="eu.changeTheme('bootstrap');">bootstrap</div>
 			<div onclick="eu.changeTheme('metro');">metro</div>
 		</div>
 	

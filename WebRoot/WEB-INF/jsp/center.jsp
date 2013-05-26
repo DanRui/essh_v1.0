@@ -78,7 +78,7 @@ function cancel(){
 	if (tab.panel('options').closable) {
 		layout_center_tabs.tabs('close', index);
 	} else {
-		showAlertMsg('[' + tab.panel('options').title + ']不可以被关闭.', 'error');
+		eu.showAlertMsg('[' + tab.panel('options').title + ']不可以被关闭.', 'error');
 	}
 }
 </script>

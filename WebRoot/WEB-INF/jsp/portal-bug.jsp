@@ -16,12 +16,16 @@ $(function() {
 		idField : 'id',
 		frozenColumns:[[ 
               {field:'title',title:'bug标题',width:800,formatter:function(value,rowData,rowIndex){  
-            	     var url = eu.fs('${ctx}/sys/bug!view.action?id={0}',rowData.id);
-            	     var title = eu.fs("<a href='javascript:addTab(window.parent.layout_center_tabs, \"{0}\",\"{1}\", true)' title='{2}'>{3}</a>",value,url,value, value);
+            	     var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
+            	     var title = $.formatString("<a href='javascript:eu.addTab(window.parent.layout_center_tabs, \"{0}\",\"{1}\", true)' >{2}</a>",value,url, value);
             	     return title;
                   }
               }
-		    ]]
+		]],
+	    onLoadSuccess:function(){
+	    	//鼠标移动提示列表信息tooltip
+			$(this).datagrid('showTooltip');
+		}
 	});
 	
 });

@@ -74,7 +74,7 @@ $(function() {
 			} ] ],
 			onDblClickRow : function(rowIndex, rowData) {
 				if (editRow != undefined) {
-					showMsg("请先保存正在编辑的数据！");
+					eu.showMsg("请先保存正在编辑的数据！");
 					//结束编辑 自动保存
 					//dictionaryType_datagrid.datagrid('endEdit', editRow);
 				}else{
@@ -98,7 +98,7 @@ $(function() {
 						editRow = undefined;
 						editRowData = undefined;
 						dictionaryType_datagrid.datagrid('reload');
-						showMsg(data.msg);
+						eu.showMsg(data.msg);
 					}else if((data.code == 2)){//警告信息
 						$.messager.alert('提示信息！', data.msg, 'warning',function(){
 							dictionaryType_datagrid.datagrid('beginEdit', editRow);
@@ -110,7 +110,7 @@ $(function() {
 					} else {
 						dictionaryType_datagrid.datagrid('rejectChanges');
 						dictionaryType_datagrid.datagrid('beginEdit', editRow);
-						showAlertMsg(data.msg, 'error');
+						eu.showAlertMsg(data.msg, 'error');
 					}
 			    }, 'json');
 			},
@@ -143,7 +143,7 @@ $(function() {
 	//新增
 	function add() {
 		if (editRow != undefined) {
-			//showMsg("请先保存正在编辑的数据！");
+			//eu.showMsg("请先保存正在编辑的数据！");
 			dictionaryType_datagrid.datagrid('endEdit', editRow);
 		}else{
 			cancelSelect();
@@ -167,10 +167,10 @@ $(function() {
 		if (row){
 			if(rows.length>1){
 				row = rows[rows.length-1];
-				showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+				eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
 			}
 			if (editRow != undefined) {
-				showMsg("请先保存正在编辑的数据！");
+				eu.showMsg("请先保存正在编辑的数据！");
 				//结束编辑 自动保存
 				//dictionaryType_datagrid.datagrid('endEdit', editRow);
 			} else {
@@ -180,9 +180,9 @@ $(function() {
 			}
 		}else  {
 			if(editRow != undefined){
-				showMsg("请先保存正在编辑的数据！");
+				eu.showMsg("请先保存正在编辑的数据！");
 			} else{
-			    showMsg("请选择要操作的对象！");
+			    eu.showMsg("请选择要操作的对象！");
 			}
 		}
 	}
@@ -193,7 +193,7 @@ $(function() {
 			//结束编辑 自动保存
 			dictionaryType_datagrid.datagrid('endEdit', editRow);
 		} else {
-			showMsg("请选择要操作的对象！");
+			eu.showMsg("请选择要操作的对象！");
 		}
 	}
 	
@@ -214,7 +214,7 @@ $(function() {
 		var rows = dictionaryType_datagrid.datagrid('getSelections');
 		if (rows.length > 0) {
 			if(editRow != undefined){
-				showMsg("请先保存正在编辑的数据！");
+				eu.showMsg("请先保存正在编辑的数据！");
 				return;
 			}
 			$.messager.confirm('确认提示！', '您确定要删除当前选中的所有行？', function(r) {
@@ -228,21 +228,21 @@ $(function() {
 								if (data.code == 1) {
 									dictionaryType_datagrid.datagrid('clearSelections');//取消所有的已选择项
 									dictionaryType_datagrid.datagrid('load');//重新加载列表数据
-									showMsg(data.msg);//操作结果提示
+									eu.showMsg(data.msg);//操作结果提示
 								} else {
-									showAlertMsg(data.msg,'error');
+									eu.showAlertMsg(data.msg,'error');
 								}
 				    }, 'json');
 				}
 			});
 		} else {
-			showMsg("请选择要操作的对象！");
+			eu.showMsg("请选择要操作的对象！");
 		}
 	}
 
 	//搜索
 	function search() {
-		dictionaryType_datagrid.datagrid('load',eu.serializeObject(dictionaryType_search_form));
+		dictionaryType_datagrid.datagrid('load',$.serializeObject(dictionaryType_search_form));
 	}
 </script>
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">

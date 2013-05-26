@@ -12,7 +12,7 @@
     	    $.each(data, function(i, n) {
     			var menulist = "<div class='easyui-panel' data-options='fit:true,border:false' style='overflow-y:auto;overflow-X: hidden;'><ul>";
     	        $.each(n.children, function(j, o) {//依赖于center界面选项卡layout_center_tabs对象
-    	        	menulist += "<li><div><strong><a onClick='javascript:addTab(layout_center_tabs,\""
+    	        	menulist += "<li><div><strong><a onClick='javascript:eu.addTab(layout_center_tabs,\""
         			    + o.text+"\",\"${ctx}" + o.attributes.url+ "\",true,\""+o.iconCls+"\")' style='font-size:14px;' > <span class='tree-icon tree-file "+o.iconCls+"'></span>" + o.text + "</a></strong></div></li> ";
     	        });
     	        menulist += '</ul></div>';
