@@ -160,7 +160,6 @@ $(function() {
 						$("input[name=status]:eq(0)").attr("checked",'checked');//状态 初始化值
 						setSortValue();
 					}
-					menu_form.form('readonly');
 				}
 			}).dialog('open');
 		}
