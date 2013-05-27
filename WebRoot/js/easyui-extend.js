@@ -139,116 +139,71 @@ eu.unSelected = function(id,rowIndex,rowData){
 }
 
 /**
- * 禁用表单(easyui表单输入框需要ID).
- * input[text、checkbox、radio] textarea、select
- * combo、combobox、combotree、combogrid、datebox、datetimebox、numberbox、slider、numberspinner
- * @param formId 表单ID
+ * combo方法扩展 禁止手工改变输入框的值
+ * 启用或禁用文本域
  */
-eu.formReadonly = function(formId){
-	$('#' + formId + ' input[type="text"],input[type="checkbox"],input[type="radio"],textarea,select').attr("disabled", "true");
-	$('#' + formId + ' .easyui-combo').each(function(){
-        if (this.id) {
-	        $("#" + this.id).combo('disable');	
-		}
-	});
-	$('#' + formId + ' .easyui-combobox').each(function(){
-		if (this.id) { 
-			$("#" + this.id).combobox('disable');
-		}
-	});
-	$('#' + formId + ' .easyui-combotree').each(function(){
-        if (this.id) {
-	        $("#" + this.id).combotree('disable');	
-		}
-	});
-	$('#' + formId + ' .easyui-combogrid').each(function(){
-        if (this.id) {
-	        $("#" + this.id).combogrid('disable');	
-		}
-	});
-	$('#' + formId + ' .easyui-datebox').each(function(){
-		if (this.id) {
-			$("#" + this.id).datebox('disable');
-		}
-	});
-	$('#' + formId + ' .easyui-datetimebox').each(function(){
-        if (this.id) {
-	        $("#" + this.id).datetimebox('disable');	
-		}
-	});
-	
-	$('#' + formId + ' .easyui-numberbox').each(function(){
-        if (this.id) {
-	        $("#" + this.id).numberbox('disable');	
-		}
-	});
-	$('#' + formId + ' .easyui-slider').each(function(){
-        if (this.id) {
-	        $("#" + this.id).slider('disable');	
-		}
-	});
-	$('#' + formId + ' .easyui-numberspinner').each(function(){
-        if (this.id) {
-	        $("#" + this.id).numberspinner('disable');	
-		}
-	});
-}
-
-/**
- * 启用表单(easyui表单输入框需要ID).
- * input[text、checkbox、radio] textarea、select
- * combo、combobox、combotree、combogrid、datebox、datetimebox、numberbox、slider、numberspinner
- * @param formId 表单ID
- */
-eu.formUnReadonly = function(formId){
-	$('#' + formId + ' input[type="text"],input[type="checkbox"],input[type="radio"],textarea,select').attr("enable", "true");
-	$('#' + formId + ' .easyui-combo').each(function(){
-        if (this.id) {
-	        $("#" + this.id).combo('enable');	
-		}
-	});
-	$('#' + formId + ' .easyui-combobox').each(function(){
-		if (this.id) { 
-			$("#" + this.id).combobox('enable');
-		}
-	});
-	$('#' + formId + ' .easyui-combotree').each(function(){
-        if (this.id) {
-	        $("#" + this.id).combotree('enable');	
-		}
-	});
-	$('#' + formId + ' .easyui-combogrid').each(function(){
-        if (this.id) {
-	        $("#" + this.id).combogrid('enable');	
-		}
-	});
-	$('#' + formId + ' .easyui-datebox').each(function(){
-		if (this.id) {
-			$("#" + this.id).datebox('enable');
-		}
-	});
-	$('#' + formId + ' .easyui-datetimebox').each(function(){
-        if (this.id) {
-	        $("#" + this.id).datetimebox('enable');	
-		}
-	});
-	
-	$('#' + formId + ' .easyui-numberbox').each(function(){
-        if (this.id) {
-	        $("#" + this.id).numberbox('enable');	
-		}
-	});
-	$('#' + formId + ' .easyui-slider').each(function(){
-        if (this.id) {
-	        $("#" + this.id).slider('enable');	
-		}
-	});
-	$('#' + formId + ' .easyui-numberspinner').each(function(){
-        if (this.id) {
-	        $("#" + this.id).numberspinner('enable');	
-		}
-	});
-}
+$.extend($.fn.combo.methods, {
+	/**
+	 * 禁用combo文本域
+	 * @param {Object} jq
+	 * @param {Object} param stopArrowFocus:是否阻止点击下拉按钮时foucs文本域
+	 * stoptype:禁用类型，包含disable和readOnly两种方式
+	 */
+	disableTextbox : function(jq, param) {
+		return jq.each(function() {
+			param = param || {};
+			var textbox = $(this).combo("textbox");
+			var that = this;
+			var panel = $(this).combo("panel");
+			var data = $(this).data('combo');
+			if (param.stopArrowFocus) {
+				data.stopArrowFocus = param.stopArrowFocus;
+				var arrowbox = $.data(this, 'combo').combo.find('span.combo-arrow');
+				arrowbox.unbind('click.combo').bind('click.combo', function() {
+					if (panel.is(":visible")) {
+						$(that).combo('hidePanel');
+					} else {
+						$("div.combo-panel").panel("close");
+						$(that).combo('showPanel');
+					}
+				});
+				textbox.unbind('mousedown.mycombo').bind('mousedown.mycombo', function(e) {
+						e.preventDefault();
+				});
+			}
+			textbox.prop(param.stoptype?param.stoptype:'disabled', true);
+			data.stoptype = param.stoptype?param.stoptype:'disabled';
+		});
+	},
+	/**
+	 * 还原文本域
+	 * @param {Object} jq
+	 */
+	enableTextbox : function(jq) {
+		return jq.each(function() {
+			var textbox = $(this).combo("textbox");
+			var data = $(this).data('combo');
+			if (data.stopArrowFocus) {
+				var that = this;
+				var panel = $(this).combo("panel");
+				var arrowbox = $.data(this, 'combo').combo.find('span.combo-arrow');
+				arrowbox.unbind('click.combo').bind('click.combo', function() {
+					if (panel.is(":visible")) {
+						$(that).combo('hidePanel');
+					} else {
+						$("div.combo-panel").panel("close");
+						$(that).combo('showPanel');
+					}
+					textbox.focus();
+				});
+				textbox.unbind('mousedown.mycombo');
+				data.stopArrowFocus = null;
+			}
+			textbox.prop(data.stoptype, false);
+			data.stoptype = null;
+		});
+	}
+});
 
 /**
  * EasyUI from方法扩展
@@ -285,19 +240,43 @@ $.extend($.fn.form.methods, {
     },
     /**
      * 将form表单 启用/禁用
-     * $('#fm').form('readonly');		 // 禁用
-     * $('#fm').form('readonly', true);	 // 禁用
-     * $('#fm').form('readonly', false); // 启用
+     * $('#fm').form('disable', true);	 // 禁用
+     * $('#fm').form('disable', false); // 启用
      * @param jq
-     * @param params
+     * @param isDisabled 是否禁用（禁用 true 启用 false）
      */
-    readonly:function(jq, params){
+    disable:function(jq, isDisabled){
     	var formId = jq.attr('id');
-    	if(params === false){
-    		eu.formUnReadonly(formId);
-    	}else{
-    		eu.formReadonly(formId);
-    	}
+    	var attr="disable";  
+        if(!isDisabled){  
+           attr="enable";  
+        }  
+        $("form[id='"+formId+"'] :text").attr("disabled",isDisabled);  
+        $("form[id='"+formId+"'] textarea").attr("disabled",isDisabled);  
+        $("form[id='"+formId+"'] select").attr("disabled",isDisabled);  
+        $("form[id='"+formId+"'] :radio").attr("disabled",isDisabled);  
+        $("form[id='"+formId+"'] :checkbox").attr("disabled",isDisabled);  
+          
+        //禁用jquery easyui中的下拉选（使用input生成的combox）  
+        $("#" + formId + " input[class='combobox-f combo-f']").each(function () {  
+            if (this.id) {alert("input"+this.id);  
+                $("#" + this.id).combobox(attr);  
+            }  
+        });  
+        //禁用jquery easyui中的下拉选（使用select生成的combox）  
+        $("#" + formId + " select[class='combobox-f combo-f']").each(function () {  
+            if (this.id) {  
+            alert(this.id);  
+                $("#" + this.id).combobox(attr);  
+            }  
+        });  
+        //禁用jquery easyui中的日期组件dataBox  
+        $("#" + formId + " input[class='datebox-f combo-f']").each(function () {  
+            if (this.id) {  
+            alert(this.id)  
+                $("#" + this.id).datebox(attr);  
+            }  
+        });  
     }
 });
 
@@ -311,7 +290,6 @@ $.extend($.fn.form.methods, {
  * iframe.width	string	框架标签iframe的宽度，默认值为'100%'
  * iframe.frameBorder	number	框架标签iframe的边框宽度，默认值为0
  * iframe.message	string	加载中效果显示的消息，默认值为'页面加载中...'
- * update object 该参数是是否刷新,传递该参数表示是刷新tab
  * which string/number 更新方法updateIframeTab tab标题或索引号
  */ 
 $.extend($.fn.tabs.methods, {   
