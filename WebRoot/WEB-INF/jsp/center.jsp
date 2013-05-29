@@ -38,6 +38,8 @@ $(function() {
 		}
 	});
 
+	//活动中的tip消息
+	var activeTip;
 	layout_center_tabs.tabs({
 		fit : true,
 		border : false,
@@ -52,11 +54,16 @@ $(function() {
 			//tip标题提示
 			var tab = $(this).tabs('getTab',index).panel('options').tab;
 			tab.unbind('mouseenter').bind('mouseenter',function(e){  
-				$(this).tooltip({  
+				activeTip = $(this).tooltip({  
 	                position: 'top',  
 	                content: title 
 	            }).tooltip('show',e); 
 	        });
+		},
+		onBeforeClose:function(title,index){
+			if(activeTip){
+				activeTip.tooltip('destroy'); 
+			}
 		}
 	});
 	
