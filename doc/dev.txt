@@ -3,9 +3,14 @@
                                   2013-05-11
 ×××××××××××××××××××××××××××××××××××××××××××××××××××××××
 
+* 2013-05-29
+
+	1. tab关闭选项面板 tip提示不会自动消失修正.
+
+
 * 2013-05-27
 
-	1.form 是否可用扩展disable.
+	1.form 是否可用disable扩展.
 	
 	2.combo是否可用文本域方法扩展disableTextbox、enableTextbox.
 	
@@ -17,7 +22,7 @@
     
     2.分离jQuery、EasyUI扩展，部分名称调整，小幅度重构.
     
-    3.EasyUI form方法扩展：获取表单数据 getData、启用或禁用表单是否可编辑readonly.
+    3.EasyUI form方法扩展：获取表单数据 getData.
     
     4.jstl jar升级.
 
