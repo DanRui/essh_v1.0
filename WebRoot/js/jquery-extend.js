@@ -260,3 +260,16 @@ $.random4 = function() {
 $.UUID = function() {
 	return (eu.random4() + eu.random4() + "-" + eu.random4() + "-" + eu.random4() + "-" + eu.random4() + "-" + eu.random4() + eu.random4() + eu.random4());
 };
+
+/**
+ * 扩展js 去字符串空格
+ */
+String.prototype.trim = function() {
+	return this.replace(/(^\s*)|(\s*$)/g, '');
+};
+String.prototype.ltrim = function() {
+	return this.replace(/(^\s*)/g, '');
+};
+String.prototype.rtrim = function() {
+	return this.replace(/(\s*$)/g, '');
+};

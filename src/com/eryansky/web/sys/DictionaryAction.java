@@ -6,9 +6,13 @@ import org.apache.commons.collections.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.eryansky.common.model.Combobox;
+import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.Result;
 import com.eryansky.common.model.TreeNode;
+import com.eryansky.common.orm.Page;
+import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.hibernate.EntityManager;
+import com.eryansky.common.orm.hibernate.HibernateWebUtils;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
@@ -31,6 +35,10 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 	private DictionaryManager dictionaryManager;
 	@Autowired
 	private DictionaryTypeManager dictionaryTypeManager;
+	/**
+	 * 数据字典类型.
+	 */
+	private String dictionaryTypeCode;
 
 	@Override
 	public EntityManager<Dictionary, Long> getEntityManager() {
@@ -88,8 +96,7 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 		}
 		return null;
 	}
-
-
+	
 	/**
 	 * 在combotree()前执行二次绑定.
 	 * @throws Exception
@@ -143,7 +150,7 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 			}
 
 			List<Combobox> cList = dictionaryManager
-					.getByDictionaryTypeCode(model.getDictionaryTypeCode());
+					.getByDictionaryTypeCode(dictionaryTypeCode);
 			List<Combobox> unionList = ListUtils.union(titleList, cList);
 			Struts2Utils.renderJson(unionList);
 		} catch (Exception e) {
@@ -163,4 +170,10 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 			throw e;
 		}
 	}
+
+	public void setDictionaryTypeCode(String dictionaryTypeCode) {
+		this.dictionaryTypeCode = dictionaryTypeCode;
+	}
+	
+	
 }

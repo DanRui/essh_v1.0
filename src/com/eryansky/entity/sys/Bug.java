@@ -3,6 +3,7 @@ package com.eryansky.entity.sys;
 import java.io.Serializable;
 import java.sql.Clob;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -12,7 +13,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.eryansky.common.model.BaseEntity;
 import com.eryansky.common.utils.io.ClobUtil;
 import com.eryansky.common.utils.jackson.ClobSerializer;
-import com.eryansky.common.utils.mapper.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -27,6 +27,15 @@ public class Bug extends BaseEntity implements Serializable{
 	 * bug标题.
 	 */
 	private String title;
+	/**
+	 * bug类型 使用数据字典
+	 */
+    private String type;
+    /**
+     * bug类型名称 @Transient
+     */
+    private String typeName;
+    
 	/**
 	 * bug描述.
 	 */
@@ -50,6 +59,24 @@ public class Bug extends BaseEntity implements Serializable{
 		this.title = title;
 	}
 
+	@Column(length = 36)
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Transient
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
 	/**
 	 * bug内容.
 	 */
@@ -64,6 +91,10 @@ public class Bug extends BaseEntity implements Serializable{
 		this.content = content;
 	}
 	
+	/**
+	 * 用于view显示
+	 * @return
+	 */
 	@Transient
 	public String getTContent() {
 		return ClobUtil.getString(content);

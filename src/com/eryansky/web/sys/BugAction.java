@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,13 +18,19 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 
+import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.Result;
+import com.eryansky.common.orm.Page;
+import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.hibernate.EntityManager;
+import com.eryansky.common.orm.hibernate.HibernateWebUtils;
 import com.eryansky.common.utils.SysConstants;
 import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.sys.Bug;
+import com.eryansky.entity.sys.Dictionary;
 import com.eryansky.service.sys.BugManager;
+import com.eryansky.service.sys.DictionaryManager;
 import com.google.common.collect.Maps;
 
 /**
@@ -38,6 +45,8 @@ public class BugAction extends StrutsAction<Bug> {
 
 	@Autowired
 	private BugManager bugManager;
+	@Autowired
+	private DictionaryManager dictionaryManager;
 
 	@Override
 	public EntityManager<Bug, Long> getEntityManager() {
@@ -61,6 +70,34 @@ public class BugAction extends StrutsAction<Bug> {
             result = Result.successResult();
             logger.debug(result.toString());
 			Struts2Utils.renderText(result);
+		} catch (Exception e) {
+			throw e;
+		}
+		return null;
+	}
+	
+	@Override
+	public String datagrid() throws Exception {
+		try {
+			// 自动构造属性过滤器
+			List<PropertyFilter> filters = HibernateWebUtils
+					.buildPropertyFilters(Struts2Utils.getRequest());
+			Page<Bug> p = getEntityManager().find(page, rows, sort, order,
+					filters);
+			
+			//转换设置bug类型名称
+			if(p.getResult() != null){
+				for(Bug bug:p.getResult()){
+					Dictionary dictionary = dictionaryManager.getByCode(bug.getType());
+					if(dictionary!=null){
+						bug.setTypeName(dictionary.getName());
+					}else{
+						logger.warn("[{}]未设置bug类型.",bug.getTitle());
+					}
+				}
+			}
+			Datagrid<Bug> dg = new Datagrid<Bug>(p.getTotalCount(), p.getResult());
+			Struts2Utils.renderJson(dg);
 		} catch (Exception e) {
 			throw e;
 		}

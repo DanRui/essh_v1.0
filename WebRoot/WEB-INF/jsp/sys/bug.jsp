@@ -24,6 +24,7 @@ $(function() {
 		frozenColumns:[[ 
               {field:'ck',checkbox:true},
               {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
+              {field:'typeName',title:'bug类型',width:120 },
               {field:'title',title:'bug标题',width:360 },
               {field:'operater',title:'操作',align:'center',width:80,formatter:function(value,rowData,rowIndex){ 
             	  var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
@@ -50,119 +51,129 @@ $(function() {
 			});
 		}
 	});
-    
+    loadBugType();
 });
 </script>
 <script type="text/javascript">
-        function formInit(){
-        	bug_form = $('#bug_form').form({
-				url: '${ctx}/sys/bug!save.action',
-				onSubmit: function(param){  
-			        return $(this).form('validate');
-			    },
-				success: function(data){
-					var json = eval('('+ data+')'); //将后台传递的json字符串转换为javascript json对象 
-					if (json.code ==1){
-						bug_dialog.dialog('destroy');//销毁对话框 
-						bug_datagrid.datagrid('reload');//重新加载列表数据
-						eu.showMsg(json.msg);//操作结果提示
-					}else if(json.code == 2){
-						$.messager.alert('提示信息！', json.msg, 'warning',function(){
-							if(json.obj){
-								$('#bug_form input[name="'+json.obj+'"]').focus();
-							}
-						});
-					}else {
-						eu.showAlertMsg(json.msg,'error');
-					}
+	//加载bug类型
+	function loadBugType(){
+		$('#filter_EQS_type').combobox({  
+	        url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug&selectType=all',
+		    multiple:false,//是否可多选
+		    //editable:false,//是否可编辑
+		    width:120,
+		    valueField:'value',
+	        displayField:'text',
+		});
+	}
+    function formInit(){
+       	bug_form = $('#bug_form').form({
+			url: '${ctx}/sys/bug!save.action',
+			onSubmit: function(param){  
+		        return $(this).form('validate');
+		    },
+			success: function(data){
+				var json = eval('('+ data+')'); //将后台传递的json字符串转换为javascript json对象 
+				if (json.code ==1){
+					bug_dialog.dialog('destroy');//销毁对话框 
+					bug_datagrid.datagrid('reload');//重新加载列表数据
+					eu.showMsg(json.msg);//操作结果提示
+				}else if(json.code == 2){
+					$.messager.alert('提示信息！', json.msg, 'warning',function(){
+						if(json.obj){
+							$('#bug_form input[name="'+json.obj+'"]').focus();
+						}
+					});
+				}else {
+					eu.showAlertMsg(json.msg,'error');
 				}
-			});
+			}
+		});
+	}
+	//显示弹出窗口 新增：row为空 编辑:row有值 
+	function showDialog(row){
+		//弹出对话窗口
+		bug_dialog = $('<div/>').dialog({
+			title:'bug详细信息',
+			width : 680,
+			height : 460,
+			modal : true,
+			maximizable:true,
+			href : '${ctx}/sys/bug-input.action',
+			buttons : [ {
+				text : '保存',
+				iconCls : 'icon-save',
+				handler : function() {
+					bug_form.submit();
+				}
+			},{
+				text : '关闭',
+				iconCls : 'icon-cancel',
+				handler : function() {
+					bug_dialog.dialog('destroy');
+				}
+			}],
+			onClose : function() {
+				$(this).dialog('destroy');
+			},
+			onLoad:function(){
+				formInit();
+				if(row){
+					bug_form.form('load', row);
+				}
+			}
+		}).dialog('open');
+		
+	}
+	
+	//编辑
+	function edit(){
+		//选中的所有行
+		var rows = bug_datagrid.datagrid('getSelections');
+		//选中的行（第一次选择的行）
+		var row = bug_datagrid.datagrid('getSelected');
+		if (row){
+			if(rows.length>1){
+				row = rows[rows.length-1];
+				eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+			}
+			showDialog(row);
+		}else{
+			eu.showMsg("请选择要操作的对象！");
 		}
-		//显示弹出窗口 新增：row为空 编辑:row有值 
-		function showDialog(row){
-			//弹出对话窗口
-			bug_dialog = $('<div/>').dialog({
-				title:'bug详细信息',
-				width : 500,
-				height : 360,
-				modal : true,
-				maximizable:true,
-				href : '${ctx}/sys/bug-input.action',
-				buttons : [ {
-					text : '保存',
-					iconCls : 'icon-save',
-					handler : function() {
-						bug_form.submit();
+	}
+	
+	//删除
+	function del(){
+		var rows = bug_datagrid.datagrid('getSelections');
+		
+		if(rows.length >0){
+			$.messager.confirm('确认提示！','您确定要删除选中的所有行？',function(r){
+				if (r){
+					var ids = new Object();
+					for(var i=0;i<rows.length;i++){
+						ids[i] = rows[i].id;
 					}
-				},{
-					text : '关闭',
-					iconCls : 'icon-cancel',
-					handler : function() {
-						bug_dialog.dialog('destroy');
-					}
-				}],
-				onClose : function() {
-					$(this).dialog('destroy');
-				},
-				onLoad:function(){
-					formInit();
-					if(row){
-						bug_form.form('load', row);
-					}
+					$.post('${ctx}/sys/bug!remove.action',{ids:ids},function(data){
+						if (data.code==1){
+							bug_datagrid.datagrid('load');	// reload the user data
+							eu.showMsg(data.msg);//操作结果提示
+						} else {
+							eu.showAlertMsg(data.msg,'error');
+						}
+					},'json');      
 					
 				}
-			}).dialog('open');
-			
+			});
+		}else{
+			eu.showMsg("请选择要操作的对象！");
 		}
-		
-		//编辑
-		function edit(){
-			//选中的所有行
-			var rows = bug_datagrid.datagrid('getSelections');
-			//选中的行（第一次选择的行）
-			var row = bug_datagrid.datagrid('getSelected');
-			if (row){
-				if(rows.length>1){
-					row = rows[rows.length-1];
-					eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
-				}
-				showDialog(row);
-			}else{
-				eu.showMsg("请选择要操作的对象！");
-			}
-		}
-		
-		//删除
-		function del(){
-			var rows = bug_datagrid.datagrid('getSelections');
-			
-			if(rows.length >0){
-				$.messager.confirm('确认提示！','您确定要删除选中的所有行？',function(r){
-					if (r){
-						var ids = new Object();
-						for(var i=0;i<rows.length;i++){
-							ids[i] = rows[i].id;
-						}
-						$.post('${ctx}/sys/bug!remove.action',{ids:ids},function(data){
-							if (data.code==1){
-								bug_datagrid.datagrid('load');	// reload the user data
-								eu.showMsg(data.msg);//操作结果提示
-							} else {
-								eu.showAlertMsg(data.msg,'error');
-							}
-						},'json');      
-						
-					}
-				});
-			}else{
-				eu.showMsg("请选择要操作的对象！");
-			}
-		}
-		
-		//搜索
-		function search(){
-			bug_datagrid.datagrid('load',$.serializeObject(bug_search_form));
-		}
+	}
+	
+	//搜索
+	function search(){
+		bug_datagrid.datagrid('load',$.serializeObject(bug_search_form));
+	}
 		
 </script>
 <%-- 列表右键 --%>
@@ -176,6 +187,7 @@ $(function() {
 <div id="bug_datagrid-toolbar">
     <div style="margin-left:10px; float: left;">
         <form id="bug_search_form" style="padding: 0px;">
+            bug类型:<input type="text" id="filter_EQS_type" name="filter_EQS_type" /> 
 			bug标题:<input type="text" name="filter_LIKES_title" maxLength="25" style="width: 160px" /> 
 			<a href="javascript:search();" class="easyui-linkbutton"
 					iconCls="icon-search" plain="true" >查 询</a>
