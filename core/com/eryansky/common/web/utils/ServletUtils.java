@@ -1,5 +1,7 @@
 package com.eryansky.common.web.utils;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Map;
@@ -11,8 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.util.Assert;
+import org.springframework.web.util.WebUtils;
 
 import com.eryansky.common.utils.encode.EncodeUtils;
+import com.eryansky.common.utils.mapper.JsonMapper;
 
 /**
  * Http与Servlet工具类.
@@ -170,5 +174,29 @@ public class ServletUtils {
 	public static String encodeHttpBasic(String userName, String password) {
 		String encode = userName + ":" + password;
 		return "Basic " + EncodeUtils.base64Encode(encode.getBytes());
+	}
+	/**
+	 * 输出 html/text格式 json字符串
+	 * <br>自动间爱你过data参数转换为json字符串
+	 * @param data 输出数据 可以是List Map等
+	 * @param response
+	 * @throws IOException 
+	 */
+	public static void rendText(Object data,HttpServletResponse response) throws IOException {
+		response.setContentType("text/plain;charset=UTF-8");
+		setDisableCacheHeader(response);
+		PrintWriter out = null;
+		try {
+			out = response.getWriter();
+			out.print(JsonMapper.nonEmptyMapper().toJson(data));
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw e;
+		}finally{
+			if(out != null){
+				out.close();
+			}
+		}
 	}
 }
