@@ -51,9 +51,9 @@ public class UserAction extends StrutsAction<User> {
 		Result result = null;
 		try {
 			 // 名称重复校验
-			User user = userManager.findUniqueBy("loginName", model.getLoginName());
+			User user = userManager.getUserByLoginName(model.getLoginName());
             if (user != null && !user.getId().equals(model.getId())) {
-            	result = new Result(Result.WARN,"登录名为["+model.getName()+"]已存在,请修正!", "loginName");
+            	result = new Result(Result.WARN,"登录名为["+model.getLoginName()+"]已存在,请修正!", "loginName");
                 logger.debug(result.toString());
                 Struts2Utils.renderText(result);
                 return null;
@@ -62,7 +62,6 @@ public class UserAction extends StrutsAction<User> {
             if (model.getId() == null) {// 新增
             	model.setPassword(Encrypt.e(model.getPassword()));
             } else {// 修改
-            	model.setRoles(user.getRoles());
 				User superUser = userManager.getSuperUser();
 				User sessionUser = userManager.getCurrentUser();
 				if (!sessionUser.getId().equals(superUser.getId())) {

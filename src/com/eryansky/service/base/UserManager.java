@@ -140,6 +140,24 @@ public class UserManager extends EntityManager<User, Long> {
 		return list;
 	}
 
-
+	/**
+	 * 根据登录名查找.
+	 * <br>注：排除已删除的对象
+	 * @param loginName 登录名
+	 * @return
+	 * @throws DaoException
+	 * @throws SystemException
+	 * @throws ServiceException
+	 */
+	@SuppressWarnings("unchecked")
+	public User getUserByLoginName(String loginName)
+			throws DaoException,SystemException,ServiceException {
+		Assert.notNull(loginName, "参数[loginName]为空!");
+		Assert.notNull(loginName, "参数[status]为空!");
+		List<User> list = userDao.createQuery(
+					"from User u where u.loginName = ? and u.status <> ?",
+					new Object[] { loginName, StatusState.delete.getValue() }).list();
+		return list.isEmpty() ? null:list.get(0);
+	}
 
 }
