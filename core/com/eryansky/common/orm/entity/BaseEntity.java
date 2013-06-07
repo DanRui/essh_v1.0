@@ -1,16 +1,18 @@
-package com.eryansky.common.model;
+package com.eryansky.common.orm.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.annotations.OptimisticLock;
 
 import com.eryansky.common.utils.DateUtil;
 import com.eryansky.entity.base.state.StatusState;
@@ -44,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 // JPA 基类的标识
 // @AttributeOverride(name = "id", column = @Column(name = "base_id"))
 @MappedSuperclass
-public abstract class BaseEntity extends AutoEntity implements Serializable,
+public  class BaseEntity extends AutoEntity implements Serializable,
 		Cloneable {
 
 	/**
@@ -52,15 +54,15 @@ public abstract class BaseEntity extends AutoEntity implements Serializable,
 	 */
 	private static final long serialVersionUID = 2142201445199112425L;
 
-	protected static final String DATE_FORMAT = "yyyy-MM-dd";
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
 
-	protected static final String TIME_FORMAT = "HH:mm:ss";
+	public static final String TIME_FORMAT = "HH:mm:ss";
 
-	protected static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-	protected static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss.S";
+	public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss.S";
 
-	protected static final String TIMEZONE = "GMT+08:00";
+	public static final String TIMEZONE = "GMT+08:00";
 
 	public static String date2String(Date date, String dateFormat) {
 		return DateUtil.format(date, dateFormat);
@@ -71,6 +73,8 @@ public abstract class BaseEntity extends AutoEntity implements Serializable,
 		return (T) DateUtil.parse(dateString, dateFormat, targetResultType);
 	}
 
+	
+	
 	/**
 	 * 记录状态标志位 正常(0) 已删除(1) 待审核(2) 锁定(3)
 	 */
@@ -99,30 +103,9 @@ public abstract class BaseEntity extends AutoEntity implements Serializable,
 	protected Date updateTime;
 
 	public BaseEntity() {
+		super();
 	}
 
-	/**
-	 * 
-	 * @param id
-	 *            主键ID
-	 * @param status
-	 *            记录状态标志位 正常(0) 已删除(1) 待审核(2) 锁定(3)
-	 * @param updateUser
-	 *            操作用户登录名
-	 * @param version
-	 *            操作版本(乐观锁,用于并发控制)
-	 * @param updateTime
-	 *            操作更新时间
-	 */
-	public BaseEntity(Integer status, String updateUser, Integer version,
-			Date createTime, Date updateTime) {
-		super();
-		this.status = status;
-		this.updateUser = updateUser;
-		this.version = version;
-		this.createTime = createTime;
-		this.updateTime = updateTime;
-	}
 
 	/**
 	 * 状态标志位
@@ -236,27 +219,7 @@ public abstract class BaseEntity extends AutoEntity implements Serializable,
 		this.updateTime = updateTime;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(this.getClass().isInstance(obj) && obj.getClass()
-				.isInstance(this)))
-			return false;
-		BaseEntity instance = (BaseEntity) obj;
-		if (instance.getId() == null)
-			return false;
-		else
-			return instance.getId().equals(this.getId())
-					&& instance.getVersion().equals(this.getVersion());
-	}
 
-	@Override
-	public int hashCode() {
-		return this.id != null ? this.id.hashCode() : 0;
-	}
 
 	public BaseEntity clone() {
 		BaseEntity o = null;

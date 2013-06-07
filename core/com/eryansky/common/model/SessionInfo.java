@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -188,7 +189,7 @@ public class SessionInfo implements java.io.Serializable {
 	 * 登录时间
 	 */
 	// 设定JSON序列化时的日期格式
-	@JsonFormat(pattern = BaseEntity.DATE_TIME_FORMAT, timezone = "GMT+08:00")
+	@JsonFormat(pattern = BaseEntity.DATE_TIME_FORMAT, timezone = BaseEntity.TIMEZONE)
 	public Date getLoginTime() {
 		return loginTime;
 	}

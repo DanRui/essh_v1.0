@@ -1,11 +1,9 @@
-package com.eryansky.common.model;
+package com.eryansky.common.orm.entity;
 
-import java.io.Serializable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * 统一定义entity基类. <br>
@@ -16,23 +14,22 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author : 尔演&Eryan eryanwcp@gmail.com
  * @date : 2012-12-21 上午11:12:07
  */
-@SuppressWarnings("serial")
 @MappedSuperclass
-public abstract class AutoEntity implements Serializable {
+public abstract class IdEntity extends AbstractEntity<Long> {
 
 	/**
 	 * 主键ID
 	 */
 	protected Long id;
 
-	public AutoEntity() {
+	public IdEntity() {
 	}
 
 	/**
 	 * 主键ID 根据数据库主键自增长策略 依赖于数据库(SQL Serveer、MySQL数据库使用)
 	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
@@ -45,10 +42,5 @@ public abstract class AutoEntity implements Serializable {
 	 */
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
 	}
 }

@@ -156,17 +156,66 @@
         <filter-name>gzipFilter</filter-name>  
         <url-pattern>*.json</url-pattern>  
     </filter-mapping>
-    <filter-mapping>  
-        <filter-name>gzipFilter</filter-name>  
-        <url-pattern>*.action</url-pattern>  
-    </filter-mapping>
-
 	 
 	<filter-mapping>
 		<filter-name>struts2Filter</filter-name>
 		<url-pattern>*.action</url-pattern>
 	</filter-mapping>
 	
+	
+	<!-- kindeditor上传 -->
+	<servlet>
+		<servlet-name>FileUploadServlet</servlet-name>
+		<servlet-class>
+		    com.eryansky.common.web.servlet.kindeditor.FileUploadServlet
+		</servlet-class>
+		<!-- 上传保存的目录 -->
+		<init-param>
+			<param-name>UPLOAD_PATH</param-name>
+			<param-value>attached/</param-value>
+		</init-param>
+		<!-- 限制上传图片的大小，单位字节(缺省值为1MB) -->
+		<init-param>
+			<param-name>Img_MAX_SIZE</param-name>
+			<param-value>1024000</param-value>
+		</init-param>
+		<init-param>
+			<!-- 上传图片的类型(缺省值为gif, jpg, jpeg, png, bmp) -->
+			<param-name>Img_YPES</param-name>
+			<param-value>gif,jpg,jpeg,png,bmp</param-value>
+		</init-param>
+		<!-- ===================================================================== -->
+		<!-- 上传附件的大小，单位字节(缺省为1MB) -->
+		<init-param>
+			<param-name>File_MAX_SIZE</param-name>
+			<param-value>1000000</param-value>
+		</init-param>
+		<!-- 上传文件的类型(缺省为doc, xls, ppt, pdf, txt, rar, zip) -->
+		<init-param>
+			<param-name>File_TYPES</param-name>
+			<param-value>doc,docx,xls,xlsx,ppt,pptx,pdf,zip,rar,txt</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>FileManagerServlet</servlet-name>
+		<servlet-class>
+			com.eryansky.common.web.servlet.kindeditor.FileManagerServlet
+		</servlet-class>
+		<!-- 上传保存的目录 -->
+		<init-param>
+			<param-name>UPLOAD_PATH</param-name>
+			<param-value>attached/</param-value>
+		</init-param>
+	</servlet>
+ 
+	<servlet-mapping>
+		<servlet-name>FileUploadServlet</servlet-name>
+		<url-pattern>/servlet/FileUploadServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FileManagerServlet</servlet-name>
+		<url-pattern>/servlet/FileManagerServlet</url-pattern>
+	</servlet-mapping>
 	
 	<!-- 本地静态内容展示与下载的Servlet -->
 	<servlet>

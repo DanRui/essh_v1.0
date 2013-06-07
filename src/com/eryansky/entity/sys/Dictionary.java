@@ -17,7 +17,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
-import com.eryansky.common.model.BaseEntity;
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.utils.CacheConstants;
 
 /**
@@ -34,7 +34,7 @@ import com.eryansky.utils.CacheConstants;
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "parentDictionary",
 		"dictionaryType", "subDictionarys" })
 @SuppressWarnings("serial")
-public class Dictionary extends BaseEntity implements java.io.Serializable {
+public class Dictionary extends BaseEntity{
 
 	/**
 	 * 参数名称

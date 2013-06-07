@@ -13,7 +13,7 @@ import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
-import com.eryansky.common.model.BaseEntity;
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.entity.base.state.StatusState;
 import com.eryansky.utils.CacheConstants;

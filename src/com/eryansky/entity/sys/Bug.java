@@ -10,7 +10,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import com.eryansky.common.model.BaseEntity;
+
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.io.ClobUtil;
 import com.eryansky.common.utils.jackson.ClobSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

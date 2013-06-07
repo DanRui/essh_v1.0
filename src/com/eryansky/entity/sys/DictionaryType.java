@@ -1,7 +1,5 @@
 package com.eryansky.entity.sys;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import com.eryansky.common.model.BaseEntity;
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.utils.CacheConstants;
 
 /**
@@ -24,7 +22,7 @@ import com.eryansky.utils.CacheConstants;
 @Table(name = "T_SYS_DICTIONARYTYPE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_SYS)
 @SuppressWarnings("serial")
-public class DictionaryType extends BaseEntity implements Serializable {
+public class DictionaryType extends BaseEntity {
 
 	/**
 	 * 类型名称

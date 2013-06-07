@@ -19,9 +19,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.eryansky.common.model.BaseEntity;
 import com.eryansky.common.orm.PropertyType;
 import com.eryansky.common.orm.annotation.Delete;
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.entity.base.state.SexState;
 import com.eryansky.utils.AppConstants;
