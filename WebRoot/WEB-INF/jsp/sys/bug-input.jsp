@@ -1,18 +1,19 @@
 <%@ page language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <%@ include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-var content_xheditor;
+var content_kindeditor;
 $(function() {
 	loadBugType();
-	content_xheditor = $('#content_xheditor').xheditor({
-		tools:'Cut,Copy,Paste,Pastetext,Blocktag,Fontface,FontSize,Bold,Italic,Underline,Strikethrough,Table,FontColor,BackColor,Img,Link,Unlink,|,Source,Fullscreen,Preview',
-		html5Upload : true,
-		upMultiple : 4,
-		upLinkUrl : '${ctx}/sys/bug!upload.action',
-		upLinkExt : 'zip,rar,txt,doc,docx,xls,xlsx',
-		upImgUrl : '${ctx}/sys/bug!upload.action',
-		upImgExt : 'jpg,jpeg,gif,png'
-	});
+	window.setTimeout(function() {
+		content_kindeditor = KindEditor.create('#content_kindeditor', {
+			width : '680px',
+			height : '300px',
+			items : [ 'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript', 'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak', 'anchor', 'link', 'unlink' ],
+			uploadJson : '${ctx}/servlet/FileUploadServlet',
+			fileManagerJson : '${ctx}/servlet/FileManagerServlet',
+			allowFileManager : true
+		});
+	}, 1);
 	
 });
 
@@ -23,8 +24,8 @@ function loadBugType(){
 	    multiple:false,//是否可多选
 	    editable:false,//是否可编辑
 	    width:120,
-	    valueField:'value',
-        displayField:'text',
+        valueField:'value',
+        displayField:'text'
 	});
 }
 </script>
@@ -35,7 +36,7 @@ function loadBugType(){
         <input type="hidden" id="version" name="version" ></input>
         <div>
 			<label>bug类型:</label>
-		    <input id="type" name="type" type="text" class="easyui-combobox"  data-options="required:true,missingMessage:'请选择bug类型.'">
+		    <input id="type" name="type" type="text" class="easyui-combobox"  data-options="required:true">
 		    <span style="color: red">*</span>
 		</div>
 		<div>
@@ -46,7 +47,7 @@ function loadBugType(){
 		</div>
 		<div>
 			<label >bug描述:</label>
-			<textarea id="content_xheditor" name="content" maxLength="1000" style="width: 80%;height: 200px;"></textarea>
+			<textarea id="content_kindeditor" name="content" maxLength="1000" style="width: 80%;height: 200px;"></textarea>
 		</div>
 	</form>
 </div>

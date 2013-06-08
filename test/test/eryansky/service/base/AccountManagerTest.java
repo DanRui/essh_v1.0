@@ -14,15 +14,19 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.google.common.collect.Maps;
+import com.eryansky.common.exception.DaoException;
+import com.eryansky.common.exception.ServiceException;
+import com.eryansky.common.exception.SystemException;
 import com.eryansky.common.model.User;
 import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.jdbc.JdbcDao;
 import com.eryansky.common.utils.io.PropertiesLoader;
 import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Menu;
+import com.eryansky.entity.base.Role;
 import com.eryansky.service.CommonManager;
 import com.eryansky.service.base.MenuManager;
-
+import com.eryansky.service.base.RoleManager;
 /**
  * Account单元测试
  * @author 尔演&Eryan eryanwcp@gmail.com
@@ -36,13 +40,16 @@ public class AccountManagerTest {
 	private static JdbcDao jdbcDao;
 	private static MenuManager menuManager;
 	private static CommonManager commonManager;
+	private static RoleManager roleManager;
+	
 	
 	@BeforeClass
 	public static void init() throws Exception{
-		ApplicationContext context = new ClassPathXmlApplicationContext("spring-test.xml");
+		ApplicationContext context = new ClassPathXmlApplicationContext("spring-jdbc.xml");
 		jdbcDao = (JdbcDao)context.getBean("jdbcDao");
 		menuManager = (MenuManager)context.getBean("menuManager");
 		commonManager = (CommonManager)context.getBean("commonManager");
+		roleManager = (RoleManager)context.getBean("roleManager");
 		
 		pro = new PropertiesLoader("/appconfig.properties").getProperties();
 	}
@@ -93,7 +100,41 @@ public class AccountManagerTest {
 	}
 	
 	@Test
-    public void dbutils(){
+    public void bf(){
+		Thread thread1 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for(int i=0;i<1000;i++){
+					try {
+						Menu m = new Menu();
+						m.setName(i+"");
+						menuManager.save(m);
+						System.out.println(1+ " "+i);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		Thread thread2 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for(int i=0;i<1000;i++){
+					try {
+						Role r = new Role();
+						r.setName(i+"");
+						roleManager.save(r);
+						System.out.println(2+ " "+i);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread1.start();
+		thread2.start();
     }
+	
 
 }
+

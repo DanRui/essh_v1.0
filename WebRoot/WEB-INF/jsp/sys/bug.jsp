@@ -70,6 +70,9 @@ $(function() {
        	bug_form = $('#bug_form').form({
 			url: '${ctx}/sys/bug!save.action',
 			onSubmit: function(param){  
+				if(content_kindeditor){
+					content_kindeditor.sync();
+				}
 		        return $(this).form('validate');
 		    },
 			success: function(data){
@@ -120,6 +123,9 @@ $(function() {
 				formInit();
 				if(row){
 					bug_form.form('load', row);
+				}
+				if(content_kindeditor){
+					content_kindeditor.sync();
 				}
 			}
 		}).dialog('open');
