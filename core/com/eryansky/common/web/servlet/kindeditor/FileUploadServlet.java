@@ -114,8 +114,6 @@ public class FileUploadServlet extends HttpServlet {
 		//文件保存目录URL
 		String saveUrl  = request.getContextPath() + "/"+configPath;
   
-		response.setContentType("text/html; charset=UTF-8");
-
 		if(!ServletFileUpload.isMultipartContent(request)){
 			ServletUtils.rendText(getError("请选择文件。"), response);
 			return;
