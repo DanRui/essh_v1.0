@@ -11,7 +11,7 @@
 <script type="text/javascript" src="${ctx}/js/bootstrap-2.3.1/js/bootstrap.min.js" charset="utf-8"></script>
 --%>
 
-<link rel="stylesheet" type="text/css" href="${ctx}/css/" />
+<link rel="stylesheet" type="text/css" href="${ctx}/css/default.css" />
 
 <link rel="stylesheet" type="text/css" href="${ctx}/css/form_style.css" />
 
