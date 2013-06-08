@@ -247,9 +247,11 @@ $.extend($.fn.form.methods, {
      */
     disable:function(jq, isDisabled){
     	var formId = jq.attr('id');
-    	var attr="disable";  
+    	var attr="disable"; 
+    	var attr_r = true;
         if(!isDisabled){  
-           attr="enable";  
+           attr="enable";
+           attr_r = false;
         }  
         $("form[id='"+formId+"'] :text").attr("disabled",isDisabled);  
         $("form[id='"+formId+"'] textarea").attr("disabled",isDisabled);  
@@ -259,22 +261,23 @@ $.extend($.fn.form.methods, {
           
         //禁用jquery easyui中的下拉选（使用input生成的combox）  
         $("#" + formId + " input[class='combobox-f combo-f']").each(function () {  
-            if (this.id) {alert("input"+this.id);  
-                $("#" + this.id).combobox(attr);  
+            if (this.id) {  
+                $("#" + this.id).combobox(attr); 
+                $("#" + this.id).combobox('readonly',attr_r);
             }  
         });  
         //禁用jquery easyui中的下拉选（使用select生成的combox）  
         $("#" + formId + " select[class='combobox-f combo-f']").each(function () {  
             if (this.id) {  
-            alert(this.id);  
                 $("#" + this.id).combobox(attr);  
+                $("#" + this.id).combobox('readonly',attr_r);
             }  
         });  
         //禁用jquery easyui中的日期组件dataBox  
         $("#" + formId + " input[class='datebox-f combo-f']").each(function () {  
             if (this.id) {  
-            alert(this.id)  
                 $("#" + this.id).datebox(attr);  
+               $("#" + this.id).datebox('readonly',attr_r);
             }  
         });  
     }
