@@ -17,29 +17,21 @@ public abstract class AbstractEntity<ID extends Serializable>{
     public abstract ID getId();
 
     /**
-     * Sets the id of the entity.
+     * 设置主键ID.
      *
-     * @param id the id to set
+     * @param id 主键ID
      */
     public abstract void setId(final ID id);
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.springframework.data.domain.Persistable#isNew()
-
+    /**
+     * 是否是新创建的对象.
+     * @return
      */
     @JsonIgnore
     public boolean isNew() {
-
         return null == getId();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
 
@@ -60,11 +52,6 @@ public abstract class AbstractEntity<ID extends Serializable>{
         return null == this.getId() ? false : this.getId().equals(that.getId());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
 
