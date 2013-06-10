@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.eryansky.common.orm.PropertyType;
-import com.eryansky.entity.base.state.StatusState;
 
 /**
  * Hibernate状态删除，如果在orm实体配置该注解，将不会物理删除数据，会根据该配置来进行对orm实体的update操作
@@ -46,7 +45,7 @@ public @interface Delete {
 
 	/**
 	 * 要改变的值
-	 * <br> 默认值:"1" @link StatusState
+	 * <br> 默认值:"1" {@link StatusState}
 	 * 
 	 * @return String
 	 */
