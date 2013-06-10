@@ -13,7 +13,9 @@ import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Query;
+import org.hibernate.ReplicationMode;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -157,6 +159,20 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	}
 	
 	/**
+	 * 刷新对象.
+	 * <br>参数lockOptions可为null
+	 * @param entity 操作对象
+	 * @param lockOptions Hibernate LockOptions 
+	 */
+	public void refresh(T entity,LockOptions lockOptions) {
+		if (lockOptions == null) {
+			refresh(entity);
+		} else {
+			getSession().refresh(entity, lockOptions);
+		}
+	}
+	
+	/**
 	 * 将对象变为游离状态.
 	 */
 	public void evict(final T entity) {
@@ -171,6 +187,16 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		Assert.notNull(entity, "entity不能为空");
 		getSession().merge(entity);
 		logger.debug("merge entity: {}", entity);
+	}
+	
+	/**
+	 * 如果session中存在相同持久化识别的实例，用给出的对象的状态覆盖持久化实例
+	 * 
+	 * @param entityName 持久化对象名称
+	 * @param entity 持久化实例
+	 */
+	public void merge(String entityName,T entity) {
+		getSession().merge(entityName, entity);
 	}
 
 	/**
@@ -470,6 +496,16 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		ClassMetadata meta = getSessionFactory().getClassMetadata(entityClass);
 		return meta.getIdentifierPropertyName();
 	}
+	
+	/**
+	 * 获取实体名称
+	 * 
+	 * @return String
+	 */
+	public String getEntityName() {
+		ClassMetadata meta = sessionFactory.getClassMetadata(entityClass);
+		return meta.getEntityName();
+	}
 
 	/**
 	 * 判断对象的属性值在数据库内是否唯一.
@@ -542,4 +578,16 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 			throw new DaoException(e);
 		}
 	}
+	
+	/**
+	 * 判断entity实例是否已经与session缓存关联,是返回true,否则返回false
+	 * 
+	 * @param entity 实例
+	 * 
+	 * @return boolean
+	 */
+	public boolean contains(Object entity) {
+		return getSession().contains(entity);
+	}
+	
 }
