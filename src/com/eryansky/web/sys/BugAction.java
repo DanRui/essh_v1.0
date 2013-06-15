@@ -78,7 +78,7 @@ public class BugAction extends StrutsAction<Bug> {
                 return null;
             }
 			
-            bugManager.saveOrUpdate(model);
+            bugManager.merge(model);
             result = Result.successResult();
             logger.debug(result.toString());
 			Struts2Utils.renderText(result);

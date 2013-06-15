@@ -185,9 +185,6 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 			model = (T) ReflectionUtils.getClassGenricType(getClass()).newInstance();
 			//对象拷贝 
 			MyBeanUtils.copyBeanNotNull2Bean(entity, model);
-			
-			//将对象从Hibernate session中置为托管状态 防止session中有两个相同id的对象
-			getEntityManager().evict(entity);
 		} else {
 			model = (T) ReflectionUtils.getClassGenricType(getClass())
 					.newInstance();

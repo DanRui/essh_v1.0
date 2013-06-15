@@ -23,6 +23,7 @@ import com.eryansky.common.orm.PropertyType;
 import com.eryansky.common.orm.annotation.Delete;
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
+import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.entity.base.state.SexState;
 import com.eryansky.utils.AppConstants;
 import com.eryansky.utils.CacheConstants;
@@ -223,7 +224,7 @@ public class User
     @SuppressWarnings("unchecked")
     @Transient
     public List<Long> getRoleIds() {
-        if (roleIds.isEmpty()) {
+        if (!Collections3.isEmpty(roles)) {
             roleIds = ConvertUtils.convertElementPropertyToList(roles, "id");
         }
         return roleIds;

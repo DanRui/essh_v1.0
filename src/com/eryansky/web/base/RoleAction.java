@@ -30,6 +30,8 @@ public class RoleAction extends StrutsAction<Role> {
 	private RoleManager roleManager;
 	@Autowired
 	private MenuManager menuManager;
+	//角色管理菜单id集合
+	private List<Long> menuIds = Lists.newArrayList();
 
 	@Override
 	public EntityManager<Role, Long> getEntityManager() {
@@ -70,15 +72,14 @@ public class RoleAction extends StrutsAction<Role> {
             }
             
             //设置用户角色信息
-            List<Long> menuIdList = model.getMenuIds();
 			List<Menu> menuList = Lists.newArrayList();
-			for (Long menuId : menuIdList) {
+			for (Long menuId : menuIds) {
 				Menu menu = menuManager.loadById(menuId);
 				menuList.add(menu);
 			}
 			model.setMenus(menuList);
 			
-			roleManager.saveOrUpdate(model);
+			roleManager.merge(model);
             result = Result.successResult();
             logger.debug(result.toString());
 			Struts2Utils.renderText(result);
@@ -112,6 +113,10 @@ public class RoleAction extends StrutsAction<Role> {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	public void setMenuIds(List<Long> menuIds) {
+		this.menuIds = menuIds;
 	}
 
 

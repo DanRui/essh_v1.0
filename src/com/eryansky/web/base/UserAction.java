@@ -38,6 +38,8 @@ public class UserAction extends StrutsAction<User> {
 	private RoleManager roleManager;
 	@Autowired
 	private CommonManager commonManager;
+	//用户关连角色ID集合
+	private List<Long> roleIds = Lists.newArrayList();
 
 	@Override
 	public EntityManager<User, Long> getEntityManager() {
@@ -68,7 +70,7 @@ public class UserAction extends StrutsAction<User> {
 					throw new SystemException("超级用户信息仅允许自己修改!");
 				}
             }
-            userManager.saveOrUpdate(model);
+            userManager.merge(model);
             result = Result.successResult();
             logger.debug(result.toString());
             Struts2Utils.renderText(result);
@@ -89,7 +91,7 @@ public class UserAction extends StrutsAction<User> {
 	
 	//调用updateUserRole()方法之前执行
 	public void prepareUpdateUserRole() throws Exception {
-		this.prepareModel();
+		super.prepareModel();
 	}
 	/**
 	 * 修改用户角色.
@@ -98,23 +100,13 @@ public class UserAction extends StrutsAction<User> {
 		Result result = null;
 		try {
 			List<Role> rs = Lists.newArrayList();
-			if (model.getRoleIds() != null) {
-				for (Long id : model.getRoleIds()) {
-					Role role = roleManager.loadById(id);
-					rs.add(role);
-					model.setRoles(rs);
-				}
-			}else{
-				model.setRoles(null);
+			for (Long id : roleIds) {
+				Role role = roleManager.loadById(id);
+				rs.add(role);
 			}
-			User user = userManager.loadById(model.getId());
-			if (user != null) {
-				user.setRoles(model.getRoles());
-				userManager.saveOrUpdate(user);
-				result = Result.successResult();
-			} else {
-				result = Result.errorResult();
-			}
+			model.setRoles(rs);
+			userManager.merge(model);
+			result = Result.successResult();
 			Struts2Utils.renderText(result);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -130,6 +122,11 @@ public class UserAction extends StrutsAction<User> {
 		return "password";
 
 	}
+	//调用updateUserRole()方法之前执行
+	public void prepareUpdateUserPassword() throws Exception {
+		super.prepareModel();
+	}
+		
 	/**
 	 * 修改用户密码.
 	 * <br>参数upateOperate 需要密码"1" 不需要密码"0".
@@ -154,7 +151,7 @@ public class UserAction extends StrutsAction<User> {
 					}
 					if (isCheck) {
 						user.setPassword(Encrypt.e(newPassword));
-						userManager.saveOrUpdate(user);
+						userManager.merge(user);
 						result = Result.successResult();
 					} else {
 						result = new Result(Result.WARN, "原始密码输入错误.","password");
@@ -181,6 +178,9 @@ public class UserAction extends StrutsAction<User> {
 
 	public void setUpateOperate(String upateOperate) {
 		this.upateOperate = upateOperate;
+	}
+	public void setRoleIds(List<Long> roleIds) {
+		this.roleIds = roleIds;
 	}
 
 }

@@ -83,7 +83,7 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 						.getDictionaryTypeCode()));
 			}
 
-			dictionaryManager.saveOrUpdate(model);
+			dictionaryManager.merge(model);
 			result = Result.successResult();
 			logger.debug(result.toString());
 			Struts2Utils.renderText(result);
