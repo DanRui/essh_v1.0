@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.LockOptions;
 import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +93,30 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	public void saveOrUpdate(final Collection<T> entitys) throws DaoException,
 			SystemException, ServiceException {
 		getEntityDao().saveOrUpdate(entitys);
+	}
+	
+	/**
+	 * 清除当前session.
+	 * @param entitys
+	 * @throws DaoException
+	 * @throws SystemException
+	 * @throws ServiceException
+	 */
+	public void clear() throws DaoException,
+		    SystemException, ServiceException {
+	    getEntityDao().clear();
+	}
+	
+	/**
+	 * 将对象变为游离状态.
+	 * @param entity
+	 * @throws DaoException
+	 * @throws SystemException
+	 * @throws ServiceException
+	 */
+	public void evict(T entity) throws DaoException,
+		    SystemException, ServiceException {
+		getEntityDao().evict(entity);
 	}
 
 	/**
@@ -190,6 +215,12 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			ServiceException {
 		return getEntityDao().load(id);
 	}
+	
+	@Transactional(readOnly = true)
+	public T loadById2(final PK id) throws DaoException, SystemException,
+			ServiceException {
+		return getEntityDao().load(id,LockOptions.UPGRADE);
+	}
 
 	/**
 	 * 按id获取对象(直接返回实体类).
@@ -257,21 +288,6 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	public List<T> findByLike(String propertyName, String value)
 			throws DaoException, SystemException, ServiceException {
 		return getEntityDao().findBy(propertyName, value, MatchType.LIKE);
-	}
-
-	/**
-	 * 
-	 * @param 按id获取对象
-	 *            (实体的代理类实例,延迟缓存).
-	 * @return
-	 * @throws DaoException
-	 * @throws SystemException
-	 * @throws ServiceException
-	 */
-	@Transactional(readOnly = true)
-	public T load(final PK id) throws DaoException, SystemException,
-			ServiceException {
-		return getEntityDao().get(id);
 	}
 
 	/**

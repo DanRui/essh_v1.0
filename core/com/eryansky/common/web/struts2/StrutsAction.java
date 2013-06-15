@@ -2,6 +2,8 @@ package com.eryansky.common.web.struts2;
 
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtilsBean;
+
 import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.Result;
 import com.eryansky.common.orm.Page;
@@ -181,10 +183,10 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 //			model = getEntityManager().loadById(id);
 			//修正因使用以上代码(根据ID查找对象)导致乐观锁是失效bug
 			T entity = getEntityManager().loadById(id);
-			model = (T) ReflectionUtils.getClassGenricType(getClass())
-					.newInstance();
-			//对象拷贝
+			model = (T) ReflectionUtils.getClassGenricType(getClass()).newInstance();
+			//对象拷贝 
 			MyBeanUtils.copyBeanNotNull2Bean(entity, model);
+			getEntityManager().evict(entity);
 		} else {
 			model = (T) ReflectionUtils.getClassGenricType(getClass())
 					.newInstance();

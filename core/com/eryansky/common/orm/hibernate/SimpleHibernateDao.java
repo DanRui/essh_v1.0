@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
-import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -28,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.eryansky.common.exception.DaoException;
@@ -124,7 +124,6 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public void update(final T entity) {
 		Assert.notNull(entity, "entity不能为空");
-		clear();
 		getSession().update(entity);
 		logger.debug("update entity: {}", entity);
 	}
@@ -134,7 +133,6 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public void saveOrUpdate(final T entity) {
 		Assert.notNull(entity, "entity不能为空");
-		clear();
 		getSession().saveOrUpdate(entity);
 		logger.debug("saveOrUpdate entity: {}", entity);
 	}
@@ -144,8 +142,8 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public void saveOrUpdate(final Collection<T> entitys) {
 		Assert.notNull(entitys, "entitys不能为空");
-		for (Object entity : entitys) {
-			getSession().saveOrUpdate(entity);
+		for (T entity : entitys) {
+			this.saveOrUpdate(entity);
 		}
 	}
 	
@@ -258,15 +256,14 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	/**
 	 * 按id获取对象(实体的代理类实例,是否枷锁加).
 	 * @param id
-	 * @param lock
+	 * @param lockOptions
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
-	public T load(Serializable id, boolean lock) {
+	public T load(Serializable id, LockOptions lockOptions) {
 		Assert.notNull(id);
 		T entity = null;
-		if (lock) {
-			entity = (T) getSession().load(entityClass, id,LockMode.UPGRADE);
+		if (lockOptions !=null) {
+			entity = (T) getSession().load(entityClass, id,lockOptions);
 		} else {
 			entity = (T) getSession().load(entityClass, id);
 		}
