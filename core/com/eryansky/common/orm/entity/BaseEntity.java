@@ -86,12 +86,12 @@ public  class BaseEntity extends AutoEntity implements Serializable,
 	/**
 	 * 记录创建者用户登录名
 	 */
-	@Excel(exportName="记录创建者", exportFieldWidth = 20)
+	@Excel(exportName="记录创建者", exportFieldWidth = 30)
 	protected String createUser;
 	/**
 	 * 记录创建时间
 	 */
-	@Excel(exportName="记录创建时间", exportFieldWidth = 20)
+	@Excel(exportName="记录创建时间", exportFieldWidth = 30)
 	protected Date createTime;
 
 	/**
