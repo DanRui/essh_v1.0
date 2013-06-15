@@ -291,7 +291,10 @@ public class MenuManager extends EntityManager<Menu, Long> {
 			Menu parenMenu = parentList.get(i);
 			TreeNode treeNode1 = new TreeNode(parenMenu.getId() + "",
 					parenMenu.getName(), parenMenu.getIco());
-			treeNode1.setState(TreeNode.STATE_CLOASED);
+			if(!Collections3.isEmpty(parenMenu.getSubMenus())){
+				treeNode1.setState(TreeNode.STATE_CLOASED);
+			}
+			
 			treeNodes.add(treeNode1);
 
 			// 第二级
