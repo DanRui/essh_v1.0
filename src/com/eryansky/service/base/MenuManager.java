@@ -67,6 +67,18 @@ public class MenuManager extends EntityManager<Menu, Long> {
 		Assert.notNull(entity, "参数[entity]为空!");
 		menuDao.saveOrUpdate(entity);
 	}
+	
+	/**
+	 * 保存或修改.
+	 */
+	//清除缓存
+	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
+			CacheConstants.MENU_TREE },allEntries = true)
+	public void merge(Menu entity) throws DaoException, SystemException,
+			ServiceException {
+		Assert.notNull(entity, "参数[entity]为空!");
+		menuDao.merge(entity);
+	}
 
 	/**
 	 * 自定义删除方法.
