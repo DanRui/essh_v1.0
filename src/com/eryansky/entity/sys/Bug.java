@@ -28,7 +28,7 @@ public class Bug extends BaseEntity implements Serializable{
 	/**
 	 * bug标题.
 	 */
-	@Excel(exportName="bug标题", exportFieldWidth = 30)
+	@Excel(exportName="bug标题", exportFieldWidth = 50)
 	private String title;
 	/**
 	 * bug类型 使用数据字典
@@ -47,7 +47,7 @@ public class Bug extends BaseEntity implements Serializable{
 	/**
 	 * bug描述. @Transient
 	 */
-	@Excel(exportName="bug描述", exportFieldWidth = 50)
+	@Excel(exportName="bug描述", exportFieldWidth = 100)
 	private String tContent;
 
 	public Bug() {
