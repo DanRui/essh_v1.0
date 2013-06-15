@@ -109,7 +109,11 @@ $(function() {
 						title : '提示信息',
 						text : '数据处理中，请稍后....'
 					});
-			        return $(this).form('validate');
+					var isValid = $(this).form('validate');
+					if (!isValid) {
+						$.messager.progress('close');
+					}
+					return isValid;
 			    },
 				success: function(data){
 					$.messager.progress('close');
@@ -203,10 +207,19 @@ $(function() {
 				url: '${ctx}/base/user!updateUserPassword.action',
 				onSubmit: function(param){  
 			        param.upateOperate = '0';  
-			        return $(this).form('validate');
+			        $.messager.progress({
+						title : '提示信息',
+						text : '数据处理中，请稍后....'
+					});
+					var isValid = $(this).form('validate');
+					if (!isValid) {
+						$.messager.progress('close');
+					}
+					return isValid;
 			    },
 				success: function(data){
-					var json = eval('('+ data+')');  
+					$.messager.progress('close');
+					var json = $.parseJSON(data);
 					if (json.code == 1){
 						user_password_dialog.dialog('destroy');//销毁对话框 
 						user_datagrid.datagrid('reload');	// reload the user data
@@ -273,10 +286,19 @@ $(function() {
 			user_role_form = $('#user_role_form').form({
 				url: '${ctx}/base/user!updateUserRole.action',
 				onSubmit: function(param){  
-			        return $(this).form('validate');
+					$.messager.progress({
+						title : '提示信息',
+						text : '数据处理中，请稍后....'
+					});
+					var isValid = $(this).form('validate');
+					if (!isValid) {
+						$.messager.progress('close');
+					}
+					return isValid;
 			    },
 				success: function(data){
-					var json = eval('('+ data+')');  
+					$.messager.progress('close');
+					var json = $.parseJSON(data); 
 					if (json.code == 1){
 						user_role_dialog.dialog('destroy');//销毁对话框 
 						user_datagrid.datagrid('reload');	// reload the user data

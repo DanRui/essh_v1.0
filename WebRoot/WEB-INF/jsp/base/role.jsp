@@ -53,7 +53,11 @@ $(function() {
 						title : '提示信息',
 						text : '数据处理中，请稍后....'
 					});
-			        return $(this).form('validate');
+					var isValid = $(this).form('validate');
+					if (!isValid) {
+						$.messager.progress('close');
+					}
+					return isValid;
 			    },
 				success: function(data){
 					$.messager.progress('close');

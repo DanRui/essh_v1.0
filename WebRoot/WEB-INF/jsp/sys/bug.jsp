@@ -80,7 +80,11 @@ $(function() {
 				if(content_kindeditor){
 					content_kindeditor.sync();
 				}
-		        return $(this).form('validate');
+				var isValid = $(this).form('validate');
+				if (!isValid) {
+					$.messager.progress('close');
+				}
+				return isValid;
 		    },
 			success: function(data){
 				$.messager.progress('close');
