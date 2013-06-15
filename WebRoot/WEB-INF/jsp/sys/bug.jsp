@@ -110,8 +110,8 @@ $(function() {
 		//弹出对话窗口
 		bug_dialog = $('<div/>').dialog({
 			title:'bug详细信息',
-			width : 680,
-			height : 460,
+			width : document.body.clientWidth,
+			height : document.body.clientHeight,
 			modal : true,
 			maximizable:true,
 			href : '${ctx}/sys/bug-input.action',

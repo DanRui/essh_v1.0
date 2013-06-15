@@ -6,8 +6,9 @@ $(function() {
 	loadBugType();
 	window.setTimeout(function() {
 		content_kindeditor = KindEditor.create('#content_kindeditor', {
-			width : '680px',
-			height : '300px',
+			width : '96%',
+			height : '360px',
+			minWidth:'650px',//默认最小值为"650px"
 			items : [ 'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript', 'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak', 'anchor', 'link', 'unlink' ],
 			allowFileManager : true,
 			uploadJson : '${ctx}/servlet/FileUploadServlet',
@@ -51,7 +52,7 @@ function loadBugType(){
 		</div>
 		<div>
 			<label >bug描述:</label>
-			<textarea id="content_kindeditor" name="content" maxLength="1000" style="width: 80%;height: 200px;"></textarea>
+			<textarea id="content_kindeditor" name="content" ></textarea>
 		</div>
 	</form>
 </div>
