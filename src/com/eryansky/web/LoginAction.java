@@ -103,7 +103,7 @@ public class LoginAction
             Struts2Utils.getSession().setAttribute(SysConstants.SESSION_USER, user);
             
             AppUtils.putUserToSession(user);
-            logger.info("用户{}登录系统.", user.getLoginName());
+            logger.info("用户{}登录系统,IP:{}.", user.getLoginName(),Struts2Utils.getIp());
         } catch (Exception e) {
             throw e;
         }
