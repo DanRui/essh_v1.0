@@ -40,7 +40,7 @@ public @interface Excel {
 	public boolean exportConvert() default false;
 
 	/**
-	 * 导入数据是否需要转化 及 对已有的excel，是否需要将字段转为对应的数据 默认值：false <br>
+	 * 导入数据是否需要转换 及 对已有的excel，是否需要将字段转为对应的数据 默认值：false <br>
 	 * 若是sign为1,则需要在pojo中加入 void<br>
 	 * set字段名Convert(String text)
 	 */
