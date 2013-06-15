@@ -613,14 +613,10 @@ public final class ExcelUtil {
 					// 对于重名将导致 覆盖 失败，对于此处的限制需要
 					fieldSetMap.put(excel.exportName(), setMethod);
 					if (excel.importConvert() == true) {
-						//----------------------------------------------------------------
-						//update-begin--Author:Quainty  Date:20130524 for：[8]excel导出时间问题
 						// 用get/setXxxxConvert方法名的话， 由于直接使用了数据库绑定的Entity对象，注入会有冲突
 						StringBuffer setConvertMethodName = new StringBuffer("convertSet");
 						setConvertMethodName.append(fieldname.substring(0, 1).toUpperCase());
 						setConvertMethodName.append(fieldname.substring(1));
-						//update-end--Author:Quainty  Date:20130524 for：[8]excel导出时间问题
-						//----------------------------------------------------------------
 						Method getConvertMethod = pojoClass.getMethod(setConvertMethodName.toString(), new Class[] { String.class });
 						fieldSetConvertMap.put(excel.exportName(), getConvertMethod);
 					}
@@ -690,12 +686,10 @@ public final class ExcelUtil {
 									cellDate = stringToDate(cell.getStringCellValue());
 								}
 			                    setMethod.invoke(tObject,cellDate);
-								//// update-start--Author:lihuan Date:20130423 for：导入bug修复直接将导出的Excel导入出现的bug的修复
 								//// --------------------------------------------------------------------------------------------
 								//String cellValue = cell.getStringCellValue();
 								//Date theDate = stringToDate(cellValue);
 								//setMethod.invoke(tObject, theDate);
-								//// update-end--Author:lihuan Date:20130423 for：导入bug修复直接将导出的Excel导入出现的bug的修复
 								//// --------------------------------------------------------------------------------------------
 							} else if (xclass.equals("class java.lang.Boolean")) {
 								boolean valBool;
@@ -730,12 +724,6 @@ public final class ExcelUtil {
 									valDecimal = new BigDecimal(cell.getStringCellValue());
 								}
 								setMethod.invoke(tObject, valDecimal);
-								//// ----------------------------------------------------------------
-								//// update-begin--Author:sky Date:20130422 for：取值类型调整cell.getNumberCellValue-->>getStringCellValue
-								//setMethod.invoke(tObject, new BigDecimal(cell.getStringCellValue()));
-								//// update-end--Author:sky Date:20130422 for：取值类型调整
-								//// ----------------------------------------------------------------
-								// update-end--Author:Quainty Date:20130523 for：日期类型数据导入不对(顺便扩大支持了Excel的数据类型)
 							}
 						}
 					}
@@ -751,9 +739,6 @@ public final class ExcelUtil {
 		return dist;
 	}
 
-	// update-begin--Author:Quainty Date:20130523 for：日期类型数据导入不对(顺便扩大支持了Excel的数据类型)
-	// --------------------------------------------------------------------------------------------
-	// update-begin--Author:lihuan Date:20130423 for：直接将导出的Excel导入出现的bug的修复
 	/**
 	 * 字符串转换为Date类型数据（限定格式      YYYY-MM-DD hh:mm:ss）或（YYYY/MM/DD hh:mm:ss）
 	 * 
@@ -792,8 +777,4 @@ public final class ExcelUtil {
 		}
 		return calendar.getTime();
 	}
-
-	// update-end--Author:lihuan Date:20130423 for：导入bug修复直接将导出的Excel导入出现的bug的修复
-	// --------------------------------------------------------------------------------------------
-	// update-end--Author:Quainty Date:20130523 for：日期类型数据导入不对(顺便扩大支持了Excel的数据类型)
 }
