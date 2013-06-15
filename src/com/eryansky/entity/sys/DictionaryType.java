@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.eryansky.common.excel.annotation.Excel;
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.utils.CacheConstants;
 
@@ -27,15 +28,18 @@ public class DictionaryType extends BaseEntity {
 	/**
 	 * 类型名称
 	 */
+	@Excel(exportName="类型名称", exportFieldWidth = 30)
 	private String name;
 	/**
 	 * 类型编码
 	 */
+	@Excel(exportName="类型编码", exportFieldWidth = 20)
 	private String code;
 
 	/**
 	 * 排序
 	 */
+	@Excel(exportName="排序", exportFieldWidth = 10)
 	private Integer orderNo;
 
 	public DictionaryType() {

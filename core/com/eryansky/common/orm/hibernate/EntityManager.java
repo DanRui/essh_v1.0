@@ -306,18 +306,18 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	/**
 	 * 查询所有(排序).
 	 * 
-	 * @param orderByProperty
-	 *            排序属性
-	 * @param isAsc
-	 *            是够升序
+	 * @param orderBy
+	 *            排序字段 多个排序字段时用','分隔.
+	 * @param order
+	 *            排序方式"asc"、"desc" 中间以","分割
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	public List<T> getAll(String orderByProperty, boolean isAsc)
-			throws DaoException, SystemException, ServiceException {
-		return getEntityDao().getAll(orderByProperty, isAsc);
+	public List<T> getAll(String orderBy, String order) throws DaoException,
+			SystemException, ServiceException {
+		return getEntityDao().getAll(orderBy, order);
 	}
 
 	/**
@@ -355,11 +355,32 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	}
 
 	/**
+	 * 过滤器查询.
+	 * 
+	 * @param filters
+	 *            属性过滤器
+	 * @param orderBy
+	 *            排序字段 多个排序字段时用','分隔.
+	 * @param order
+	 *            排序方式"asc"、"desc" 中间以","分割
+	 * @return
+	 * @throws DaoException
+	 * @throws SystemException
+	 * @throws ServiceException
+	 */
+	@Transactional(readOnly = true)
+	public List<T> find(final List<PropertyFilter> filters,
+			final String orderBy, final String order) throws DaoException,
+			SystemException, ServiceException {
+		return getEntityDao().find(filters, orderBy, order);
+	}
+
+	/**
 	 * 自定义hql分页查询.
 	 * 
-	 * @param page
-	 * @param hql
-	 * @param values
+	 * @param page 分页对象
+	 * @param hql HQL语句
+	 * @param values 参数
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
@@ -373,8 +394,9 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	}
 
 	/**
-	 * 过滤器分页查询.
-	 * <br>自动过滤逻辑删除的数据.
+	 * 过滤器分页查询. <br>
+	 * 自动过滤逻辑删除的数据.
+	 * 
 	 * @param page
 	 *            第几页
 	 * @param rows
@@ -399,11 +421,11 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		Assert.notNull(filters, "参数[filters]为空!");
 		Page<T> p = new Page<T>(rows);
 		p.setPageNo(page);
-		//过滤逻辑删除的数据
+		// 过滤逻辑删除的数据
 		PropertyFilter normal = new PropertyFilter("NEI_status",
 				StatusState.delete.getValue() + "");
 		filters.add(normal);
-		
+
 		if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
 			p.setOrder(order);
 			p.setOrderBy(sort);
@@ -443,7 +465,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		Assert.notNull(filters, "参数[filters]为空!");
 		Page<T> p = new Page<T>(rows);
 		p.setPageNo(page);
-		//过滤逻辑删除的数据
+		// 过滤逻辑删除的数据
 		if (isFilterDelete) {
 			PropertyFilter normal = new PropertyFilter("NEI_status",
 					StatusState.delete.getValue() + "");

@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import com.eryansky.common.excel.annotation.Excel;
+
 /**
  * 统一定义entity基类. <br>
  * 基类统一定义id的属性名称、数据类型、列名映射及生成策略. <br>
@@ -21,6 +23,7 @@ public abstract class AutoEntity  extends AbstractEntity<Long>{
 	/**
 	 * 主键ID
 	 */
+	@Excel(exportName="编号", exportFieldWidth = 10)
 	protected Long id;
 
 	public AutoEntity() {

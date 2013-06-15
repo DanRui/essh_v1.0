@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.eryansky.common.excel.annotation.Excel;
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.io.ClobUtil;
 import com.eryansky.common.utils.jackson.ClobSerializer;
@@ -27,6 +28,7 @@ public class Bug extends BaseEntity implements Serializable{
 	/**
 	 * bug标题.
 	 */
+	@Excel(exportName="bug标题", exportFieldWidth = 10)
 	private String title;
 	/**
 	 * bug类型 使用数据字典
@@ -35,12 +37,18 @@ public class Bug extends BaseEntity implements Serializable{
     /**
      * bug类型名称 @Transient
      */
+	@Excel(exportName="bug类型", exportFieldWidth = 10)
     private String typeName;
     
 	/**
 	 * bug描述.
 	 */
 	private Clob content;
+	/**
+	 * bug描述. @Transient
+	 */
+	@Excel(exportName="bug描述", exportFieldWidth = 10)
+	private String tContent;
 
 	public Bug() {
 		super();
@@ -98,9 +106,20 @@ public class Bug extends BaseEntity implements Serializable{
 	 */
 	@Transient
 	public String getTContent() {
-		return ClobUtil.getString(content);
+		String str = "";
+		if(content != null){
+			str = ClobUtil.getString(content);
+		}else{
+			str = tContent;
+		}
+		return str;
 	}
 	
+	
+	public void setTContent(String tContent) {
+		this.tContent = tContent;
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

@@ -53,7 +53,6 @@ $(function() {
             {field:'ck',checkbox:true,width:60},
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80}, 
             {field:'ico',title:'菜单图标',width:60,align:'center',formatter:function(value,rowData,rowIndex){    
-	            	// return "<span class='tree-icon tree-file " + row+"' ></span> ";
 	            	return $.formatString('<span class="tree-icon tree-file {0}"></span>', value);
 		           // return "<div style='text-align:center;'><img src='${ctx}/img/menu/"+value +"' border='0' width='20px' height='20px'></div>";
 	            }
@@ -62,15 +61,7 @@ $(function() {
 	        {field:'url',title:'链接地址',width:260},
             {field:'markUrl',title:'标识地址',width:200},
 	        {field:'orderNo',title:'排序',align:'right',width:60,sortable:true}, 
-	        {field:'status',title:'状态',align:'center',width:60,
-	        	formatter:function(value,rowData,rowIndex){
-        			if(value == 0){
-        				return '启用';
-        			}else if(value == 3){
-        				return '<span style="color:red">停用<span>';
-        			}
-			    }
-	        }
+	        {field:'statusDesc',title:'状态',align:'center',width:60}
 	    ]],
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
@@ -103,9 +94,14 @@ $(function() {
 				url: '${ctx}/base/menu!save.action',
 				onSubmit: function(param){  
 					param.replace = 1; //是否过滤特殊字符
+					$.messager.progress({
+						title : '提示信息',
+						text : '数据处理中，请稍后....'
+					});
 			        return $(this).form('validate');
 			    },
 				success: function(data){
+					$.messager.progress('close');
 					var json = $.parseJSON(data);
 					//var json = eval('('+ data+')'); //将后台传递的json字符串转换为javascript json对象 
 					if (json.code ==1){

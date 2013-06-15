@@ -104,7 +104,7 @@ public class FileUploadServlet extends HttpServlet {
 		}
 		
 		if (StringUtils.isBlank(configPath)) {
-			ServletUtils.rendText(getError("你还没设置上传文件保存的目录路径!"), response);
+			ServletUtils.renderText(getError("你还没设置上传文件保存的目录路径!"), response);
 			return;
 		}
 		 
@@ -115,7 +115,7 @@ public class FileUploadServlet extends HttpServlet {
 		String saveUrl  = request.getContextPath() + "/"+configPath;
   
 		if(!ServletFileUpload.isMultipartContent(request)){
-			ServletUtils.rendText(getError("请选择文件。"), response);
+			ServletUtils.renderText(getError("请选择文件。"), response);
 			return;
 		}
 		//检查目录
@@ -127,12 +127,12 @@ public class FileUploadServlet extends HttpServlet {
 		}
 		//检查目录写权限
 		if(!uploadDir.canWrite()){
-			ServletUtils.rendText(getError("传目录没有写权限。"), response);
+			ServletUtils.renderText(getError("传目录没有写权限。"), response);
 			return;
 		}
  
 		if(!extMap.containsKey(dirName)){
-			ServletUtils.rendText(getError("目录名不正确。"), response);
+			ServletUtils.renderText(getError("目录名不正确。"), response);
 			return;
 		}
 		//创建文件夹
@@ -165,13 +165,13 @@ public class FileUploadServlet extends HttpServlet {
 				if (!item.isFormField()) {
 					//检查文件大小
 					if(item.getSize() > maxSize){
-						ServletUtils.rendText(getError("上传文件大小超过限制。"), response);
+						ServletUtils.renderText(getError("上传文件大小超过限制。"), response);
 						return;
 					}
 					//检查扩展名
 					String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 					if(!Arrays.<String>asList(extMap.get(dirName).split(",")).contains(fileExt)){
-						ServletUtils.rendText(getError("上传文件扩展名是不允许的扩展名。\n只允许" + extMap.get(dirName) + "格式。"), response);
+						ServletUtils.renderText(getError("上传文件扩展名是不允许的扩展名。\n只允许" + extMap.get(dirName) + "格式。"), response);
 						return;
 					}
 
@@ -181,14 +181,14 @@ public class FileUploadServlet extends HttpServlet {
 						File uploadedFile = new File(savePath, newFileName);
 						item.write(uploadedFile);
 					}catch(Exception e){
-						ServletUtils.rendText(getError("上传文件失败。"), response);
+						ServletUtils.renderText(getError("上传文件失败。"), response);
 						return;
 					}
 
 					Map<String,Object> obj = Maps.newHashMap();
 					obj.put("error", 0);
 					obj.put("url", saveUrl + newFileName);
-					ServletUtils.rendText(obj, response);
+					ServletUtils.renderText(obj, response);
 				}
 			}
 		} catch (FileUploadException e1) {

@@ -14,7 +14,6 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -182,21 +181,8 @@ public class HibernateDao<T, PK extends Serializable> extends
 		c.setFirstResult(page.getFirst() - 1);
 		c.setMaxResults(page.getPageSize());
 
-		if (page.isOrderBySetted()) {
-			String[] orderByArray = StringUtils.split(page.getOrderBy(), ',');
-			String[] orderArray = StringUtils.split(page.getOrder(), ',');
-
-			Assert.isTrue(orderByArray.length == orderArray.length,
-					"分页多重排序参数中,排序字段与排序方向的个数不相等");
-
-			for (int i = 0; i < orderByArray.length; i++) {
-				if (Page.ASC.equals(orderArray[i])) {
-					c.addOrder(Order.asc(orderByArray[i]));
-				} else {
-					c.addOrder(Order.desc(orderByArray[i]));
-				}
-			}
-		}
+		//设置排序
+		super.setPageParameterToCriteria(c, page.getOrderBy(), page.getOrder());
 		return c;
 	}
 
@@ -308,6 +294,20 @@ public class HibernateDao<T, PK extends Serializable> extends
 	public List<T> find(List<PropertyFilter> filters) {
 		Criterion[] criterions = buildCriterionByPropertyFilter(filters);
 		return find(criterions);
+	}
+	
+	/**
+	 * 按属性过滤条件列表查找对象列表.
+	 * 
+	 * @param orderBy
+	 *            排序字段 多个排序字段时用','分隔.
+	 * @param order
+	 *            排序方式"asc"、"desc" 中间以","分割
+	 */
+	public List<T> find(final List<PropertyFilter> filters,
+			final String orderBy, final String order) {
+		Criterion[] criterions = buildCriterionByPropertyFilter(filters);
+		return find(orderBy, order, criterions);
 	}
 
 	/**

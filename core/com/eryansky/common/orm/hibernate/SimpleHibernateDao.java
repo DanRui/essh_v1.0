@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
-import org.hibernate.ReplicationMode;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,6 +31,7 @@ import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.util.Assert;
 
 import com.eryansky.common.exception.DaoException;
+import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.annotation.Delete;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.common.utils.reflection.ReflectionUtils;
@@ -299,6 +300,21 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		}
 		return c.list();
 	}
+	
+	/**
+	 * 获取全部对象, 支持按属性行序.
+	 * 
+	 * @param orderBy
+	 *            排序字段 多个排序字段时用','分隔.
+	 * @param order
+	 *            排序方式"asc"、"desc" 中间以","分割
+	 */
+	public List<T> getAll(String orderBy, String order) {
+		Criteria c = createCriteria();
+		//设置排序
+		setPageParameterToCriteria(c, orderBy, order);
+		return c.list();
+	}
 
 	/**
 	 * 按属性查找对象列表, 匹配方式为相等.
@@ -413,6 +429,21 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public List<T> find(final Criterion... criterions) {
 		return createCriteria(criterions).list();
+	}
+	
+	/**
+	 * 按Criteria查询对象列表.
+	 * 
+	 * @param orderBy 多个排序字段时用','分隔.
+	 * @param orderBy 排序字段 多个排序字段时用','分隔.
+	 * @param order 排序方式"asc"、"desc" 中间以","分割
+	 * @return
+	 */
+	public List<T> find(final String orderBy, final String order,final Criterion... criterions) {
+		Criteria c = createCriteria(criterions);
+		//设置排序
+		setPageParameterToCriteria(c, orderBy, order);
+		return c.list();
 	}
 
 	/**
@@ -590,4 +621,27 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		return getSession().contains(entity);
 	}
 	
+	
+	/**
+	 * 设置分页参数到Criteria对象,辅助函数.
+	 */
+	protected Criteria setPageParameterToCriteria(final Criteria c,
+			final String orderBy,final String order) {
+		if (StringUtils.isNotBlank(orderBy) && StringUtils.isNotBlank(order)) {
+			String[] orderByArray = StringUtils.split(orderBy, ',');
+			String[] orderArray = StringUtils.split(order, ',');
+
+			Assert.isTrue(orderByArray.length == orderArray.length,
+					"分页多重排序参数中,排序字段与排序方向的个数不相等");
+
+			for (int i = 0; i < orderByArray.length; i++) {
+				if (Page.ASC.equals(orderArray[i])) {
+					c.addOrder(Order.asc(orderByArray[i]));
+				} else {
+					c.addOrder(Order.desc(orderByArray[i]));
+				}
+			}
+		}
+		return c;
+	}
 }

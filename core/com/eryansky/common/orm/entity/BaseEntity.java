@@ -4,16 +4,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.eryansky.common.excel.annotation.Excel;
 import com.eryansky.common.utils.DateUtil;
 import com.eryansky.entity.base.state.StatusState;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -87,10 +86,12 @@ public  class BaseEntity extends AutoEntity implements Serializable,
 	/**
 	 * 记录创建者用户登录名
 	 */
+	@Excel(exportName="记录创建者", exportFieldWidth = 20)
 	protected String createUser;
 	/**
 	 * 记录创建时间
 	 */
+	@Excel(exportName="记录创建时间", exportFieldWidth = 20)
 	protected Date createTime;
 
 	/**
@@ -113,6 +114,20 @@ public  class BaseEntity extends AutoEntity implements Serializable,
 	public Integer getStatus() {
 		return status;
 	}
+	
+	/**
+	 * 状态描述
+	 */
+	@Transient
+	public String getStatusDesc() {
+		StatusState s = StatusState.getStatusState(status);
+		String str = "";
+		if(s != null){
+			str =  s.getDescription();
+		}
+		return str;
+	}
+
 
 	/**
 	 * 设置 状态标志位

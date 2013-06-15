@@ -84,6 +84,10 @@ $(function() {
 				}
 			},
 			onAfterEdit : function(rowIndex, rowData, changes) {
+				$.messager.progress({
+					title : '提示信息',
+					text : '数据处理中，请稍后....'
+				});
 				var inserted = dictionaryType_datagrid.datagrid('getChanges', 'inserted');
 				var updated = dictionaryType_datagrid.datagrid('getChanges', 'updated');
 				if (inserted.length < 1 && updated.length < 1) {
@@ -93,6 +97,7 @@ $(function() {
 				}
 				$.post('${ctx}/sys/dictionary-type!save.action',rowData,
 						function(data) {
+					$.messager.progress('close');
 					if (data.code == 1) {
 						dictionaryType_datagrid.datagrid('acceptChanges');
 						editRow = undefined;

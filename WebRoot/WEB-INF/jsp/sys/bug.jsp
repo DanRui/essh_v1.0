@@ -6,6 +6,9 @@ var bug_datagrid;
 var bug_form;
 var bug_search_form;
 var bug_dialog;
+
+var bug_import_dialog;//bug导入表单弹出对话框
+var bug_import_form;
 $(function() {  
 	bug_form = $('#bug_form').form();
 	bug_search_form = $('#bug_search_form').form();
@@ -70,13 +73,18 @@ $(function() {
        	bug_form = $('#bug_form').form({
 			url: '${ctx}/sys/bug!save.action',
 			onSubmit: function(param){  
+				$.messager.progress({
+					title : '提示信息',
+					text : '数据处理中，请稍后....'
+				});
 				if(content_kindeditor){
 					content_kindeditor.sync();
 				}
 		        return $(this).form('validate');
 		    },
 			success: function(data){
-				var json = eval('('+ data+')'); //将后台传递的json字符串转换为javascript json对象 
+				$.messager.progress('close');
+				var json = $.parseJSON(data);
 				if (json.code ==1){
 					bug_dialog.dialog('destroy');//销毁对话框 
 					bug_datagrid.datagrid('reload');//重新加载列表数据
@@ -181,14 +189,78 @@ $(function() {
 		bug_datagrid.datagrid('load',$.serializeObject(bug_search_form));
 	}
 		
+	//导出Excel
+	function exportExcel(){
+		$('#bug_temp_iframe').attr('src','${ctx}/sys/bug!exportExcel.action');
+	}
+	
+	function importFormInit(){
+		bug_import_form = $('#bug_import_form').form({
+			url: '${ctx}/sys/bug!importExcel.action',
+			onSubmit: function(param){  
+				$.messager.progress({
+					title : '提示信息',
+					text : '数据处理中，请稍后....'
+				});
+		        return $(this).form('validate');
+		    },
+			success: function(data){
+				$.messager.progress('close');
+				var json = $.parseJSON(data);
+				if (json.code ==1){
+					bug_import_dialog.dialog('destroy');//销毁对话框 
+					bug_datagrid.datagrid('reload');//重新加载列表数据
+					eu.showMsg(json.msg);//操作结果提示
+				}else {
+					eu.showAlertMsg(json.msg,'error');
+				}
+			}
+		});
+	}
+	
+	//导入
+	function importExcel(){
+		bug_import_dialog = $('<div/>').dialog({//基于中心面板
+			title:'Excel导入',
+			width : 500,
+			height : 360,
+			modal : true,
+			maximizable:true,
+			href : '${ctx}/sys/bug-import.action',
+			buttons : [ {
+				text : '保存',
+				iconCls : 'icon-save',
+				handler : function() {
+					bug_import_form.submit();
+				}
+			},{
+				text : '关闭',
+				iconCls : 'icon-cancel',
+				handler : function() {
+					bug_import_dialog.dialog('destroy');
+				}
+			}],
+			onClose : function() {
+				$(this).dialog('destroy');
+			},
+			onLoad:function(){
+				importFormInit();
+			}
+		}).dialog('open');
+	}
 </script>
 <%-- 列表右键 --%>
 <div id="bug_datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
 	<div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
 	<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
 	<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
+	<div onclick="exportExcel();" data-options="iconCls:'icon-edit'">Excel导出</div>
+	<div onclick="importExcel();" data-options="iconCls:'icon-edit'">Excel导入</div>
 </div>
-		
+
+<%-- 隐藏iframe --%>
+<iframe id="bug_temp_iframe" style="display: none;"></iframe>
+	
 <%-- 工具栏 操作按钮 --%>
 <div id="bug_datagrid-toolbar">
     <div style="margin-left:10px; float: left;">
@@ -205,6 +277,10 @@ $(function() {
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
 		<span class="toolbar-btn-separator"></span>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a> 
+		<span class="toolbar-btn-separator"></span>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="exportExcel()">Excel导出</a> 
+		<span class="toolbar-btn-separator"></span>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="importExcel()">Excel导入</a> 
 	</div>
 </div>
 <table id="bug_datagrid" toolbar="#bug_datagrid-toolbar" fit="true"></table>

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.util.Assert;
 import org.springframework.web.util.WebUtils;
 
+import com.eryansky.common.utils.browser.BrowserUtils;
 import com.eryansky.common.utils.encode.EncodeUtils;
 import com.eryansky.common.utils.mapper.JsonMapper;
 
@@ -129,6 +130,25 @@ public class ServletUtils {
 	 * 
 	 * @param fileName 下载后的文件名.
 	 */
+	public static void setFileDownloadHeader(HttpServletRequest request,HttpServletResponse response, String fileName) {
+		try {
+			if(BrowserUtils.isIE(request)){
+				response.setHeader("content-disposition","attachment;filename=\""+ java.net.URLEncoder.encode(fileName,"UTF-8")+ "\"");
+			}else{
+				//中文文件名支持
+				String encodedfileName = new String(fileName.getBytes(), "ISO8859-1");
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedfileName + "\"");
+			}
+			
+		} catch (UnsupportedEncodingException e) {
+		}
+	}
+	
+	/**
+	 * 设置让浏览器弹出下载对话框的Header.
+	 * 
+	 * @param fileName 下载后的文件名.
+	 */
 	public static void setFileDownloadHeader(HttpServletResponse response, String fileName) {
 		try {
 			//中文文件名支持
@@ -182,7 +202,7 @@ public class ServletUtils {
 	 * @param response
 	 * @throws IOException 
 	 */
-	public static void rendText(Object data,HttpServletResponse response) throws IOException {
+	public static void renderText(Object data,HttpServletResponse response){
 		response.setContentType("text/plain;charset=UTF-8");
 		setDisableCacheHeader(response);
 		PrintWriter out = null;
@@ -192,7 +212,7 @@ public class ServletUtils {
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw e;
+			throw new RuntimeException(e);
 		}finally{
 			if(out != null){
 				out.close();

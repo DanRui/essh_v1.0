@@ -160,6 +160,19 @@ public class User
         this.sex = sex;
     }
 
+    /**
+     * 性别描述.
+     */
+    @Transient
+    public String getSexDesc() {
+    	SexState ss = SexState.getSexState(sex);
+    	String str = "";
+    	if(ss != null){
+    		str = ss.getDescription();
+    	}
+        return str;
+    }
+    
     public String getEmail() {
         return email;
     }

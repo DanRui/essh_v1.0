@@ -49,10 +49,15 @@ $(function() {
         	role_form = $('#role_form').form({
 				url: '${ctx}/base/role!save.action',
 				onSubmit: function(param){  
+					$.messager.progress({
+						title : '提示信息',
+						text : '数据处理中，请稍后....'
+					});
 			        return $(this).form('validate');
 			    },
 				success: function(data){
-					var json = eval('('+ data+')'); //将后台传递的json字符串转换为javascript json对象 
+					$.messager.progress('close');
+					var json = $.parseJSON(data);
 					if (json.code ==1){
 						role_dialog.dialog('destroy');//销毁对话框 
 						role_datagrid.datagrid('reload');//重新加载列表数据

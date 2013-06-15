@@ -78,31 +78,11 @@ $(function() {
         		}
             },
 	        {field:'name',title:'姓名',width:100,sortable:true},
-	        {field:'sex',title:'性别',width:100,align:'center',sortable:true,
-	        	formatter:function(value,rowData,rowIndex){
-	        		value = parseInt(value, 10);
-	        		if(value == 1){
-	        			return '男';
-	        		}else if(value == 0){
-	        			return '女';
-	        		}else if(value == 2){
-	        			return '保密';
-	        		}
-	        		
-				}
-			},
+	        {field:'sexDesc',title:'性别',width:60,align:'center'},
 	        {field:'email',title:'邮箱',width:100},
 	        {field:'address',title:'地址',width:100},
 	        {field:'tel',title:'电话',width:100},
-	        {field:'status',title:'状态',align:'center',width:60,
-	        	formatter:function(value,rowData,rowIndex){
-	        		value = parseInt(value, 10);
-	        		if(value == 0){
-        				return '启用';
-        			}else if(value == 3){
-        				return $.formatString('<span style="color:red">{0}<span>','停用');
-        			}
-			}}
+	        {field:'statusDesc',title:'状态',align:'center',width:60}
 	    ]],
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
@@ -125,10 +105,15 @@ $(function() {
 			user_form = $('#user_form').form({
 				url: '${ctx}/base/user!save.action',
 				onSubmit: function(param){  
+					$.messager.progress({
+						title : '提示信息',
+						text : '数据处理中，请稍后....'
+					});
 			        return $(this).form('validate');
 			    },
 				success: function(data){
-					var json = eval('('+ data+')'); //将后台传递的json字符串转换为javascript json对象 
+					$.messager.progress('close');
+					var json = $.parseJSON(data);
 					if (json.code ==1){
 						user_dialog.dialog('destroy');//销毁对话框 
 						user_datagrid.datagrid('reload');//重新加载列表数据

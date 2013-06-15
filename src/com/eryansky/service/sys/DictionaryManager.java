@@ -199,7 +199,7 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 			ServiceException {
 		Assert.notNull(dictionaryTypeCode, "参数[dictionaryTypeCode]为空!");
 		List<Dictionary> list = dictionaryDao.createQuery(
-				"from Dictionary d where d.dictionaryType = ? ",
+				"from Dictionary d where d.dictionaryType.code = ? ",
 				new Object[] { dictionaryTypeCode }).list();
 		return list;
 	}

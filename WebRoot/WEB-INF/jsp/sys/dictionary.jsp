@@ -159,6 +159,10 @@ $(function() {
 				dictionaryTypeCode = rowData.dictionaryTypeCode;
 			},
 			onAfterEdit : function(rowIndex, rowData, changes) {
+				$.messager.progress({
+					title : '提示信息',
+					text : '数据处理中，请稍后....'
+				});
 				var inserted = dictionary_datagrid.datagrid('getChanges', 'inserted');
 				var updated = dictionary_datagrid.datagrid('getChanges', 'updated');
 				if (inserted.length < 1 && updated.length < 1) {
@@ -169,6 +173,7 @@ $(function() {
 				}
 				$.post('${ctx}/sys/dictionary!save.action',rowData,
 						function(data) {
+					$.messager.progress('close');
 					if (data.code == 1) {
 						dictionary_datagrid.datagrid('acceptChanges');
 						cancelSelect();

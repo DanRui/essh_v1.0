@@ -59,7 +59,7 @@ public class FileManagerServlet extends HttpServlet {
 		String dirName = request.getParameter("dir");
 		if (dirName != null) {
 			if(!Arrays.<String>asList(new String[]{"image", "flash", "media", "file"}).contains(dirName)){
-				ServletUtils.rendText("无效目录.", response);
+				ServletUtils.renderText("无效目录.", response);
 				return;
 			}
 			rootPath += dirName + "/";
@@ -85,18 +85,18 @@ public class FileManagerServlet extends HttpServlet {
 
 		//不允许使用..移动到上一级目录
 		if (path.indexOf("..") >= 0) {
-			ServletUtils.rendText("不允许访问.", response);
+			ServletUtils.renderText("不允许访问.", response);
 			return;
 		}
 		//最后一个字符不是/
 		if (!"".equals(path) && !path.endsWith("/")) {
-			ServletUtils.rendText("参数无效.", response);
+			ServletUtils.renderText("参数无效.", response);
 			return;
 		}
 		//目录不存在或不是目录
 		File currentPathFile = new File(currentPath);
 		if(!currentPathFile.isDirectory()){
-			ServletUtils.rendText("目录不存在或不是目录.", response);
+			ServletUtils.renderText("目录不存在或不是目录.", response);
 			return;
 		}
 
@@ -141,7 +141,7 @@ public class FileManagerServlet extends HttpServlet {
 		result.put("total_count", fileList.size());
 		result.put("file_list", fileList);
 
-		ServletUtils.rendText(result, response);
+		ServletUtils.renderText(result, response);
 	}
 
 	public class NameComparator implements Comparator {
