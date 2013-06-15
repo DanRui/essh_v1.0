@@ -215,12 +215,6 @@ public abstract class EntityManager<T, PK extends Serializable> {
 			ServiceException {
 		return getEntityDao().load(id);
 	}
-	
-	@Transactional(readOnly = true)
-	public T loadById2(final PK id) throws DaoException, SystemException,
-			ServiceException {
-		return getEntityDao().load(id,LockOptions.UPGRADE);
-	}
 
 	/**
 	 * 按id获取对象(直接返回实体类).
