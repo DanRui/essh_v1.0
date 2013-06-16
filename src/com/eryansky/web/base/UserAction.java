@@ -14,7 +14,6 @@ import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.Role;
 import com.eryansky.entity.base.User;
-import com.eryansky.service.CommonManager;
 import com.eryansky.service.base.RoleManager;
 import com.eryansky.service.base.UserManager;
 import com.eryansky.utils.AppConstants;
@@ -36,8 +35,6 @@ public class UserAction extends StrutsAction<User> {
 	private UserManager userManager;
 	@Autowired
 	private RoleManager roleManager;
-	@Autowired
-	private CommonManager commonManager;
 	//用户关连角色ID集合
 	private List<Long> roleIds = Lists.newArrayList();
 
