@@ -74,7 +74,7 @@ $(function() {
 			url: '${ctx}/sys/bug!save.action',
 			onSubmit: function(param){  
 				$.messager.progress({
-					title : '提示信息',
+					title : '提示信息！',
 					text : '数据处理中，请稍后....'
 				});
 				if(content_kindeditor){
@@ -203,7 +203,7 @@ $(function() {
 			url: '${ctx}/sys/bug!importExcel.action',
 			onSubmit: function(param){  
 				$.messager.progress({
-					title : '提示信息',
+					title : '提示信息！',
 					text : '数据处理中，请稍后....'
 				});
 		        return $(this).form('validate');

@@ -95,7 +95,7 @@ $(function() {
 				onSubmit: function(param){  
 					param.replace = 1; //是否过滤特殊字符
 					$.messager.progress({
-						title : '提示信息',
+						title : '提示信息！',
 						text : '数据处理中，请稍后....'
 					});
 					var isValid = $(this).form('validate');

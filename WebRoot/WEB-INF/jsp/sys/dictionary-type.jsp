@@ -85,7 +85,7 @@ $(function() {
 			},
 			onAfterEdit : function(rowIndex, rowData, changes) {
 				$.messager.progress({
-					title : '提示信息',
+					title : '提示信息！',
 					text : '数据处理中，请稍后....'
 				});
 				var inserted = dictionaryType_datagrid.datagrid('getChanges', 'inserted');

@@ -50,7 +50,7 @@ $(function() {
 				url: '${ctx}/base/role!save.action',
 				onSubmit: function(param){  
 					$.messager.progress({
-						title : '提示信息',
+						title : '提示信息！',
 						text : '数据处理中，请稍后....'
 					});
 					var isValid = $(this).form('validate');

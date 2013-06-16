@@ -106,7 +106,7 @@ $(function() {
 				url: '${ctx}/base/user!save.action',
 				onSubmit: function(param){  
 					$.messager.progress({
-						title : '提示信息',
+						title : '提示信息！',
 						text : '数据处理中，请稍后....'
 					});
 					var isValid = $(this).form('validate');
@@ -208,7 +208,7 @@ $(function() {
 				onSubmit: function(param){  
 			        param.upateOperate = '0';  
 			        $.messager.progress({
-						title : '提示信息',
+						title : '提示信息！',
 						text : '数据处理中，请稍后....'
 					});
 					var isValid = $(this).form('validate');
@@ -287,7 +287,7 @@ $(function() {
 				url: '${ctx}/base/user!updateUserRole.action',
 				onSubmit: function(param){  
 					$.messager.progress({
-						title : '提示信息',
+						title : '提示信息！',
 						text : '数据处理中，请稍后....'
 					});
 					var isValid = $(this).form('validate');
