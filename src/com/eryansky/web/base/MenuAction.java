@@ -6,6 +6,7 @@ import org.apache.commons.collections.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;
+import com.eryansky.common.exception.ActionException;
 import com.eryansky.common.model.Result;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.hibernate.EntityManager;
@@ -58,7 +59,14 @@ public class MenuAction extends StrutsAction<Menu> {
 
 			// 设置上级节点
 			if (parentId != null) {
-				model.setParentMenu(menuManager.loadById(parentId));
+				Menu parentMenu = menuManager.loadById(parentId);
+				if(parentMenu == null){
+					logger.error("父级菜单[{}]已被删除.",parentId);
+					throw new ActionException("父级菜单已被删除.");
+				}
+				model.setParentMenu(parentMenu);
+			}else{
+				model.setParentMenu(null);
 			}
 			if (model.getId() != null) {
 				if (model.getId().equals(parentId)) {
