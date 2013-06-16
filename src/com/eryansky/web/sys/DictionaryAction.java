@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.collections.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.eryansky.common.exception.ActionException;
 import com.eryansky.common.model.Combobox;
 import com.eryansky.common.model.Result;
 import com.eryansky.common.model.TreeNode;
@@ -35,6 +36,10 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 	 * 数据字典类型.
 	 */
 	private String dictionaryTypeCode;
+	/**
+	 * 父级数据字典编号.
+	 */
+	private String parentDictionaryCode;
 
 	@Override
 	public EntityManager<Dictionary, Long> getEntityManager() {
@@ -72,15 +77,24 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 			}
 
 			// 设置上级节点
-			if (!StringUtils.isEmpty(model.getParentDictionaryCode())) {
-				model.setParentDictionary(dictionaryManager.getByCode(model
-						.getParentDictionaryCode()));
+			if (!StringUtils.isEmpty(parentDictionaryCode)) {
+				Dictionary parentDictionary = dictionaryManager.getByCode(parentDictionaryCode);
+				if(parentDictionary == null){
+					logger.error("上级数据字典[{}]已被删除.",parentDictionaryCode);
+					throw new ActionException("上级数据字典已被删除.");
+				}
+				model.setParentDictionary(parentDictionary);
+			}else {
+				model.setParentDictionary(null);
 			}
 
 			// 设置字典类型
 			if (!StringUtils.isEmpty(model.getDictionaryTypeCode())) {
 				model.setDictionaryType(dictionaryTypeManager.getByCode(model
 						.getDictionaryTypeCode()));
+			}else{
+				logger.error("字典类型为空.");
+				throw new ActionException("字典类型为空.");
 			}
 
 			dictionaryManager.merge(model);
@@ -169,6 +183,10 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 
 	public void setDictionaryTypeCode(String dictionaryTypeCode) {
 		this.dictionaryTypeCode = dictionaryTypeCode;
+	}
+
+	public void setParentDictionaryCode(String parentDictionaryCode) {
+		this.parentDictionaryCode = parentDictionaryCode;
 	}
 	
 	
