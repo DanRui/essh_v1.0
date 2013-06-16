@@ -30,6 +30,10 @@ public class MenuAction extends StrutsAction<Menu> {
 
 	@Autowired
 	private MenuManager menuManager;
+	/**
+	 * 父级菜单ID
+	 */
+	private Long parentId;
 
 	@Override
 	public EntityManager<Menu, Long> getEntityManager() {
@@ -53,11 +57,11 @@ public class MenuAction extends StrutsAction<Menu> {
 			}
 
 			// 设置上级节点
-			if (model.getParentId() != null) {
-				model.setParentMenu(menuManager.loadById(model.getParentId()));
+			if (parentId != null) {
+				model.setParentMenu(menuManager.loadById(parentId));
 			}
 			if (model.getId() != null) {
-				if (model.getId().equals(model.getParentId())) {
+				if (model.getId().equals(parentId)) {
 					result = new Result(Result.ERROR, "[上级菜单]不能与[菜单名称]相同.",
 							null);
 					logger.debug(result.toString());
@@ -152,5 +156,10 @@ public class MenuAction extends StrutsAction<Menu> {
 			throw e;
 		}
 	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
+	
 	
 }
