@@ -176,6 +176,7 @@ public class UserAction extends StrutsAction<User> {
 	public void setUpateOperate(String upateOperate) {
 		this.upateOperate = upateOperate;
 	}
+	
 	public void setRoleIds(List<Long> roleIds) {
 		this.roleIds = roleIds;
 	}
