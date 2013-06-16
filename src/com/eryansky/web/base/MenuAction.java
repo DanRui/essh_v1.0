@@ -68,6 +68,7 @@ public class MenuAction extends StrutsAction<Menu> {
 			}else{
 				model.setParentMenu(null);
 			}
+			
 			if (model.getId() != null) {
 				if (model.getId().equals(parentId)) {
 					result = new Result(Result.ERROR, "[上级菜单]不能与[菜单名称]相同.",
