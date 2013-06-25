@@ -25,17 +25,15 @@
 	<context:component-scan base-package="com.eryansky.common.orm,com.eryansky.service,com.eryansky.timer" />
 	
 	<!-- 1.jndi数据源 -->
-	<!-- <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/${jndi.name}" resource-ref="true" /> -->
+	<jee:jndi-lookup id="dataSource" jndi-name="${jndi.name}" />
 	
 	<!-- 2.DBCP数据源 数据源配置,使用应用内的DBCP数据库连接池 -->
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<!-- Connection Info -->
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driverClassName}" />
 		<property name="url" value="${jdbc.url}" />
 		<property name="username" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
         
-		<!-- Connection Pooling Info -->
 		<property name="initialSize" value="5" />
 		<property name="maxActive" value="40" />
 		<property name="maxIdle" value="200" />
@@ -46,7 +44,7 @@
         <property name="testOnReturn" value="false" />  
         <property name="validationQuery" value="${jdbc.validationQuery}" />
 		<property name="defaultAutoCommit" value="false" />
-	</bean>
+	</bean> -->
 	
 	
 	<!-- Hibernate切面拦截器 -->
