@@ -274,12 +274,14 @@
         <location>/common/403.jsp</location>
     </error-page>
     
-    <!-- jndi数据源 -->
+    <!-- jndi数据源配置 -->
+    <!-- 
 	<resource-ref>  
 		<description>jndi数据源</description>  
 		<res-ref-name>jdbc/mysql</res-ref-name>  
 		<res-type>javax.sql.DataSource</res-type>  
 		<res-auth>Container</res-auth>  
 	</resource-ref>  
-
+     -->
+     
 </web-app>
