@@ -1,8 +1,13 @@
 package com.eryansky.utils;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.comparators.ComparatorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +17,7 @@ import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.User;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 
 /**
  * 系统使用的特殊工具类 简化代码编写.
@@ -65,7 +71,16 @@ public class AppUtils {
 			SessionInfo sessionInfo = AppConstants.sessionUser.get(key);
 			list.add(sessionInfo);
 		}
+		//排序
+	    Collections.sort(list, new Comparator<SessionInfo>() {
+			@Override
+			public int compare(SessionInfo o1, SessionInfo o2) {
+				return o2.getLoginTime().compareTo(o1.getLoginTime());
+			}
+		}); 
+			 
 		Datagrid<SessionInfo> dg = new Datagrid<SessionInfo>(AppConstants.sessionUser.size(), list);
 		return dg;
 	}
 }
+

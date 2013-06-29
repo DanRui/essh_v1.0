@@ -21,7 +21,7 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.springframework.util.FileCopyUtils;
 
 import com.eryansky.common.utils.SysConstants;
-import com.eryansky.common.web.struts2.utils.Struts2Utils;
+import com.eryansky.common.web.utils.ServletUtils;
  
 /**
  * Uploadify文件上传.
@@ -53,24 +53,24 @@ public class UploadifyServlet extends HttpServlet {
 			try {
 				inputStream = request.getInputStream();
 			} catch (IOException e) {
-				uploadError("上传文件出错！");
+				uploadError("上传文件出错！",response);
 				return;
 			}
 
 			if (inputStream == null) {
-				uploadError("您没有上传任何文件！");
+				uploadError("您没有上传任何文件！",response);
 				return;
 			}
 
 			if (fileSize > SysConstants.getUploadFileMaxSize()) {
-				uploadError("上传文件超出限制大小！", fileName);
+				uploadError("上传文件超出限制大小！", fileName,response);
 				return;
 			}
 
 			// 检查文件扩展名
 			String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 			if (!Arrays.<String> asList(SysConstants.getUploadFileExts().split(",")).contains(fileExt)) {
-				uploadError("上传文件扩展名是不允许的扩展名。\n只允许" + SysConstants.getUploadFileExts() + "格式！");
+				uploadError("上传文件扩展名是不允许的扩展名。\n只允许" + SysConstants.getUploadFileExts() + "格式！",response);
 				return;
 			}
 
@@ -96,14 +96,14 @@ public class UploadifyServlet extends HttpServlet {
 			try {
 				FileCopyUtils.copy(inputStream, new FileOutputStream(uploadedFile));
 			} catch (FileNotFoundException e) {
-				uploadError("上传文件出错！");
+				uploadError("上传文件出错！",response);
 				return;
 			} catch (IOException e) {
-				uploadError("上传文件出错！");
+				uploadError("上传文件出错！",response);
 				return;
 			}
 
-			uploadSuccess(request.getContextPath() + saveUrl + newFileName, fileName, 0);// 文件上传成功
+			uploadSuccess(request.getContextPath() + saveUrl + newFileName, fileName, 0,response);// 文件上传成功
 
 			return;
 		}
@@ -113,7 +113,7 @@ public class UploadifyServlet extends HttpServlet {
 		String[] fileNames = multiPartRequest.getFileNames(SysConstants.getUploadFieldName());// 上传文件名称集合
 
 		if (files == null || files.length < 1) {
-			uploadError("您没有上传任何文件！");
+			uploadError("您没有上传任何文件！",response);
 			return;
 		}
 
@@ -122,14 +122,14 @@ public class UploadifyServlet extends HttpServlet {
 			String fileName = fileNames[i];// 上传文件名
 
 			if (file.length() > SysConstants.getUploadFileMaxSize()) {
-				uploadError("上传文件超出限制大小！", fileName);
+				uploadError("上传文件超出限制大小！", fileName,response);
 				return;
 			}
 
 			// 检查文件扩展名
 			String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 			if (!Arrays.<String> asList(SysConstants.getUploadFileExts().split(",")).contains(fileExt)) {
-				uploadError("上传文件扩展名是不允许的扩展名。\n只允许" + SysConstants.getUploadFileExts() + "格式！");
+				uploadError("上传文件扩展名是不允许的扩展名。\n只允许" + SysConstants.getUploadFileExts() + "格式！",response);
 				return;
 			}
 
@@ -155,11 +155,11 @@ public class UploadifyServlet extends HttpServlet {
 			try {
 				FileCopyUtils.copy(file, uploadedFile);// 利用spring的文件工具上传
 			} catch (Exception e) {
-				uploadError("上传文件失败！", fileName);
+				uploadError("上传文件失败！", fileName,response);
 				return;
 			}
 
-			uploadSuccess(request.getContextPath() + saveUrl + newFileName, fileName, i);// 文件上传成功
+			uploadSuccess(request.getContextPath() + saveUrl + newFileName, fileName, i,response);// 文件上传成功
 
 		}
 	}
@@ -169,18 +169,18 @@ public class UploadifyServlet extends HttpServlet {
 		doGet(req, resp);
 	}
 	
-	private void uploadError(String err, String msg) {
+	private void uploadError(String err, String msg,HttpServletResponse response) throws IOException {
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("err", err);
 		m.put("msg", msg);
-		Struts2Utils.renderText(m);
+		ServletUtils.renderText(m,response);
 	}
 
-	private void uploadError(String err) {
-		uploadError(err, "");
+	private void uploadError(String err,HttpServletResponse response) throws IOException {
+		uploadError(err, "",response);
 	}
 
-	private void uploadSuccess(String newFileName, String fileName, int id) {
+	private void uploadSuccess(String newFileName, String fileName, int id,HttpServletResponse response) throws IOException {
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("err", "");
 		Map<String, Object> nm = new HashMap<String, Object>();
@@ -188,6 +188,6 @@ public class UploadifyServlet extends HttpServlet {
 		nm.put("localfile", fileName);
 		nm.put("id", id);
 		m.put("msg", nm);
-		Struts2Utils.renderText(m);
+		ServletUtils.renderText(m,response);
 	}
 }

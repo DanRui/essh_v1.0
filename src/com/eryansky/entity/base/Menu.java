@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
-import com.eryansky.common.model.BaseEntity;
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.entity.base.state.MenuState;
 import com.eryansky.utils.CacheConstants;
@@ -23,6 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -185,7 +186,7 @@ public class Menu
                 ", ");
     }
 
-    @Transient
+    @OneToMany(mappedBy = "parentMenu")
     public List<Menu> getSubMenus() {
         return subMenus;
     }

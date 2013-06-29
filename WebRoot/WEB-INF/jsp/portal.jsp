@@ -91,7 +91,7 @@
 			<div></div>
 		</div>	
 	</div>
-	<div data-options="region:'east',title:'日历',href:'${ctx}/fileRedirect.action?toPage=east.jsp'" style="height: 100%;width:200px;overflow: hidden;">
+	<div data-options="region:'east',title:'日历',href:'${ctx}/fileRedirect.action?toPage=portal-east.jsp'" style="height: 100%;width:200px;overflow: hidden;">
 	</div>
 </div>
 

@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -26,9 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.eryansky.common.exception.DaoException;
+import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.annotation.Delete;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.common.utils.reflection.ReflectionUtils;
@@ -121,7 +124,6 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public void update(final T entity) {
 		Assert.notNull(entity, "entity不能为空");
-		clear();
 		getSession().update(entity);
 		logger.debug("update entity: {}", entity);
 	}
@@ -131,7 +133,6 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public void saveOrUpdate(final T entity) {
 		Assert.notNull(entity, "entity不能为空");
-		clear();
 		getSession().saveOrUpdate(entity);
 		logger.debug("saveOrUpdate entity: {}", entity);
 	}
@@ -141,8 +142,8 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	 */
 	public void saveOrUpdate(final Collection<T> entitys) {
 		Assert.notNull(entitys, "entitys不能为空");
-		for (Object entity : entitys) {
-			getSession().saveOrUpdate(entity);
+		for (T entity : entitys) {
+			this.saveOrUpdate(entity);
 		}
 	}
 	
@@ -154,6 +155,20 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		Assert.notNull(entity, "entity不能为空");
 		getSession().refresh(entity);
 		logger.debug("refresh entity: {}", entity);
+	}
+	
+	/**
+	 * 刷新对象.
+	 * <br>参数lockOptions可为null
+	 * @param entity 操作对象
+	 * @param lockOptions Hibernate LockOptions 
+	 */
+	public void refresh(T entity,LockOptions lockOptions) {
+		if (lockOptions == null) {
+			refresh(entity);
+		} else {
+			getSession().refresh(entity, lockOptions);
+		}
 	}
 	
 	/**
@@ -171,6 +186,16 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		Assert.notNull(entity, "entity不能为空");
 		getSession().merge(entity);
 		logger.debug("merge entity: {}", entity);
+	}
+	
+	/**
+	 * 如果session中存在相同持久化识别的实例，用给出的对象的状态覆盖持久化实例
+	 * 
+	 * @param entityName 持久化对象名称
+	 * @param entity 持久化实例
+	 */
+	public void merge(String entityName,T entity) {
+		getSession().merge(entityName, entity);
 	}
 
 	/**
@@ -231,15 +256,14 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	/**
 	 * 按id获取对象(实体的代理类实例,是否枷锁加).
 	 * @param id
-	 * @param lock
+	 * @param lockOptions
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
-	public T load(Serializable id, boolean lock) {
+	public T load(Serializable id, LockOptions lockOptions) {
 		Assert.notNull(id);
 		T entity = null;
-		if (lock) {
-			entity = (T) getSession().load(entityClass, id,LockMode.UPGRADE);
+		if (lockOptions !=null) {
+			entity = (T) getSession().load(entityClass, id,lockOptions);
 		} else {
 			entity = (T) getSession().load(entityClass, id);
 		}
@@ -271,6 +295,21 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		} else {
 			c.addOrder(Order.desc(orderByProperty));
 		}
+		return c.list();
+	}
+	
+	/**
+	 * 获取全部对象, 支持按属性行序.
+	 * 
+	 * @param orderBy
+	 *            排序字段 多个排序字段时用','分隔.
+	 * @param order
+	 *            排序方式"asc"、"desc" 中间以","分割
+	 */
+	public List<T> getAll(String orderBy, String order) {
+		Criteria c = createCriteria();
+		//设置排序
+		setPageParameterToCriteria(c, orderBy, order);
 		return c.list();
 	}
 
@@ -388,6 +427,21 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 	public List<T> find(final Criterion... criterions) {
 		return createCriteria(criterions).list();
 	}
+	
+	/**
+	 * 按Criteria查询对象列表.
+	 * 
+	 * @param orderBy 多个排序字段时用','分隔.
+	 * @param orderBy 排序字段 多个排序字段时用','分隔.
+	 * @param order 排序方式"asc"、"desc" 中间以","分割
+	 * @return
+	 */
+	public List<T> find(final String orderBy, final String order,final Criterion... criterions) {
+		Criteria c = createCriteria(criterions);
+		//设置排序
+		setPageParameterToCriteria(c, orderBy, order);
+		return c.list();
+	}
 
 	/**
 	 * 按Criteria查询唯一对象.
@@ -470,6 +524,16 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		ClassMetadata meta = getSessionFactory().getClassMetadata(entityClass);
 		return meta.getIdentifierPropertyName();
 	}
+	
+	/**
+	 * 获取实体名称
+	 * 
+	 * @return String
+	 */
+	public String getEntityName() {
+		ClassMetadata meta = sessionFactory.getClassMetadata(entityClass);
+		return meta.getEntityName();
+	}
 
 	/**
 	 * 判断对象的属性值在数据库内是否唯一.
@@ -541,5 +605,40 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		} catch (SQLException e) {
 			throw new DaoException(e);
 		}
+	}
+	
+	/**
+	 * 判断entity实例是否已经与session缓存关联,是返回true,否则返回false
+	 * 
+	 * @param entity 实例
+	 * 
+	 * @return boolean
+	 */
+	public boolean contains(Object entity) {
+		return getSession().contains(entity);
+	}
+	
+	
+	/**
+	 * 设置分页参数到Criteria对象,辅助函数.
+	 */
+	protected Criteria setPageParameterToCriteria(final Criteria c,
+			final String orderBy,final String order) {
+		if (StringUtils.isNotBlank(orderBy) && StringUtils.isNotBlank(order)) {
+			String[] orderByArray = StringUtils.split(orderBy, ',');
+			String[] orderArray = StringUtils.split(order, ',');
+
+			Assert.isTrue(orderByArray.length == orderArray.length,
+					"分页多重排序参数中,排序字段与排序方向的个数不相等");
+
+			for (int i = 0; i < orderByArray.length; i++) {
+				if (Page.ASC.equals(orderArray[i])) {
+					c.addOrder(Order.asc(orderByArray[i]));
+				} else {
+					c.addOrder(Order.desc(orderByArray[i]));
+				}
+			}
+		}
+		return c;
 	}
 }

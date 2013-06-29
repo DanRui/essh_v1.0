@@ -1,29 +1,46 @@
 package com.eryansky.web.sys;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletInputStream;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 
+import com.eryansky.common.excel.ExcelUtil;
+import com.eryansky.common.excel.ExportExcel;
+import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.Result;
+import com.eryansky.common.orm.Page;
+import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.hibernate.EntityManager;
+import com.eryansky.common.orm.hibernate.HibernateWebUtils;
 import com.eryansky.common.utils.SysConstants;
+import com.eryansky.common.utils.io.ClobUtil;
 import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
+import com.eryansky.common.web.utils.ServletUtils;
 import com.eryansky.entity.sys.Bug;
+import com.eryansky.entity.sys.Dictionary;
 import com.eryansky.service.sys.BugManager;
+import com.eryansky.service.sys.DictionaryManager;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -36,8 +53,12 @@ import com.google.common.collect.Maps;
 @SuppressWarnings("serial")
 public class BugAction extends StrutsAction<Bug> {
 
+	public final static String SSSION_SEARCH = "BUG_SEARCH";
+	
 	@Autowired
 	private BugManager bugManager;
+	@Autowired
+	private DictionaryManager dictionaryManager;
 
 	@Override
 	public EntityManager<Bug, Long> getEntityManager() {
@@ -57,7 +78,7 @@ public class BugAction extends StrutsAction<Bug> {
                 return null;
             }
 			
-            bugManager.saveOrUpdate(model);
+            bugManager.merge(model);
             result = Result.successResult();
             logger.debug(result.toString());
 			Struts2Utils.renderText(result);
@@ -66,6 +87,135 @@ public class BugAction extends StrutsAction<Bug> {
 		}
 		return null;
 	}
+	
+	@Override
+	public String datagrid() throws Exception {
+		try {
+			// 自动构造属性过滤器
+			List<PropertyFilter> filters = HibernateWebUtils
+					.buildPropertyFilters(Struts2Utils.getRequest());
+			Page<Bug> p = getEntityManager().find(page, rows, sort, order,
+					filters);
+			
+			//转换设置bug类型名称
+			if(p.getResult() != null){
+				for(Bug bug:p.getResult()){
+					Dictionary dictionary = dictionaryManager.getByCode(bug.getType());
+					if(dictionary!=null){
+						bug.setTypeName(dictionary.getName());
+					}else{
+						logger.warn("[{}]未设置bug类型.",bug.getTitle());
+					}
+				}
+			}
+			Datagrid<Bug> dg = new Datagrid<Bug>(p.getTotalCount(), p.getResult());
+			Struts2Utils.renderJson(dg);
+		} catch (Exception e) {
+			throw e;
+		}
+		return null;
+	}
+	
+	/**
+	 * Excel导入
+	 */
+	@SuppressWarnings("unchecked")
+	public void importExcel() throws Exception {
+		Result result = null;
+        
+        MultiPartRequestWrapper multiPartRequest = (MultiPartRequestWrapper) Struts2Utils.getRequest();// 由于struts2上传文件时自动使用了request封装
+		File[] files = multiPartRequest.getFiles("filedata");// 上传的文件集合
+		
+        List<Bug> bugs = Lists.newArrayList();
+        List<Bug> bugs_new = Lists.newArrayList();
+		try {
+			if(files != null && files.length >0){
+				InputStream inputStream= new FileInputStream(files[0]);
+				bugs = (List<Bug>) ExcelUtil.importExcelByIs(inputStream, Bug.class);
+			    if(bugs != null && bugs.size() >0){
+			    	for (Bug bug : bugs) {
+						//重复数据校验
+						Bug checkBug = bugManager.findUniqueBy("title",bug.getTitle());
+						if(checkBug == null){
+							bug.setVersion(0);
+							bug.setContent(ClobUtil.getClob(bug.getTContent()));
+							Dictionary dictionary = dictionaryManager.findUniqueBy("name", bug.getTypeName());
+							if(dictionary !=null){
+								bug.setType(dictionary.getCode());
+							}else{
+								logger.warn("无法识别[{}].",bug.getTypeName());
+							}
+							bugs_new.add(bug);
+						}else{
+							logger.warn("[{}]已存在.",bug.getTitle());
+						}
+					}
+			    }
+				bugManager.saveOrUpdate(bugs_new);
+				result = new Result(Result.SUCCESS,"已导入"+bugs_new.size()+"条数据.",null);
+			}else{
+				result = new Result(Result.WARN,"未上传任何文件.",null);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			result = new Result(Result.ERROR,"文件导入失败",null);           
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = new Result(Result.ERROR,"文件格式不正确，导入失败",null);
+		}finally{
+			Struts2Utils.renderText(result);
+		}
+	}
+    /**
+     * Excel导出
+     */
+	@SuppressWarnings("unchecked")
+	public void exportExcel() throws Exception {
+		// 生成提示信息，
+		final String fileName = "bug信息.xls";
+		OutputStream outStream = null;
+		try {
+			//设置文件类型
+			Struts2Utils.getResponse().setContentType(ServletUtils.EXCEL_TYPE);
+			//设置下载弹出对话框
+			ServletUtils.setFileDownloadHeader(Struts2Utils.getRequest(),Struts2Utils.getResponse(), fileName);
+			//从session中获取查询参数
+			List<PropertyFilter> sessionFilters = (List<PropertyFilter>) Struts2Utils.getSessionAttribute(SSSION_SEARCH);
+			List<Bug> bugs = Lists.newArrayList();
+			if(sessionFilters != null){
+				bugs = bugManager.find(sessionFilters,"orderNo",Page.ASC);
+			}else{
+				bugs = bugManager.getAll("id",Page.ASC);
+			}
+			//设置bug类型（此处由于Bug未直接关联Dictionary所以被动设置类型名称）
+			for(Bug bug:bugs){
+				Dictionary dictionary = dictionaryManager.getByCode(bug.getType());
+				String dicStringName = "";
+				if(dictionary != null){
+					dicStringName = dictionary.getName();
+				}
+				bug.setTypeName(dicStringName);
+			}
+			HSSFWorkbook workbook = new ExportExcel<Bug>().exportExcel("导出信息",
+					Bug.class, bugs);
+			outStream = Struts2Utils.getResponse().getOutputStream();
+			workbook.write(outStream);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				outStream.flush();
+				outStream.close();
+			} catch (IOException e) {
+
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * 文件上传

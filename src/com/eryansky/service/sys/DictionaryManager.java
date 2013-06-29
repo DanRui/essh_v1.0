@@ -46,11 +46,24 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 		return dictionaryDao;
 	}
 
+	/**
+	 * 新增或修改 保存对象.
+	 */
 	@TriggersRemove(cacheName = { CacheConstants.DICTIONARYS_BY_TYPE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
 	public void saveOrUpdate(Dictionary entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		dictionaryDao.saveOrUpdate(entity);
+	}
+	
+	/**
+	 * 新增或修改 保存对象.
+	 */
+	@TriggersRemove(cacheName = { CacheConstants.DICTIONARYS_BY_TYPE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+	public void merge(Dictionary entity) throws DaoException, SystemException,
+			ServiceException {
+		Assert.notNull(entity, "参数[entity]为空!");
+		dictionaryDao.merge(entity);
 	}
 
 	/**
@@ -199,7 +212,7 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 			ServiceException {
 		Assert.notNull(dictionaryTypeCode, "参数[dictionaryTypeCode]为空!");
 		List<Dictionary> list = dictionaryDao.createQuery(
-				"from Dictionary d where d.dictionaryType = ? ",
+				"from Dictionary d where d.dictionaryType.code = ? ",
 				new Object[] { dictionaryTypeCode }).list();
 		return list;
 	}

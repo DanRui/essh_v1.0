@@ -19,10 +19,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.eryansky.common.model.BaseEntity;
 import com.eryansky.common.orm.PropertyType;
 import com.eryansky.common.orm.annotation.Delete;
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
+import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.entity.base.state.SexState;
 import com.eryansky.utils.AppConstants;
 import com.eryansky.utils.CacheConstants;
@@ -160,6 +161,19 @@ public class User
         this.sex = sex;
     }
 
+    /**
+     * 性别描述.
+     */
+    @Transient
+    public String getSexDesc() {
+    	SexState ss = SexState.getSexState(sex);
+    	String str = "";
+    	if(ss != null){
+    		str = ss.getDescription();
+    	}
+        return str;
+    }
+    
     public String getEmail() {
         return email;
     }
@@ -210,7 +224,7 @@ public class User
     @SuppressWarnings("unchecked")
     @Transient
     public List<Long> getRoleIds() {
-        if (roleIds.isEmpty()) {
+        if (!Collections3.isEmpty(roles)) {
             roleIds = ConvertUtils.convertElementPropertyToList(roles, "id");
         }
         return roleIds;

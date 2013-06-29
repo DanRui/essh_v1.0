@@ -6,6 +6,7 @@ import org.apache.commons.collections.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;
+import com.eryansky.common.exception.ActionException;
 import com.eryansky.common.model.Result;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.hibernate.EntityManager;
@@ -30,6 +31,10 @@ public class MenuAction extends StrutsAction<Menu> {
 
 	@Autowired
 	private MenuManager menuManager;
+	/**
+	 * 父级菜单ID
+	 */
+	private Long parentId;
 
 	@Override
 	public EntityManager<Menu, Long> getEntityManager() {
@@ -53,11 +58,19 @@ public class MenuAction extends StrutsAction<Menu> {
 			}
 
 			// 设置上级节点
-			if (model.getParentId() != null) {
-				model.setParentMenu(menuManager.loadById(model.getParentId()));
+			if (parentId != null) {
+				Menu parentMenu = menuManager.loadById(parentId);
+				if(parentMenu == null){
+					logger.error("父级菜单[{}]已被删除.",parentId);
+					throw new ActionException("父级菜单已被删除.");
+				}
+				model.setParentMenu(parentMenu);
+			}else{
+				model.setParentMenu(null);
 			}
+			
 			if (model.getId() != null) {
-				if (model.getId().equals(model.getParentId())) {
+				if (model.getId().equals(parentId)) {
 					result = new Result(Result.ERROR, "[上级菜单]不能与[菜单名称]相同.",
 							null);
 					logger.debug(result.toString());
@@ -65,7 +78,7 @@ public class MenuAction extends StrutsAction<Menu> {
 					return null;
 				}
 			}
-			menuManager.saveOrUpdate(model);
+			menuManager.merge(model);
 			result = Result.successResult();
 			logger.debug(result.toString());
 			Struts2Utils.renderText(result);
@@ -152,5 +165,10 @@ public class MenuAction extends StrutsAction<Menu> {
 			throw e;
 		}
 	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
+	
 	
 }

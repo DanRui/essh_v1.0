@@ -179,11 +179,11 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 	protected void prepareModel() throws Exception {
 		if (id != null) {
 //			model = getEntityManager().loadById(id);
+			
 			//修正因使用以上代码(根据ID查找对象)导致乐观锁是失效bug
 			T entity = getEntityManager().loadById(id);
-			model = (T) ReflectionUtils.getClassGenricType(getClass())
-					.newInstance();
-			//对象拷贝
+			model = (T) ReflectionUtils.getClassGenricType(getClass()).newInstance();
+			//对象拷贝 
 			MyBeanUtils.copyBeanNotNull2Bean(entity, model);
 		} else {
 			model = (T) ReflectionUtils.getClassGenricType(getClass())

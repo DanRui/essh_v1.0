@@ -3,16 +3,18 @@ package com.eryansky.entity.sys;
 import java.io.Serializable;
 import java.sql.Clob;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import com.eryansky.common.model.BaseEntity;
+
+import com.eryansky.common.excel.annotation.Excel;
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.io.ClobUtil;
 import com.eryansky.common.utils.jackson.ClobSerializer;
-import com.eryansky.common.utils.mapper.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -26,11 +28,27 @@ public class Bug extends BaseEntity implements Serializable{
 	/**
 	 * bug标题.
 	 */
+	@Excel(exportName="bug标题", exportFieldWidth = 50)
 	private String title;
+	/**
+	 * bug类型 使用数据字典
+	 */
+    private String type;
+    /**
+     * bug类型名称 @Transient
+     */
+	@Excel(exportName="bug类型", exportFieldWidth = 20)
+    private String typeName;
+    
 	/**
 	 * bug描述.
 	 */
 	private Clob content;
+	/**
+	 * bug描述. @Transient
+	 */
+	@Excel(exportName="bug描述", exportFieldWidth = 100)
+	private String tContent;
 
 	public Bug() {
 		super();
@@ -50,6 +68,24 @@ public class Bug extends BaseEntity implements Serializable{
 		this.title = title;
 	}
 
+	@Column(length = 36)
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Transient
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
 	/**
 	 * bug内容.
 	 */
@@ -64,11 +100,26 @@ public class Bug extends BaseEntity implements Serializable{
 		this.content = content;
 	}
 	
+	/**
+	 * 用于view显示
+	 * @return
+	 */
 	@Transient
 	public String getTContent() {
-		return ClobUtil.getString(content);
+		String str = "";
+		if(content != null){
+			str = ClobUtil.getString(content);
+		}else{
+			str = tContent;
+		}
+		return str;
 	}
 	
+	
+	public void setTContent(String tContent) {
+		this.tContent = tContent;
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

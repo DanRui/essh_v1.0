@@ -6,7 +6,7 @@
  */     
 (function($) {      
     //如果没有my97控件，则添加之。      
-    (function() {      
+    (function() {       
         var hasmy97 = false;      
         var plugins = $.parser.plugins;      
         for(var i = plugins.length - 1; i > -1; i--) {      

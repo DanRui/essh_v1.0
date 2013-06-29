@@ -49,14 +49,23 @@ $(function() {
         	role_form = $('#role_form').form({
 				url: '${ctx}/base/role!save.action',
 				onSubmit: function(param){  
-			        return $(this).form('validate');
+					$.messager.progress({
+						title : '提示信息！',
+						text : '数据处理中，请稍后....'
+					});
+					var isValid = $(this).form('validate');
+					if (!isValid) {
+						$.messager.progress('close');
+					}
+					return isValid;
 			    },
 				success: function(data){
-					var json = eval('('+ data+')'); //将后台传递的json字符串转换为javascript json对象 
+					$.messager.progress('close');
+					var json = $.parseJSON(data);
 					if (json.code ==1){
 						role_dialog.dialog('destroy');//销毁对话框 
 						role_datagrid.datagrid('reload');//重新加载列表数据
-						showMsg(json.msg);//操作结果提示
+						eu.showMsg(json.msg);//操作结果提示
 					}else if(json.code == 2){
 						$.messager.alert('提示信息！', json.msg, 'warning',function(){
 							if(json.obj){
@@ -64,7 +73,7 @@ $(function() {
 							}
 						});
 					}else {
-						showAlertMsg(json.msg,'error');
+						eu.showAlertMsg(json.msg,'error');
 					}
 				}
 			});
@@ -115,11 +124,11 @@ $(function() {
 			if (row){
 				if(rows.length>1){
 					row = rows[rows.length-1];
-					showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+					eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
 				}
 				showDialog(row);
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		
@@ -137,22 +146,22 @@ $(function() {
 						$.post('${ctx}/base/role!remove.action',{ids:ids},function(data){
 							if (data.code==1){
 								role_datagrid.datagrid('load');	// reload the user data
-								showMsg(data.msg);//操作结果提示
+								eu.showMsg(data.msg);//操作结果提示
 							} else {
-								showAlertMsg(data.msg,'error');
+								eu.showAlertMsg(data.msg,'error');
 							}
 						},'json');      
 						
 					}
 				});
 			}else{
-				showMsg("请选择要操作的对象！");
+				eu.showMsg("请选择要操作的对象！");
 			}
 		}
 		
 		//搜索
 		function search(){
-			role_datagrid.datagrid('load',eu.serializeObject(role_search_form));
+			role_datagrid.datagrid('load',$.serializeObject(role_search_form));
 		}
 		
 </script>

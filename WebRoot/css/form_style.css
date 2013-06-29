@@ -15,7 +15,8 @@ form div textarea {
 	margin-left: 1px;
 }
 
-form div input {
+form div input[type="text"],
+form div input[type="password"] {
 	width: 260px;
 }
 

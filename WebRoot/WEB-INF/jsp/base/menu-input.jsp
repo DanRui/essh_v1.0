@@ -32,7 +32,7 @@
 	        valueField:'value',
 	        displayField:'text',
 	        formatter:function(row){    
-	        	return eu.fs('<span class="tree-icon tree-file {0}"></span>{1}', row.value, row.text);
+	        	return $.formatString('<span class="tree-icon tree-file {0}"></span>{1}', row.value, row.text);
 	        }
 		});
 	}

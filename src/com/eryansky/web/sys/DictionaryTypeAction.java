@@ -2,13 +2,20 @@ package com.eryansky.web.sys;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;
 import com.eryansky.common.model.Combobox;
+import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.Result;
+import com.eryansky.common.orm.Page;
+import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.hibernate.EntityManager;
+import com.eryansky.common.orm.hibernate.HibernateWebUtils;
 import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.sys.DictionaryType;
@@ -24,6 +31,8 @@ import com.eryansky.utils.SelectType;
 @SuppressWarnings("serial")
 public class DictionaryTypeAction
         extends StrutsAction<DictionaryType> {
+	
+	public final static String SSSION_SEARCH = "DICTIONARYTYPE_SEARCH";
 
     @Autowired
     private DictionaryTypeManager dictionaryTypeManager;
@@ -62,7 +71,7 @@ public class DictionaryTypeAction
                 return null;
             }
             
-            dictionaryTypeManager.saveOrUpdate(model);
+            dictionaryTypeManager.merge(model);
             result = Result.successResult();
             logger.debug(result.toString());
             Struts2Utils.renderText(result);
@@ -114,5 +123,29 @@ public class DictionaryTypeAction
             throw e;
         }
     }
-
+    
+    /**
+	 * 数据列表. 子类可覆盖.
+	 * @return
+	 * @throws Exception
+	 */
+	public String datagrid() throws Exception {
+		try {
+			// 自动构造属性过滤器
+			List<PropertyFilter> filters = HibernateWebUtils
+					.buildPropertyFilters(Struts2Utils.getRequest());
+			//将查询参数设置在session中
+			HttpSession session = Struts2Utils.getSession();
+			session.setAttribute(SSSION_SEARCH, filters);
+			session.setMaxInactiveInterval(5*60);//单位 秒
+			Page<DictionaryType> p = getEntityManager().find(page, rows, sort, order,
+					filters);
+			Datagrid<DictionaryType> dg = new Datagrid<DictionaryType>(p.getTotalCount(), p.getResult());
+			Struts2Utils.renderJson(dg);
+		} catch (Exception e) {
+			throw e;
+		}
+		return null;
+	}
+	
 }

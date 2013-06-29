@@ -13,8 +13,9 @@ import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
-import com.eryansky.common.model.BaseEntity;
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
+import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.entity.base.state.StatusState;
 import com.eryansky.utils.CacheConstants;
 
@@ -132,7 +133,7 @@ public class Role
     @Transient
     @SuppressWarnings("unchecked")
     public List<Long> getMenuIds() {
-        if (menuIds.isEmpty()) {
+        if (!Collections3.isEmpty(menus)) {
             menuIds = ConvertUtils.convertElementPropertyToList(menus, "id");
         }
         return menuIds;

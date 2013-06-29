@@ -1,7 +1,5 @@
 package com.eryansky.entity.sys;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,7 +8,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import com.eryansky.common.model.BaseEntity;
+import com.eryansky.common.excel.annotation.Excel;
+import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.utils.CacheConstants;
 
 /**
@@ -24,20 +23,23 @@ import com.eryansky.utils.CacheConstants;
 @Table(name = "T_SYS_DICTIONARYTYPE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_SYS)
 @SuppressWarnings("serial")
-public class DictionaryType extends BaseEntity implements Serializable {
+public class DictionaryType extends BaseEntity {
 
 	/**
 	 * 类型名称
 	 */
+	@Excel(exportName="类型名称", exportFieldWidth = 30)
 	private String name;
 	/**
 	 * 类型编码
 	 */
+	@Excel(exportName="类型编码", exportFieldWidth = 20)
 	private String code;
 
 	/**
 	 * 排序
 	 */
+	@Excel(exportName="排序", exportFieldWidth = 10)
 	private Integer orderNo;
 
 	public DictionaryType() {

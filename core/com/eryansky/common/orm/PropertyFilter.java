@@ -1,5 +1,6 @@
 package com.eryansky.common.orm;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,8 @@ import com.eryansky.common.web.utils.ServletUtils;
  * 
  * @author 尔演&Eryan eryanwcp@gmail.com
  */
-public class PropertyFilter {
+@SuppressWarnings("serial")
+public class PropertyFilter implements Serializable{
 
 	/** 多个属性间OR关系的分隔符. */
 	public static final String OR_SEPARATOR = "_OR_";

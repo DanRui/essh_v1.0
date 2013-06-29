@@ -3,6 +3,8 @@ package com.eryansky.common.model;
 import java.io.Serializable;
 import javax.persistence.MappedSuperclass;
 
+import com.eryansky.common.orm.entity.BaseEntity;
+
 /**
  * 用户抽象类.
  * @author 尔演&Eryan eryanwcp@gmail.com

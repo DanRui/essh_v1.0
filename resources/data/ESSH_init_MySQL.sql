@@ -151,6 +151,7 @@ CREATE TABLE `t_sys_bug` (
   `version` int(11) DEFAULT NULL,
   `content` longtext,
   `title` varchar(255) DEFAULT NULL,
+  `type` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 

@@ -26,7 +26,7 @@ function login() {
 		    text:'正在登录...' ,
 		    disabled:true
 		});
-		$.post('${ctx}/login!login.action',eu.serializeObject(loginForm), function(data) {
+		$.post('${ctx}/login!login.action',$.serializeObject(loginForm), function(data) {
 			if (data.code ==1){
 				window.location = data.obj;//操作结果提示
 			}else {
@@ -35,7 +35,7 @@ function login() {
 				    disabled:false
 				}); 
 				$('#validateCode').val('');
-				showMsg(data.msg);
+				eu.showMsg(data.msg);
 				//refreshCheckCode();
 			}
 		}, 'json');

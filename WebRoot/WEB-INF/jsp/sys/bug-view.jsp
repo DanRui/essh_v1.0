@@ -5,7 +5,7 @@
 	    <h3>${title}</h3>
 	</div>
 	<div align="right">
-	   [ ${createUser} 发布于 <s:date name="createTime" format="yyyy-MM-dd HH:mm"/>]
+	   [ ${createUser} 发布于<fmt:formatDate value="${createTime}" type="both" /> ]
 	</div>
 	<hr>
 	<div>${tContent}</div>

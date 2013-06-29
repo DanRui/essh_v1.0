@@ -61,6 +61,17 @@ public class RoleManager extends EntityManager<Role, Long> {
 		logger.warn("保存色Role:{}",entity.getId());
 	}
 	
+	/**
+	 * 新增或修改角色.
+	 * <br>修改角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
+	 */
+	@TriggersRemove(cacheName = { CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+	public void merge(Role entity) throws DaoException,SystemException,ServiceException {
+		Assert.notNull(entity, "参数[entity]为空!");
+		roleDao.merge(entity);
+		logger.warn("保存色Role:{}",entity.getId());
+	}
+	
 	@Cacheable(cacheName = CacheConstants.ROLE_ALL)
 	public List<Role> getAll() throws DaoException,SystemException,ServiceException {
 		logger.debug("缓存:{}",CacheConstants.ROLE_ALL);
