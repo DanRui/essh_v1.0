@@ -283,7 +283,7 @@ public class HibernateDao<T, PK extends Serializable> extends
 	 *            匹配方式,目前支持的取值见PropertyFilter的MatcheType enum.
 	 */
 	public List<T> findBy(final String propertyName, final Object value,
-			final MatchType matchType) {
+                          final MatchType matchType) {
 		Criterion criterion = buildCriterion(propertyName, value, matchType);
 		return find(criterion);
 	}
@@ -408,7 +408,7 @@ public class HibernateDao<T, PK extends Serializable> extends
 				criterionList.add(disjunction);
 			}
 		}
-		return criterionList.toArray(new Criterion[criterionList.size()]);
+        return criterionList.toArray(new Criterion[criterionList.size()]);
 	}
 
 	/**
