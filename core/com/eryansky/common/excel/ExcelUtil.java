@@ -96,7 +96,6 @@ public final class ExcelUtil {
 		try {
 			createExcel("TEST01.xls", headList, fieldList, dataList);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

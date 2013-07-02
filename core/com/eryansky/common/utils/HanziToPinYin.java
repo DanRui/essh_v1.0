@@ -548,7 +548,6 @@ public class HanziToPinYin {
 	 */
 	public static String getFirstSpell(String cnStr)
 			throws UnsupportedEncodingException {
-		// todo zhengyk add
 		if (null == cnStr || "".equals(cnStr.trim())) {
 			return cnStr;
 		}

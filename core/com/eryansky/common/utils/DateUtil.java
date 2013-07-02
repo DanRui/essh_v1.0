@@ -359,7 +359,7 @@ public final class DateUtil {
 
 	/**
 	 * 
-	 * @todo:判断时间date1是否在时间date2之前 时间格式 2008-08-08 16:16:34
+	 * @判断时间date1是否在时间date2之前 时间格式 2008-08-08 16:16:34
 	 * @param date1
 	 * @param date2
 	 * @return
@@ -460,7 +460,7 @@ public final class DateUtil {
 	}
 
 	/**
-	 * @TODO：将给定的日期加一个月 参数类型“2009－03”
+	 * 将给定的日期加一个月 参数类型“2009－03”
 	 */
 	public static String getThisMonthLast(String strdate) {
 		String thisStrDate = strdate + "-01";

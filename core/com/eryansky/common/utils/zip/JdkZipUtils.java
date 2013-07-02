@@ -89,7 +89,6 @@ public class JdkZipUtils {
 			ZipEntry zipEntry = entries.nextElement();
 
 			if (zipEntry.isDirectory()) {
-				// TODO
 			} else {
 				String zipEntryName = zipEntry.getName();
 				if (zipEntryName.indexOf(File.separator) > 0) {
