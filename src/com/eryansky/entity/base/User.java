@@ -128,14 +128,14 @@ public class User
     }
 
     // 多对多定义
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     // 中间表定义,表名采用默认命名规则
     @JoinTable(name = "T_BASE_USER_ROLE", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") })
     // Fecth策略定义
-    @Fetch(FetchMode.SUBSELECT)
+//   @Fetch(FetchMode.SUBSELECT)
     // 集合按id排序.
     @OrderBy("id")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = CacheConstants.HIBERNATE_CACHE_BASE)
     public List<Role> getRoles() {
         return roles;
     }
