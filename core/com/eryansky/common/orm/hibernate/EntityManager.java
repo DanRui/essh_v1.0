@@ -601,7 +601,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 
     /**
      * 初始化对象.
-     * @param proxy
+     * @param proxy   目标对象
      */
     @Transactional(readOnly = true)
     public void initProxyObject(Object proxy) {
