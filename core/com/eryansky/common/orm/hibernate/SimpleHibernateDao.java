@@ -26,9 +26,7 @@ import org.hibernate.metadata.ClassMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.eryansky.common.exception.DaoException;
@@ -159,8 +157,7 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 			this.saveOrUpdate(entity);
 		}
 	}
-	
-	
+
 	/**
 	 * 刷新对象.
 	 */
@@ -193,15 +190,6 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 		logger.debug("evict entity: {}", entity);
 	}
 
-    /**
-     * 根据ID清空二级缓存.
-     * @param id
-     */
-    public void evictEntity(final Serializable id) {
-        Assert.notNull(id, "id不能为空");
-        this.sessionFactory.getCache().evictEntity(entityClass,id);
-        logger.debug("evict entity: {}", id);
-    }
 	/**
 	 * 合并修改的对象.
 	 */

@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Hibernate;
-import org.hibernate.LockOptions;
 import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,14 +130,6 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		    SystemException, ServiceException {
 		getEntityDao().evict(entity);
 	}
-
-    /**
-     * 根据ID清空二级缓存.
-     * @param id
-     */
-    public void evictEntity(final Serializable id) {
-        getEntityDao().evictEntity(id);
-    }
 
     /**
 	 * 修改合并.
