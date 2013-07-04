@@ -574,6 +574,9 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	 * @param uniquePropertyNames
 	 *            在POJO里不能重复的属性列表,以逗号分割 如"name,loginid,password"
 	 * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
 	 */
 	@Transactional(readOnly = true)
 	public boolean isUnique(T entity, String uniquePropertyNames)
