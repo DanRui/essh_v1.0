@@ -161,7 +161,6 @@ public class HibernateDao<T, PK extends Serializable> extends
 	 * 设置分页参数到Query对象,辅助函数.
 	 */
 	protected Query setPageParameterToQuery(final Query q, final Page<T> page) {
-
 		Assert.isTrue(page.getPageSize() > 0, "Page Size must larger than zero");
 
 		// hibernate的firstResult的序号从0开始
