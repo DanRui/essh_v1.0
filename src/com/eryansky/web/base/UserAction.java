@@ -67,7 +67,7 @@ public class UserAction extends StrutsAction<User> {
 					throw new SystemException("超级用户信息仅允许自己修改!");
 				}
             }
-            userManager.merge(model);
+            userManager.saveEntity(model);
             result = Result.successResult();
             logger.debug(result.toString());
             Struts2Utils.renderText(result);
@@ -102,7 +102,7 @@ public class UserAction extends StrutsAction<User> {
 				rs.add(role);
 			}
 			model.setRoles(rs);
-			userManager.merge(model);
+			userManager.saveEntity(model);
 			result = Result.successResult();
 			Struts2Utils.renderText(result);
 		} catch (Exception e) {
@@ -148,7 +148,7 @@ public class UserAction extends StrutsAction<User> {
 					}
 					if (isCheck) {
 						user.setPassword(Encrypt.e(newPassword));
-						userManager.merge(user);
+						userManager.saveEntity(user);
 						result = Result.successResult();
 					} else {
 						result = new Result(Result.WARN, "原始密码输入错误.","password");

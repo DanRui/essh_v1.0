@@ -71,7 +71,7 @@ public class DictionaryTypeAction
                 return null;
             }
             
-            dictionaryTypeManager.merge(model);
+            dictionaryTypeManager.saveEntity(model);
             result = Result.successResult();
             logger.debug(result.toString());
             Struts2Utils.renderText(result);

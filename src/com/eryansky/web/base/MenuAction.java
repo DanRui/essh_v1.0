@@ -78,7 +78,7 @@ public class MenuAction extends StrutsAction<Menu> {
 					return null;
 				}
 			}
-			menuManager.merge(model);
+			menuManager.saveEntity(model);
 			result = Result.successResult();
 			logger.debug(result.toString());
 			Struts2Utils.renderText(result);

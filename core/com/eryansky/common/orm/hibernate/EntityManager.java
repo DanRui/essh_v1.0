@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Hibernate;
 import org.hibernate.LockOptions;
 import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
@@ -69,6 +70,20 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		getEntityDao().update(entity);
 	}
 
+    /**
+     * 保存新增或修改的对象.
+     * <br>自定义保存实体方法 内部使用saveOrUpdate
+     * <br>注:保存之前会清空session 调用了clear()
+     * @param entity
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public void saveEntity(final T entity) throws DaoException,
+            SystemException, ServiceException {
+        getEntityDao().saveEntity(entity);
+    }
+
 	/**
 	 * 保存新增或修改的对象.
 	 * 
@@ -85,7 +100,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	/**
 	 * 保存新增或修改的对象集合.
 	 * 
-	 * @param entity
+	 * @param entitys
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
@@ -97,7 +112,6 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	
 	/**
 	 * 清除当前session.
-	 * @param entitys
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
@@ -119,7 +133,15 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		getEntityDao().evict(entity);
 	}
 
-	/**
+    /**
+     * 根据ID清空二级缓存.
+     * @param id
+     */
+    public void evictEntity(final Serializable id) {
+        getEntityDao().evictEntity(id);
+    }
+
+    /**
 	 * 修改合并.
 	 * 
 	 * @param entity
@@ -562,7 +584,6 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	 * @param uniquePropertyNames
 	 *            在POJO里不能重复的属性列表,以逗号分割 如"name,loginid,password"
 	 * @return
-	 * @throws DataAccessException
 	 */
 	@Transactional(readOnly = true)
 	public boolean isUnique(T entity, String uniquePropertyNames)
@@ -585,4 +606,8 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		return getEntityDao().buildCriterionByPropertyFilter(filters);
 	}
 
+    @Transactional(readOnly = true)
+    public void initProxyObject(Object proxy) {
+        getEntityDao().initProxyObject(proxy);
+    }
 }

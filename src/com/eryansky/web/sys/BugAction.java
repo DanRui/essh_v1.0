@@ -64,7 +64,7 @@ public class BugAction extends StrutsAction<Bug> {
 	public EntityManager<Bug, Long> getEntityManager() {
 		return bugManager;
 	}
-	
+
 	@Override
 	public String save() throws Exception {
 		Result result;
@@ -77,8 +77,8 @@ public class BugAction extends StrutsAction<Bug> {
                 Struts2Utils.renderText(result);
                 return null;
             }
-			
-            bugManager.merge(model);
+
+            bugManager.saveEntity(model);
             result = Result.successResult();
             logger.debug(result.toString());
 			Struts2Utils.renderText(result);

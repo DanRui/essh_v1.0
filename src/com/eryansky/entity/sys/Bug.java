@@ -114,8 +114,11 @@ public class Bug extends BaseEntity implements Serializable{
 		}
 		return str;
 	}
-	
-	
+
+
+
+
+
 	public void setTContent(String tContent) {
 		this.tContent = tContent;
 	}

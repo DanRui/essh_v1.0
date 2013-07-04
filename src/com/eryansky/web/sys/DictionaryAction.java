@@ -97,7 +97,7 @@ public class DictionaryAction extends StrutsAction<Dictionary> {
 				throw new ActionException("字典类型为空.");
 			}
 
-			dictionaryManager.merge(model);
+			dictionaryManager.saveEntity(model);
 			result = Result.successResult();
 			logger.debug(result.toString());
 			Struts2Utils.renderText(result);
