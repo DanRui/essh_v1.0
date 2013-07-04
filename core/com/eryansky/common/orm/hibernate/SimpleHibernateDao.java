@@ -157,7 +157,8 @@ public class SimpleHibernateDao<T, PK extends Serializable> {
 			this.saveOrUpdate(entity);
 		}
 	}
-
+	
+	
 	/**
 	 * 刷新对象.
 	 */
