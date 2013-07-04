@@ -599,6 +599,7 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		return getEntityDao().buildCriterionByPropertyFilter(filters);
 	}
 
+
     /**
      * 初始化对象.
      * @param proxy   目标对象
