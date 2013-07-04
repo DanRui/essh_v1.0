@@ -599,6 +599,10 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		return getEntityDao().buildCriterionByPropertyFilter(filters);
 	}
 
+    /**
+     * 初始化对象.
+     * @param proxy
+     */
     @Transactional(readOnly = true)
     public void initProxyObject(Object proxy) {
         getEntityDao().initProxyObject(proxy);
