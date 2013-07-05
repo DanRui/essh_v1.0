@@ -190,6 +190,9 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 		}
 	}
 
+    /**
+     * @return     模型对象
+     */
 	public T getModel() {
 		return model;
 	}
