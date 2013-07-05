@@ -182,7 +182,6 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 
 			//修正因使用以上代码(根据ID查找对象)导致乐观锁失效bug
 			T entity = getEntityManager().getById(id);
-            getEntityManager().evictEntity(id);
 			//对象拷贝
             model = (T) MyBeanUtils.cloneBean(entity);
 		} else {
