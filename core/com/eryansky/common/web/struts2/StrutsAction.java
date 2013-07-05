@@ -195,14 +195,14 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 	}
 
 	/**
-	 * ID集合
+	 * 设置 ID集合
 	 */
 	public void setIds(List<Long> ids) {
 		this.ids = ids;
 	}
 
 	/**
-	 * 设置 ID集合
+	 *  ID集合
 	 */
 	public List<Long> getIds() {
 		return ids;
