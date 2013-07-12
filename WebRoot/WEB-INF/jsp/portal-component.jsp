@@ -13,7 +13,7 @@
 </h3>
 <ul>
 	<li>
-		jQuery EasyUI、xheditor、My97DatePicker、Highcharts、Jackson、Struts2、Spring、Spring JDBC、Quartz、Hibernate、Ehcache、ehcache-spring-annotations、Hibernate Validator
+		jQuery EasyUI、Kindeditor、My97DatePicker、Highcharts、Jackson、Struts2、Spring、Spring JDBC、Quartz、Hibernate、Ehcache、ehcache-spring-annotations、Hibernate Validator
 	</li>
 </ul> 
 <h3 style="margin-left: 12px;">
