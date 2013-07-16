@@ -1,6 +1,6 @@
 package test.codegen;
 
-import com.eryansky.codegen.build.Builder;
+import com.eryansky.codegen.Builder;
 import com.eryansky.codegen.db.DataSource;
 import com.eryansky.codegen.db.DbConnection;
 import com.eryansky.codegen.db.DbFactory;
