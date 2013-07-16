@@ -1,0 +1,20 @@
+package $controllerPackage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.eryansky.common.orm.hibernate.EntityManager;
+import com.eryansky.common.web.struts2.StrutsAction;
+import ${entityPackage}.${entityName} ;
+
+public class ${entityName}Action
+    extends StrutsAction<${entityName}> {
+
+    @Autowired
+    private ${entityName}Manager ${entityInstance}Manager;
+
+    @Override
+    public EntityManager<${entityName}, Long> getEntityManager() {
+        return ${entityInstance}Manager;
+    }
+
+}
