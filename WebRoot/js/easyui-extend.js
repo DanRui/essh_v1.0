@@ -84,8 +84,8 @@ eu.addTab = function(tabs,title,url,closeAble,iconCls){
 /**
  * 扩展easyui属性 dategrid表头居中.
  */
-eu.datagridCenter = function() {
-    $(".datagrid-cell").css('text-align', 'center');
+eu.datagridHeaderCenter = function() {
+    $(".datagrid-header div").css('textAlign', 'center');
 }
 /**
  * easyui title居中

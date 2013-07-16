@@ -68,7 +68,9 @@ $(function() {
 	    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
 	    	//鼠标移动提示列表信息tooltip
 			$(this).datagrid('showTooltip');
-		},
+            //表头居中
+            //eu.datagridHeaderCenter();
+        },
 	    onRowContextMenu : function(e, rowIndex, rowData) {
 			e.preventDefault();
 			$(this).datagrid('unselectAll');
