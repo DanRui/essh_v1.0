@@ -143,7 +143,7 @@ $(function() {
 				height : 360,
 				modal : true,
 				maximizable:true,
-				href : '${ctx}/base/user-input.action',
+				href : '${ctx}/base/user!input.action',
 				buttons : [ {
 					text : '保存',
 					iconCls : 'icon-save',

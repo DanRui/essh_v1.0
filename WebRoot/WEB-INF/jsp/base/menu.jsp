@@ -137,7 +137,7 @@ $(function() {
 				height : 360,
 				modal : true,
 				maximizable:true,
-				href : '${ctx}/base/menu-input.action',
+				href : '${ctx}/base/menu!input.action',
 				buttons : [ {
 					text : '保存',
 					iconCls : 'icon-save',

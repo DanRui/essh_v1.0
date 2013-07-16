@@ -114,7 +114,7 @@ $(function() {
 			height : document.body.clientHeight,
 			modal : true,
 			maximizable:true,
-			href : '${ctx}/sys/bug-input.action',
+			href : '${ctx}/sys/bug!input.action',
 			buttons : [ {
 				text : '保存',
 				iconCls : 'icon-save',

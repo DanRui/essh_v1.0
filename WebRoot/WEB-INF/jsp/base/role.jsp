@@ -87,7 +87,7 @@ $(function() {
 				height : 360,
 				modal : true,
 				maximizable:true,
-				href : '${ctx}/base/role-input.action',
+				href : '${ctx}/base/role!input.action',
 				buttons : [ {
 					text : '保存',
 					iconCls : 'icon-save',
