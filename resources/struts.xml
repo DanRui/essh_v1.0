@@ -5,7 +5,7 @@
 
     <!-- 开发模式 -->
     <constant name="struts.devMode" value="false" />
-    
+
     <!-- 国际化 -->
     <constant name="struts.i18n.encoding" value="UTF-8" />
 	<constant name="struts.configuration.xml.reload" value="true" />
