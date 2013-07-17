@@ -443,11 +443,6 @@ public abstract class EntityManager<T, PK extends Serializable> {
 		Assert.notNull(filters, "参数[filters]为空!");
 		Page<T> p = new Page<T>(rows);
 		p.setPageNo(page);
-		// 过滤逻辑删除的数据
-		PropertyFilter normal = new PropertyFilter("NEI_status",
-				StatusState.delete.getValue() + "");
-		filters.add(normal);
-
 		if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
 			p.setOrder(order);
 			p.setOrderBy(sort);
