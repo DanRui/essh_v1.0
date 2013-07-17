@@ -66,6 +66,12 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 		dictionaryDao.merge(entity);
 	}
 
+    @TriggersRemove(cacheName = { CacheConstants.DICTIONARYS_BY_TYPE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @Override
+    public void saveEntity(Dictionary entity) throws DaoException, SystemException, ServiceException {
+        super.saveEntity(entity);
+    }
+
 	/**
 	 * 根据编码code得到对象.
 	 * 

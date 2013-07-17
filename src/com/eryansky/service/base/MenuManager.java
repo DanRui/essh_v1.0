@@ -80,7 +80,14 @@ public class MenuManager extends EntityManager<Menu, Long> {
 		menuDao.merge(entity);
 	}
 
-	/**
+    @CacheEvict(value = { CacheConstants.MENU_NAVTREE,
+            CacheConstants.MENU_TREE },allEntries = true)
+    @Override
+    public void saveEntity(Menu entity) throws DaoException, SystemException, ServiceException {
+        super.saveEntity(entity);
+    }
+
+    /**
 	 * 自定义删除方法.
 	 */
 	//清除缓存

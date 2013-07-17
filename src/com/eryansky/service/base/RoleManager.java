@@ -71,8 +71,14 @@ public class RoleManager extends EntityManager<Role, Long> {
 		roleDao.merge(entity);
 		logger.warn("保存色Role:{}",entity.getId());
 	}
-	
-	@Cacheable(cacheName = CacheConstants.ROLE_ALL)
+
+    @TriggersRemove(cacheName = { CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @Override
+    public void saveEntity(Role entity) throws DaoException, SystemException, ServiceException {
+        super.saveEntity(entity);
+    }
+
+    @Cacheable(cacheName = CacheConstants.ROLE_ALL)
 	public List<Role> getAll() throws DaoException,SystemException,ServiceException {
 		logger.debug("缓存:{}",CacheConstants.ROLE_ALL);
 		return roleDao.getAll();

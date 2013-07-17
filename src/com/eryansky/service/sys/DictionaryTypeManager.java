@@ -56,7 +56,14 @@ public class DictionaryTypeManager extends
 		super.deleteByIds(ids);
 	}
 
-	/**
+
+    @TriggersRemove(cacheName = { CacheConstants.DICTIONARYTYPE_ALL }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @Override
+    public void saveEntity(DictionaryType entity) throws DaoException, SystemException, ServiceException {
+        super.saveEntity(entity);
+    }
+
+    /**
 	 * 根据名称name得到对象.
 	 * 
 	 * @param name
