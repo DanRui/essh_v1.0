@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -14,9 +16,6 @@ import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.orm.hibernate.HibernateDao;
 import com.eryansky.entity.base.Role;
 import com.eryansky.utils.CacheConstants;
-import com.googlecode.ehcache.annotations.Cacheable;
-import com.googlecode.ehcache.annotations.TriggersRemove;
-import com.googlecode.ehcache.annotations.When;
 
 /**
  * 角色Role管理 Service层实现类.
@@ -44,7 +43,7 @@ public class RoleManager extends EntityManager<Role, Long> {
 	 * 删除角色.
 	 * <br>删除角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
 	 */
-	@TriggersRemove(cacheName = { CacheConstants.ROLE_ALL}, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @CacheEvict(value = { CacheConstants.ROLE_ALL},allEntries = true)
 	@Override
 	public void deleteByIds(List<Long> ids) throws DaoException,
 			SystemException, ServiceException {
@@ -54,8 +53,8 @@ public class RoleManager extends EntityManager<Role, Long> {
 	 * 新增或修改角色.
 	 * <br>修改角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
 	 */
-	@TriggersRemove(cacheName = { CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
-	public void saveOrUpdate(Role entity) throws DaoException,SystemException,ServiceException {
+    @CacheEvict(value = {  CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE},allEntries = true)
+    public void saveOrUpdate(Role entity) throws DaoException,SystemException,ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		roleDao.saveOrUpdate(entity);
 		logger.warn("保存色Role:{}",entity.getId());
@@ -65,21 +64,21 @@ public class RoleManager extends EntityManager<Role, Long> {
 	 * 新增或修改角色.
 	 * <br>修改角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
 	 */
-	@TriggersRemove(cacheName = { CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
-	public void merge(Role entity) throws DaoException,SystemException,ServiceException {
+    @CacheEvict(value = { CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE},allEntries = true)
+    public void merge(Role entity) throws DaoException,SystemException,ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		roleDao.merge(entity);
 		logger.warn("保存色Role:{}",entity.getId());
 	}
 
-    @TriggersRemove(cacheName = { CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @CacheEvict(value = { CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE},allEntries = true)
     @Override
     public void saveEntity(Role entity) throws DaoException, SystemException, ServiceException {
         super.saveEntity(entity);
     }
 
-    @Cacheable(cacheName = CacheConstants.ROLE_ALL)
-	public List<Role> getAll() throws DaoException,SystemException,ServiceException {
+    @Cacheable(value = { CacheConstants.ROLE_ALL })
+    public List<Role> getAll() throws DaoException,SystemException,ServiceException {
 		logger.debug("缓存:{}",CacheConstants.ROLE_ALL);
 		return roleDao.getAll();
 	}

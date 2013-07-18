@@ -6,13 +6,12 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.google.common.collect.Lists;
-import com.googlecode.ehcache.annotations.Cacheable;
-import com.googlecode.ehcache.annotations.TriggersRemove;
-import com.googlecode.ehcache.annotations.When;
 import com.eryansky.common.exception.DaoException;
 import com.eryansky.common.exception.ServiceException;
 import com.eryansky.common.exception.SystemException;
@@ -49,7 +48,7 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	/**
 	 * 新增或修改 保存对象.
 	 */
-	@TriggersRemove(cacheName = { CacheConstants.DICTIONARYS_BY_TYPE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE},allEntries = true)
 	public void saveOrUpdate(Dictionary entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
@@ -59,14 +58,14 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	/**
 	 * 新增或修改 保存对象.
 	 */
-	@TriggersRemove(cacheName = { CacheConstants.DICTIONARYS_BY_TYPE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE},allEntries = true)
 	public void merge(Dictionary entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		dictionaryDao.merge(entity);
 	}
 
-    @TriggersRemove(cacheName = { CacheConstants.DICTIONARYS_BY_TYPE }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE},allEntries = true)
     @Override
     public void saveEntity(Dictionary entity) throws DaoException, SystemException, ServiceException {
         super.saveEntity(entity);
@@ -110,7 +109,7 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	@Cacheable(cacheName = CacheConstants.DICTIONARYS_BY_TYPE)
+    @Cacheable(value = { CacheConstants.DICTIONARYS_BY_TYPE })
 	@SuppressWarnings("unchecked")
 	public List<TreeNode> getByDictionaryTypeCode(Dictionary entity,
 			String dictionaryTypeCode, Long id, boolean isCascade)
@@ -156,8 +155,6 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	 * 
 	 * @param entity
 	 *            数据字典对象
-	 * @param dictionaryTypeCode
-	 *            数据字典类型编码
 	 * @param id
 	 *            数据字ID
 	 * @param isCascade

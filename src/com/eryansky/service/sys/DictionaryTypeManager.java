@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -16,9 +18,6 @@ import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.orm.hibernate.HibernateDao;
 import com.eryansky.entity.sys.DictionaryType;
 import com.eryansky.utils.CacheConstants;
-import com.googlecode.ehcache.annotations.Cacheable;
-import com.googlecode.ehcache.annotations.TriggersRemove;
-import com.googlecode.ehcache.annotations.When;
 
 /**
  * 数据字典类型实现类.
@@ -43,21 +42,21 @@ public class DictionaryTypeManager extends
 		return dictionaryTypeDao;
 	}
 
-	@TriggersRemove(cacheName = { CacheConstants.DICTIONARYTYPE_ALL }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYTYPE_ALL},allEntries = true)
 	public void saveOrUpdate(DictionaryType entity) throws DaoException,
 			SystemException, ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		dictionaryTypeDao.saveOrUpdate(entity);
 	}
 
-	@TriggersRemove(cacheName = { CacheConstants.DICTIONARYTYPE_ALL }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYTYPE_ALL},allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException, SystemException,
 			ServiceException {
 		super.deleteByIds(ids);
 	}
 
 
-    @TriggersRemove(cacheName = { CacheConstants.DICTIONARYTYPE_ALL }, when = When.AFTER_METHOD_INVOCATION, removeAll = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYTYPE_ALL},allEntries = true)
     @Override
     public void saveEntity(DictionaryType entity) throws DaoException, SystemException, ServiceException {
         super.saveEntity(entity);
@@ -109,7 +108,8 @@ public class DictionaryTypeManager extends
 		return list.isEmpty() ? null : list.get(0);
 	}
 
-	@Cacheable(cacheName = CacheConstants.DICTIONARYTYPE_ALL)
+
+    @Cacheable(value = { CacheConstants.DICTIONARYTYPE_ALL })
 	public List<DictionaryType> getAll() throws DaoException, SystemException,
 			ServiceException {
 		logger.debug("缓存:{}", CacheConstants.DICTIONARYTYPE_ALL);
