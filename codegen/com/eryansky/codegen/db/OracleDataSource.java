@@ -18,19 +18,16 @@ public class OracleDataSource extends DataSource {
 
 	@Override
 	public List<Column> getColumns(String namePattern) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<Column> getPrimaryKey(String namePattern) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<Column> getForeignKeys(String namePattern) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

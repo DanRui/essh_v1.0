@@ -6,8 +6,6 @@ import com.eryansky.codegen.vo.Table;
 
 /**
  * 根据模板生成文件
- * 
- * @author big_tiger
  */
 public interface Generate {
 
