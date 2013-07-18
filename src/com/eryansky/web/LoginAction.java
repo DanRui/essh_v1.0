@@ -16,8 +16,8 @@ import com.eryansky.utils.AppUtils;
 
 /**
  * 系统登录.
- * @author 尔演&Eryan eryanwcp@gmail.com
- * @date 2013-3-21 上午12:18:54 
+ * Author 尔演&Eryan eryanwcp@gmail.com
+ * Date 2013-3-21 上午12:18:54
  *
  */
 @SuppressWarnings("serial")
