@@ -11,8 +11,7 @@ import com.eryansky.codegen.vo.Table;
  * 3、Jdbc Type转 Java Type
  * 4、entity get,set 方法转换
  * 5、entity instance名
- * 
- * @author big_tiger
+ *
  */
 public class ConvertHandler {
 	private Convertor tableConvertor = null;

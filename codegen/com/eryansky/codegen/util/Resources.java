@@ -2,8 +2,6 @@ package com.eryansky.codegen.util;
 
 /**
  * 各类资源配置
- * 
- * @author big_tiger
  */
 public class Resources {
 
