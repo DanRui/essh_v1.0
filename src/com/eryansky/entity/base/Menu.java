@@ -29,8 +29,8 @@ import javax.persistence.Transient;
 
 /**
  * 受保护的资源菜案Menu.
- * @author 尔演&Eryan eryanwcp@gmail.com
- * @date 2013-3-21 上午12:27:49 
+ * Author 尔演&Eryan eryanwcp@gmail.com
+ * Date 2013-3-21 上午12:27:49
  *
  */
 @SuppressWarnings("serial")
