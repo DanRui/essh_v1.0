@@ -10,6 +10,9 @@ import java.util.List;
 import com.eryansky.codegen.vo.Column;
 import com.eryansky.codegen.vo.Table;
 
+/**
+ * Oracle Metadata读取
+ */
 public class OracleDataSource extends DataSource {
 
 	public OracleDataSource(Connection conn, String catalog, String schema) {
