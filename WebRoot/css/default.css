@@ -1,6 +1,6 @@
 ﻿* {
 	font-size: 12px;
-	font-family: 微软雅黑,宋体,新宋体
+	font-family: '微软雅黑','宋体','新宋体'
 }
 
 body {
@@ -58,9 +58,9 @@ a:hover {
 	font-weight: bold;
 }
 .toolbar-btn-separator {
-	border-left: 1px solid #ccc;
-	border-right: 1px solid #fff
-    margin: 3px 1px;
+    border-right: 1px solid #fff;
+    border-left: 1px solid #ccc;
+: 3px 0px 1px 0px;
 }
 .icon {
 	padding: 2px 9px;
