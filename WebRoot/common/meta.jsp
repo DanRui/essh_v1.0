@@ -37,10 +37,6 @@
 <script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.3/portal/jquery.portal.js" charset="utf-8"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.3/easyui-lang-zh_CN.js" charset="utf-8"></script>
 
-<%-- 
-<script type="text/javascript" src="${ctx}/js/xheditor-1.2.1/xheditor-1.2.1.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="${ctx}/js/xheditor-1.2.1/xheditor_lang/zh-cn.js" charset="utf-8"></script>
- --%>
 <%-- jQuery方法扩展 --%>
 <script type="text/javascript" src="${ctx}/js/jquery-extend.js" charset="utf-8"></script>
 <%-- easyui扩展 --%>
