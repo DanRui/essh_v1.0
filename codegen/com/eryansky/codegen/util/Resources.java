@@ -18,7 +18,7 @@ public class Resources {
 	
 
 	
-	public static final String CATALOG = "null";
+	public static final String CATALOG = "";
 	public static final String SCHEMA = "ESSH";
 	
 
