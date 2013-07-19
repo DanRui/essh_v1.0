@@ -55,17 +55,17 @@ public class PageSqlUtils {
 		sqlParam[1] = beginNum + "";
 		sqlParam[2] = rows + "";
 		if (SysConstants.getJdbcUrl().indexOf(PageSqlUtils.DATABSE_TYPE_MYSQL) != -1) {
-			sql = MessageFormat.format(PageSqlUtils.MYSQL_SQL, sqlParam);
+			sql = MessageFormat.format(PageSqlUtils.MYSQL_SQL, sqlParam[0],sqlParam[1],sqlParam[2]);
 		} else if (SysConstants.getJdbcUrl().indexOf(
 				PageSqlUtils.DATABSE_TYPE_POSTGRE) != -1) {
-			sql = MessageFormat.format(PageSqlUtils.POSTGRE_SQL, sqlParam);
+			sql = MessageFormat.format(PageSqlUtils.POSTGRE_SQL, sqlParam[0],sqlParam[1],sqlParam[2]);
 		} else if (SysConstants.getJdbcUrl().indexOf(
 				PageSqlUtils.DATABSE_TYPE_ORACLE) != -1) {
 			int beginIndex = (page - 1) * rows;
 			int endIndex = beginIndex + rows;
 			sqlParam[2] = beginIndex + "";
 			sqlParam[1] = endIndex + "";
-			sql = MessageFormat.format(PageSqlUtils.ORACLE_SQL, sqlParam);
+			sql = MessageFormat.format(PageSqlUtils.ORACLE_SQL, sqlParam[0],sqlParam[1],sqlParam[2]);
 		}
 		return sql;
 	}
