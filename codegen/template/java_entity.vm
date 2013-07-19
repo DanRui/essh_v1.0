@@ -8,7 +8,9 @@ import javax.persistence.Table;
 
 import com.eryansky.common.orm.entity.BaseEntity;
 
-
+/**
+ * entity
+ */
 @Entity
 @Table(name="$tableName")
 @JsonIgnoreProperties (value = { "hibernateLazyInitializer"})

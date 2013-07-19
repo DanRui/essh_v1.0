@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import ${entityPackage}.${entityName} ;
 import com.eryansky.common.orm.hibernate.HibernateDao;
 import com.eryansky.common.orm.hibernate.EntityManager;
-
+/**
+ * service
+ */
 @Service
 public class ${entityName}Manager extends EntityManager<${entityName}, Long>  {
 	private static final Logger logger = LoggerFactory.getLogger(${entityName}Manager.class);

@@ -6,6 +6,9 @@ import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.web.struts2.StrutsAction;
 import ${entityPackage}.${entityName} ;
 
+/**
+ * action
+ */
 public class ${entityName}Action
     extends StrutsAction<${entityName}> {
 

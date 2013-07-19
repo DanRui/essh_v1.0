@@ -1,6 +1,7 @@
 package com.eryansky.codegen;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.eryansky.codegen.convert.ConvertHandler;
@@ -96,11 +97,14 @@ public class Builder {
 	}
 
 	/**
-	 * 根据keta_custom进行转换时，主键ID为Long 类型，pojo均继承IdEntity，所以pojo里不需要再次声明ID变量。
+	 * 根据essh进行转换时，主键ID为Long 类型，pojo均继承BaseEntity，所以pojo里不需要再次声明ID变量。
 	 * 需要从columns中清除该列，避免pojo重复生成
 	 */
 	private void cleanColumn(Table table) {
+        //要被排除的属性
+        List<Column> cleanColumns  = new ArrayList<Column>() ;
 		for (Column col : table.getColumns()) {
+             //主键ID
 			for (int i = 0; i < table.getPrimaryKey().size(); i++) {
 				Column pk = table.getPrimaryKey().get(i);
 				if (pk.getColumnName().equalsIgnoreCase(col.getColumnName())) {
@@ -108,10 +112,23 @@ public class Builder {
 					table.getPrimaryKey().add(i, col);
 				}
 			}
+            //继承至父类属性
+            if(col.getColumnName().equalsIgnoreCase("version")
+                    ||col.getColumnName().equalsIgnoreCase("status")
+                    ||col.getColumnName().equalsIgnoreCase("create_time")
+                    ||col.getColumnName().equalsIgnoreCase("create_user")
+                    ||col.getColumnName().equalsIgnoreCase("update_time")
+                    ||col.getColumnName().equalsIgnoreCase("update_user"))    {
+                cleanColumns.add(col);
+            }
+
 		}
 		// remove object
 		for (Column pk : table.getPrimaryKey())
 			table.getColumns().remove(pk);
+        //排除父类的属性
+        for (Column column : cleanColumns)
+            table.getColumns().remove(column);
 	}
 
 	public static void main(String args[]) {
