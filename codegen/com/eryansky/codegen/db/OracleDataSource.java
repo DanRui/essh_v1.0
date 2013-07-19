@@ -21,12 +21,48 @@ public class OracleDataSource extends DataSource {
 
 	@Override
 	public List<Column> getColumns(String namePattern) throws SQLException {
-		return null;
+        List<Column> columns = new ArrayList<Column>();
+        ResultSet rs = null;
+        try {
+            DatabaseMetaData dmd = conn.getMetaData();
+            rs = dmd.getColumns(catalog, schema, namePattern, "%");
+            while (rs.next()) {
+                Column col = new Column();
+                col.setColumnName(rs.getString("COLUMN_NAME"));
+                col.setJdbcType(rs.getString("TYPE_NAME"));
+                col.setLength(rs.getInt("COLUMN_SIZE"));
+                col.setNullable(rs.getBoolean("NULLABLE"));
+                col.setDigits(rs.getInt("DECIMAL_DIGITS"));
+                col.setDefaultValue(rs.getString("COLUMN_DEF"));
+                col.setComment(rs.getString("REMARKS"));
+                columns.add(col);
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            close(null, rs);
+        }
+        return columns;
 	}
 
 	@Override
 	public List<Column> getPrimaryKey(String namePattern) throws SQLException {
-		return null;
+        List<Column> primaryKey = new ArrayList<Column>();
+        ResultSet rs = null;
+        try {
+            DatabaseMetaData dmd = conn.getMetaData();// 获取数据库的MataData信息
+            rs = dmd.getPrimaryKeys(catalog, schema, namePattern);
+            while (rs.next()) {
+                Column pk = new Column();
+                pk.setColumnName(rs.getString("COLUMN_NAME"));
+                primaryKey.add(pk);
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            close(null, rs);
+        }
+        return primaryKey;
 	}
 
 	@Override
@@ -34,6 +70,23 @@ public class OracleDataSource extends DataSource {
 		return null;
 	}
 
+    /**
+     * 获取主键
+     *
+     * @param rs
+     * @return
+     * @throws java.sql.SQLException
+     */
+    @SuppressWarnings("unused")
+    private List<Column> getPks(ResultSet rs) throws SQLException {
+        List<Column> pks = new ArrayList<Column>();
+        while (rs.next()) {
+            Column pk = new Column();
+            pk.setColumnName(rs.getString("COLUMN_NAME"));
+            pks.add(pk);
+        }
+        return pks;
+    }
 	@Override
 	public List<Table> getTables(String namePattern) throws SQLException {
 		List<Table> tables = new ArrayList<Table>();

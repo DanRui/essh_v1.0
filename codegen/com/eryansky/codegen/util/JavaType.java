@@ -33,7 +33,10 @@ public enum JavaType {
 	DATETIME("String"),
 	TIME("String"),
 	TIMESTAMP("String"),
-	LONGTEXT("String");
+	LONGTEXT("String"),
+
+    NUMBER("Integer"),
+    VARCHAR2("String");
 
 	private String typeName;
 

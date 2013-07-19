@@ -20,7 +20,7 @@ public class $entityName extends BaseEntity{
 	 *$column.comment
 	 **/
 	#end
-    @Column(#if(!$column.nullable)nullable=false,#end length=$column.length)
+    @Column(name = "$column.columnName",#if(!$column.nullable)nullable=false,#end length = $column.length)
     private $column.javaType $column.fieldName;
 #end
 

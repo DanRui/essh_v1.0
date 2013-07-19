@@ -15,22 +15,23 @@ public class DbFactory {
 	/**
 	 * 创建数据库实例
 	 * 
-	 * @param dialect
-	 *            mysql,sqlserver,db2,oracle
+	 * @param conn
+	 *
 	 * @return
 	 * @throws Exception
 	 */
 	public static DataSource create(Connection conn) throws Exception {
 		DataSource db = null;
-		String dialect = Resources.DRIVER;
+		String dialect = Resources.DRIVER;    // mysql,sqlserver,db2,oracle
 		if (dialect == null || "".equals(dialect))
 			throw new Exception(DbFactory.class.getName() + ":>>>请指定数据库dialect......");
-		if ("org.gjt.mm.mysql.Driver".equals(dialect))
-			db = new MysqlDataSource(conn,Resources.CATALOG,Resources.SCHEMA);
-		else if ("com.ibm.db2.jcc.DB2Driver".equals(dialect))
-			db = new MysqlDataSource(conn,Resources.CATALOG,Resources.SCHEMA);
-		else if("oracle.jdbc.driver.OracleDriver".equals(dialect))
-			db = new OracleDataSource(conn,Resources.CATALOG,Resources.SCHEMA);
+		if (dialect.contains("mysql")){
+            db = new MysqlDataSource(conn,Resources.CATALOG,Resources.SCHEMA);
+        }else if(dialect.contains("oracle")){
+            db = new OracleDataSource(conn,Resources.CATALOG,Resources.SCHEMA);
+        }else {
+            db = new MysqlDataSource(conn,Resources.CATALOG,Resources.SCHEMA);
+        }
 		return db;
 	}
 
