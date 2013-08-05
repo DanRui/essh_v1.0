@@ -43,7 +43,7 @@
 			<!-- 异常处理拦截器 -->
 			<interceptor name="exceptionAuthority" class="com.eryansky.common.web.struts2.interceptor.ExceptionInterceptor" />
 			<interceptor-stack name="crudStack">
-				<interceptor-ref name="inputReplaceInterceptor" /> 
+				<!--<interceptor-ref name="inputReplaceInterceptor" /> -->
 				<!-- 将登录验证拦截器加入默认的拦截器栈中 -->
 				<interceptor-ref name="authority">
 					<param name="excludeMethods">welcome,login</param>
