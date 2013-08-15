@@ -30,7 +30,7 @@ import com.eryansky.utils.CacheConstants;
 @Table(name = "T_BASE_ROLE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
-@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "menus","users"})
+@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler" , "menus","users"})
 public class Role
         extends BaseEntity
         implements Serializable {

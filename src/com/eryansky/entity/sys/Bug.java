@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
 @Table(name = "T_SYS_BUG")
 // jackson标记不生成json对象的属性
-@JsonIgnoreProperties(value = { "hibernateLazyInitializer","tcontent"})
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer" , "handler","fieldHandler","tcontent"})
 @SuppressWarnings("serial")
 public class Bug extends BaseEntity implements Serializable{
 

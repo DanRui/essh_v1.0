@@ -31,7 +31,7 @@ import com.eryansky.utils.CacheConstants;
 @Table(name = "T_SYS_DICTIONARY")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_SYS)
 // jackson标记不生成json对象的属性
-@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "parentDictionary",
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer" , "handler","fieldHandler", "parentDictionary",
 		"dictionaryType", "subDictionarys" })
 @SuppressWarnings("serial")
 public class Dictionary extends BaseEntity{

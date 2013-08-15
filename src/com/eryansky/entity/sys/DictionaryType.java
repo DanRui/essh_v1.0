@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -22,6 +23,7 @@ import com.eryansky.utils.CacheConstants;
 @Entity
 @Table(name = "T_SYS_DICTIONARYTYPE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_SYS)
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer" , "handler","fieldHandler" })
 @SuppressWarnings("serial")
 public class DictionaryType extends BaseEntity {
 
