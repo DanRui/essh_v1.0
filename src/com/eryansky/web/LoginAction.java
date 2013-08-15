@@ -1,5 +1,8 @@
 package com.eryansky.web;
 
+import com.eryansky.common.model.TreeNode;
+import com.eryansky.service.base.MenuManager;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,6 +16,8 @@ import com.eryansky.entity.base.User;
 import com.eryansky.entity.base.state.StatusState;
 import com.eryansky.service.base.UserManager;
 import com.eryansky.utils.AppUtils;
+
+import java.util.List;
 
 /**
  * 系统登录.
@@ -46,6 +51,8 @@ public class LoginAction
      */
     @Autowired
     private UserManager userManager;
+    @Autowired
+    private MenuManager menuManager;
     
     public String welcome() throws Exception{
         return list();
@@ -110,14 +117,34 @@ public class LoginAction
         return null;
     }
 
-    
+    /**
+     * 当前在线用户
+     * @throws Exception
+     */
     public void onlineDatagrid() throws Exception{
     	try {
 			Struts2Utils.renderJson(AppUtils.getSessionUser());
 		} catch (Exception e) {
 			throw e;
 		}
-    } 
+    }
+
+    /**
+     * 导航菜单.
+     */
+    public void navTree() throws Exception {
+        List<TreeNode> treeNodes = Lists.newArrayList();
+        try {
+            User user = (User) Struts2Utils
+                    .getSessionAttribute(SysConstants.SESSION_USER);
+            if (user != null) {
+                treeNodes = menuManager.getNavTree(user.getId());
+            }
+            Struts2Utils.renderJson(treeNodes);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
     
     /**
      * 注销登录

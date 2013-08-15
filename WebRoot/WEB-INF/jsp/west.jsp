@@ -8,7 +8,7 @@
 	
 	/*  初始化导航菜单 */
 	function initMenu(){
-    	$.post("${ctx}/base/menu!navTree.action", function(data) {
+    	$.post("${ctx}/login!navTree.action", function(data) {
     	    $.each(data, function(i, n) {
     			var menulist = "<div class='easyui-panel' data-options='fit:true,border:false' style='overflow-y:auto;overflow-X: hidden;'><ul>";
     	        $.each(n.children, function(j, o) {//依赖于center界面选项卡layout_center_tabs对象

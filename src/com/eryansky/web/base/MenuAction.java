@@ -102,23 +102,6 @@ public class MenuAction extends StrutsAction<Menu> {
 	}
 
 	/**
-	 * 导航菜单.
-	 */
-	public void navTree() throws Exception {
-		List<TreeNode> treeNodes = Lists.newArrayList();
-		try {
-			User user = (User) Struts2Utils
-					.getSessionAttribute(SysConstants.SESSION_USER);
-			if (user != null) {
-				treeNodes = menuManager.getNavTree(user.getId());
-			}
-			Struts2Utils.renderJson(treeNodes);
-		} catch (Exception e) {
-			throw e;
-		}
-	}
-
-	/**
 	 * 父级菜单下拉列表.
 	 */
 	@SuppressWarnings("unchecked")
