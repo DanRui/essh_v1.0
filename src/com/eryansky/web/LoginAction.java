@@ -69,6 +69,7 @@ public class LoginAction
     public String login() throws Exception {
     	Result result = null;
         try {
+            //如果校验不通过将会抛出异常 异常会被异常拦截器ExceptionInterceptor拦截并返回客户端 客户端解析返回的数据即可做相应的提示
         	Validate.notBlank(loginName, "用户名不能为空!");
         	Validate.notBlank(password, "密码不能为空!");
             //验证码校验
@@ -164,6 +165,11 @@ public class LoginAction
         return SUCCESS;
     }
 
+    /**
+     * 后台管理主界面
+     * @return
+     * @throws Exception
+     */
     public String index() throws Exception {
         return "index";
     }

@@ -67,6 +67,9 @@
 		<div>
 			<label>标识地址:</label>
 			<input type="text" id="markUrl" name="markUrl" maxLength="255" class="easyui-validatebox" />
+            <%--提示小图标--%>
+            <span class="tree-icon tree-file icon-tip easyui-tooltip"
+                  title="设置标识地址的URL会被拦截器拦截；支持通配符'*';多个标识地址之间以';'分割." ></span>
 		</div>
 		<div>
 			<label>排序:</label>
