@@ -16,6 +16,7 @@
 		    classpath*:applicationContext-ehcache.xml,
 		    <!-- classpath*:applicationContext-task.xml, -->
 		    <!-- classpath*:applicationContext-quartz.xml -->
+            classpath*:applicationContext-minaServer.xml
 		</param-value>
 	</context-param>
 
@@ -246,7 +247,16 @@
 		<servlet-name>ValidateCodeServlet</servlet-name>
 		<url-pattern>/servlet/ValidateCodeServlet</url-pattern>
 	</servlet-mapping>
-	
+
+    <!-- Servlet 验证码 -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.eryansky.servlet.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/servlet/LoginServlet</url-pattern>
+    </servlet-mapping>
 
 	<!-- session超时定义,单位为分钟 -->
     <session-config>

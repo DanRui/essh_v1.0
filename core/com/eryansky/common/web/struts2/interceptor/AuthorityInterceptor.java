@@ -1,10 +1,19 @@
 package com.eryansky.common.web.struts2.interceptor;
 
+import com.eryansky.common.model.TreeNode;
+import com.eryansky.common.utils.StringUtils;
+import com.eryansky.common.web.struts2.utils.Struts2Utils;
+import com.eryansky.entity.base.User;
+import com.eryansky.service.base.MenuManager;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.eryansky.common.utils.SysConstants;
-import com.eryansky.common.web.struts2.utils.Struts2Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * 登录验证拦截器.
@@ -13,15 +22,31 @@ import com.eryansky.common.web.struts2.utils.Struts2Utils;
 @SuppressWarnings("serial")
 public class AuthorityInterceptor extends MethodFilterInterceptor{
 
+    protected Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private MenuManager menuManager;
+
 	@Override
 	protected String doIntercept(ActionInvocation actioninvocation) throws Exception {
 	    //登录用户
-		Object user = Struts2Utils.getSessionAttribute(SysConstants.SESSION_USER);
-		if(user != null){
+		User sessionUser = (User) Struts2Utils.getSessionAttribute(SysConstants.SESSION_USER);
+        String requestUrl = Struts2Utils.getRequest().getRequestURI();
+
+		if(sessionUser != null){
+            String url = StringUtils.replaceOnce(requestUrl,  Struts2Utils.getRequest().getContextPath(), "");
+            //检查用户是否授权该URL
+            boolean isAuthority = menuManager.isAuthority(url,sessionUser.getId());
+            if(!isAuthority){
+                logger.warn("用户{}未被授权URL:{}", sessionUser.getLoginName(), requestUrl);
+                return "noauthority"; //返回403页面 返回"noauthority"由struts.xml配置
+            }
+
 			return actioninvocation.invoke(); //递归调用拦截器
 		}else{
 			return Action.LOGIN; //返回到登录页面
 		}
 		
 	}
+
 }

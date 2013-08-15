@@ -385,7 +385,26 @@ $.extend($.fn.tabs.methods, {
             }   
             $(this).tabs('loadTabIframe',params);         
         });      
-    }     
+    } ,
+    /**
+     * 设置tab标题
+     * 使用方法：
+     *   var tab = $('#tt').tabs('getSelected');
+     *   $('#tt').tabs('setTabTitle',{tab:tab,title:"New Title"});
+     * @param jq
+     * @param opts
+     * @returns {*}
+     */
+    setTabTitle:function(jq,opts){
+        return jq.each(function(){
+            var tab = opts.tab;
+            var options = tab.panel("options");
+            var tab = options.tab;
+            options.title = opts.title;
+            var title = tab.find("span.tabs-title");
+            title.html(opts.title);
+        });
+    }
 });  
 
 
@@ -565,7 +584,28 @@ $.extend($.fn.datagrid.methods, {
 			var e = $(jq).datagrid('getColumnOption', param);
 			e.editor = {};
 		}
-	}
+	},
+    /**
+     * 动态设置列标题
+     * 用法:
+     *   $("#dg").datagrid("setColumnTitle",{field:'productid',text:'newTitle'})
+     * @param jq
+     * @param option
+     * @returns {*}
+     */
+    setColumnTitle: function(jq, option){
+        if(option.field){
+            return jq.each(function(){
+                var $panel = $(this).datagrid("getPanel");
+                var $field = $('td[field='+option.field+']',$panel);
+                if($field.length){
+                    var $span = $("span",$field).eq(0);
+                    $span.html(option.text);
+                }
+            });
+        }
+        return jq;
+    }
 });
 
 //datagrid扩展
@@ -779,7 +819,31 @@ $.extend($.fn.tree.methods, {
 			checked.push(node);
 		});
 		return checked;
-	}
+	},
+    /**
+     * 获取节点级别
+     * 用法：
+     *   var node = $('#tree').tree("getSelected");
+     *   var lv =  $('#tree').tree("getLevel",node.target);
+     * @param jq
+     * @param target
+     * @returns {number}
+     */
+    getLevel:function(jq,target){
+        var l = $(target).parentsUntil("ul.tree","ul");
+        return l.length+1;
+    },
+    /**
+     * 设置参数
+     * @param jq
+     * @param params
+     * @returns {*}
+     */
+    setQueryParams : function (jq, params) {
+        return jq.each(function () {
+            $(this).tree("options").queryParams = params;
+        });
+    }
 });
 
 /**
@@ -1067,6 +1131,27 @@ $.extend($.fn.datagrid.defaults.editors, {
         resize: function(target, width){  
             $(target).numberspinner('resize',width);  
         }  
+    },
+    timespinner : {
+        init : function (container, options) {
+            var input = $('<input/>').appendTo(container);
+            input.timespinner(options);
+            return input
+        },
+        getValue : function (target) {
+            var val = $(target).timespinner('getValue');
+        },
+        setValue : function (target, value) {
+            $(target).timespinner('setValue', value);
+        },
+        resize : function (target, width) {
+            var input = $(target);
+            if ($.boxModel == true) {
+                input.resize('resize', width - (input.outerWidth() - input.width()));
+            } else {
+                input.resize('resize', width);
+            }
+        }
     },
     password: {
 		init: function(container, options) {

@@ -59,6 +59,7 @@
 		
 		<global-results>
 		    <result name="login" type="redirect">/jump.jsp</result>
+            <result name="noauthority" type="redirect">/common/403.jsp</result>
         </global-results>
         
         

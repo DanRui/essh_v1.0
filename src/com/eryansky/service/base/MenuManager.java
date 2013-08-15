@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import com.eryansky.common.utils.StringUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -192,6 +192,11 @@ public class MenuManager extends EntityManager<Menu, Long> {
 			Menu parenMenu = parentList.get(i);
 			TreeNode treeNode1 = new TreeNode(parenMenu.getId() + "",
 					parenMenu.getName(), parenMenu.getIco());
+            // 自定义属性 url
+            Map<String, Object> attributes1 = Maps.newHashMap();
+//            attributes1.put("url", parenMenu.getUrl());
+            attributes1.put("markUrl",parenMenu.getMarkUrl());
+            treeNode1.setAttributes(attributes1);
 			treeNodes.add(treeNode1);
 
 			// 第二级
@@ -202,9 +207,10 @@ public class MenuManager extends EntityManager<Menu, Long> {
 				TreeNode treeNode2 = new TreeNode(subMenu.getId() + "",
 						subMenu.getName(), subMenu.getIco());
 				// 自定义属性 url
-				Map<String, Object> attributes = Maps.newHashMap();
-				attributes.put("url", subMenu.getUrl());
-				treeNode2.setAttributes(attributes);
+				Map<String, Object> attributes2 = Maps.newHashMap();
+				attributes2.put("url", subMenu.getUrl());
+                attributes2.put("markUrl",subMenu.getMarkUrl());
+				treeNode2.setAttributes(attributes2);
 				// 将节点赋值到顶级节点 作为父级的子节点
 				treeNode1.addChild(treeNode2);
 			}
@@ -261,8 +267,12 @@ public class MenuManager extends EntityManager<Menu, Long> {
 				Menu parenMenu = parentList.get(i);
 				TreeNode treeNode1 = new TreeNode(parenMenu.getId() + "",
 						parenMenu.getName(), parenMenu.getIco());
-				treeNodes.add(treeNode1);
-
+                // 自定义属性 url
+                Map<String, Object> attributes1 = Maps.newHashMap();
+                attributes1.put("url", parenMenu.getUrl());
+                attributes1.put("markUrl",parenMenu.getMarkUrl());
+                treeNode1.setAttributes(attributes1);
+                treeNodes.add(treeNode1);
 				List<Menu> subList2 = new ArrayList<Menu>();
 				for (Menu mm : subList) {
 					if (mm.getParentMenu().getId() == parenMenu.getId()) {
@@ -279,6 +289,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 					// 自定义属性 url
 					Map<String, Object> attributes = Maps.newHashMap();
 					attributes.put("url", subMenu.getUrl());
+                    attributes.put("markUrl",subMenu.getMarkUrl());
 					treeNode2.setAttributes(attributes);
 					// 将节点赋值到顶级节点 作为父级的子节点
 					treeNode1.addChild(treeNode2);
@@ -289,6 +300,92 @@ public class MenuManager extends EntityManager<Menu, Long> {
 		}
 		return treeNodes;
 	}
+
+    /**
+     * 根据用户ID查找用户拥有的URL权限
+     * @param userId   用户ID
+     * @return    List<String> 用户拥有的markUrl地址
+     */
+    public List<String> getUserAuthoritysByUserId(Long userId){
+        List<String> userAuthoritys = Lists.newArrayList();
+        List<TreeNode> treeNodes = this.getNavTree(userId);
+        for(TreeNode node : treeNodes){
+            Object obj = node.getAttributes().get("markUrl");
+            if(obj != null){
+                String markUrl = (String)obj ;
+                if(StringUtils.isNotBlank(markUrl)){
+                    userAuthoritys.add(markUrl);
+                }
+            }
+
+        }
+        return  userAuthoritys;
+    }
+
+    /**
+     * 根据请求地址判断用户是否有权访问该url
+     * @param requestUrl 请求URL地址
+     * @param userId 用户ID
+     * @return
+     */
+    public boolean isAuthority(String requestUrl,Long userId){
+        //如果是超级管理员 直接允许被授权
+        if(userManager.getSuperUser().getId().equals(userId)) {
+            return true;
+        }
+        //检查该URL是否需要拦截
+        boolean isInterceptorUrl = this.isInterceptorUrl(requestUrl);
+        if (isInterceptorUrl){
+            //用户权限
+            List<String> userAuthoritys = this.getUserAuthoritysByUserId(userId);
+            for(String markUrl :userAuthoritys){
+                String[] markUrls = markUrl.split(";");
+                for(int i=0;i<markUrls.length;i++){
+                    if(StringUtils.isNotBlank(markUrls[i]) && StringUtils.simpleWildcardMatch(markUrls[i],requestUrl)){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 查找需要拦截的url规则
+     * @return
+     */
+    public List<String> getInterceptorUrl(){
+        List<String> markUrls = Lists.newArrayList();
+        //查找所有菜单
+//        List<Menu> menus = this.findBy("NEI_status",StatusState.delete.getValue());
+        List<Menu> menus = this.getAll();
+        for(Menu menu:menus){
+              if(StringUtils.isNotBlank(menu.getMarkUrl())){
+                  markUrls.add(menu.getMarkUrl());
+              }
+        }
+        return markUrls;
+    }
+
+    /**
+     * 检查某个URL是都需要拦截
+     * @param requestUrl 检查的URL地址
+     * @return
+     */
+    public boolean isInterceptorUrl(String requestUrl){
+        List<String> markUrlList = this.getInterceptorUrl();
+        for(String markUrl :markUrlList){
+            String[] markUrls = markUrl.split(";");
+            for(int i=0;i<markUrls.length;i++){
+                if(StringUtils.isNotBlank(markUrls[i]) && StringUtils.simpleWildcardMatch(markUrls[i],requestUrl)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * 返回所有Menu树列表(仅限两级).

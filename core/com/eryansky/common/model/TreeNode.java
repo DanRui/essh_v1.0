@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.common.collect.Lists;
@@ -45,7 +46,7 @@ public class TreeNode implements Serializable {
 	/**
 	 * 自定义属性
 	 */
-	private Map<String, Object> attributes;
+	private Map<String, Object> attributes = Maps.newHashMap();
 	/**
 	 * 子节点
 	 */
