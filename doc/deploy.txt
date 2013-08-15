@@ -7,6 +7,7 @@
 	/resource 配置文件目录
 	/test 单元测试目录
 	/core 共用核心源代码
+	/codegen 基于数据库表的代码生成器（不是很完善哦）
 	/src Service、Action等 应用源代码
 	/doc 一些帮助文档 以及核心包api文档
 	/WebRoot ...
