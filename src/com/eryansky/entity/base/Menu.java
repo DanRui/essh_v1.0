@@ -38,7 +38,7 @@ import javax.persistence.Transient;
 @Table(name = "T_BASE_MENU")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
-@JsonIgnoreProperties (value = { "hibernateLazyInitializer" ,  "parentMenu",
+@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler" ,  "parentMenu",
         "roles", "roleNames", "subMenus", "navigation" })
 public class Menu
         extends BaseEntity

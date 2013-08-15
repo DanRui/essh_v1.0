@@ -28,6 +28,10 @@ public class CacheConstants {
 	 * 导航tree树(无).
 	 */
 	public static final String MENU_TREE = "menu_tree_cache";
+    /**
+     * 需要拦截的所有url规则.
+     */
+    public static final String MENU_ALLINTERCEPTORURLS = "menu_allInterceptorUrls_cache";
 	
 	/**
 	 * 角色(无).

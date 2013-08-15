@@ -30,6 +30,15 @@
         timeToIdleSeconds="0"   
         timeToLiveSeconds="3600"        
         memoryStoreEvictionPolicy="LRU" />
+
+    <!-- 需要拦截的所有url规则 每1周 -->
+    <cache name="menu_allInterceptorUrls_cache" eternal="false"
+           maxElementsInMemory="1000"
+           overflowToDisk="false"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="604800"
+           memoryStoreEvictionPolicy="LRU" />
         
    <!--  角色 每1小时 -->
    <cache name="role_all_cache" eternal="false"         

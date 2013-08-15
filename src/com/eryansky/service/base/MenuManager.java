@@ -61,7 +61,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 */
 	//清除缓存
 	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE },allEntries = true)
+			CacheConstants.MENU_TREE,CacheConstants.MENU_ALLINTERCEPTORURLS },allEntries = true)
 	public void saveOrUpdate(Menu entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
@@ -73,7 +73,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 */
 	//清除缓存
 	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE },allEntries = true)
+			CacheConstants.MENU_TREE,CacheConstants.MENU_ALLINTERCEPTORURLS },allEntries = true)
 	public void merge(Menu entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
@@ -81,7 +81,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	}
 
     @CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-            CacheConstants.MENU_TREE },allEntries = true)
+            CacheConstants.MENU_TREE,CacheConstants.MENU_ALLINTERCEPTORURLS },allEntries = true)
     @Override
     public void saveEntity(Menu entity) throws DaoException, SystemException, ServiceException {
         super.saveEntity(entity);
@@ -92,7 +92,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 */
 	//清除缓存
 	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE },allEntries = true)
+			CacheConstants.MENU_TREE ,CacheConstants.MENU_ALLINTERCEPTORURLS},allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException, SystemException,
 			ServiceException {
 		if(!Collections3.isEmpty(ids)){
@@ -353,10 +353,12 @@ public class MenuManager extends EntityManager<Menu, Long> {
     }
 
     /**
-     * 查找需要拦截的url规则
+     * 查找需要拦截的所有url规则
      * @return
      */
-    public List<String> getInterceptorUrl(){
+    @Cacheable(value = { CacheConstants.MENU_ALLINTERCEPTORURLS })
+    public List<String> getAllInterceptorUrls(){
+        logger.debug("缓存:{}", CacheConstants.MENU_ALLINTERCEPTORURLS);
         List<String> markUrls = Lists.newArrayList();
         //查找所有菜单
 //        List<Menu> menus = this.findBy("NEI_status",StatusState.delete.getValue());
@@ -375,7 +377,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
      * @return
      */
     public boolean isInterceptorUrl(String requestUrl){
-        List<String> markUrlList = this.getInterceptorUrl();
+        List<String> markUrlList = this.getAllInterceptorUrls();
         for(String markUrl :markUrlList){
             String[] markUrls = markUrl.split(";");
             for(int i=0;i<markUrls.length;i++){
