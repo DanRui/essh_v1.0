@@ -14,7 +14,7 @@
 		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" />
 	
 	<!-- 导航菜单(根据用户权限) 每1小时 -->
-	<cache name="menu_navTree_cache" eternal="false"         
+	<cache name="resource_navTree_cache" eternal="false"
         maxElementsInMemory="100"   
         overflowToDisk="true"   
         diskPersistent="false"         
@@ -23,7 +23,7 @@
         memoryStoreEvictionPolicy="LRU" /> 
         
    <!-- 导航菜单(所有) 每1小时 -->
-   <cache name="menu_tree_cache" eternal="false"         
+   <cache name="resource_tree_cache" eternal="false"
         maxElementsInMemory="100"   
         overflowToDisk="false"   
         diskPersistent="false"         
@@ -32,7 +32,7 @@
         memoryStoreEvictionPolicy="LRU" />
 
     <!-- 需要拦截的所有url规则 每1周 -->
-    <cache name="menu_allInterceptorUrls_cache" eternal="false"
+    <cache name="resource_allInterceptorUrls_cache" eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"
            diskPersistent="false"

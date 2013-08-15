@@ -3,13 +3,13 @@
 <script type="text/javascript">
     var json;
 	$(function() {
-		loadMenu();
+		loadResource();
 	});
-	//加载菜单
-    function loadMenu(){
+	//加载资源
+    function loadResource(){
     	//树 请求数据
     	$.ajax( {
-			url : "${ctx}/base/menu!tree.action",
+			url : "${ctx}/base/resource!tree.action",
 			type : "post",
 			async : false,//是否异步方式 
 			success : function(data) { 
@@ -17,12 +17,12 @@
 		    }
 		});
 		
-		$('#menuIds').combotree({   
+		$('#resourceIds').combotree({
 			data : json,
 			cascadeCheck : false,
 			multiple : true,
 			onClick : function(node){
-				var tree = $('#menuIds').combotree('tree');//combotree组件中的tree组件
+				var tree = $('#resourceIds').combotree('tree');//combotree组件中的tree组件
 				eu.myCascadeCheck(tree,node);
 			},
 			onCheck:function(node, checked) {
@@ -34,7 +34,7 @@
 		//$('[span^="tree-checkbox"]').bind("click", function() {
 		 $('.tree-checkbox').bind("click", function() {
 			 window.setTimeout(function() {
-			     var tree = $('#menuIds').combotree('tree');//combotree组件中的tree组件
+			     var tree = $('#resourceIds').combotree('tree');//combotree组件中的tree组件
 			     eu.myCascadeCheck(tree,checkedNode);
 			 }, 1);
 	     });
@@ -46,8 +46,8 @@
 	    <!-- 用户版本控制字段 version -->
         <input type="hidden" id="version" name="version" ></input>
         <div>
-			<label>关联菜单:</label>  
-		    <input id="menuIds" name="menuIds"  style="width:200px" />
+			<label>关联资源:</label>
+		    <input id="resourceIds" name="resourceIds"  style="width:200px" />
 		</div> 
 		<div>
 			<label>角色名称:</label>

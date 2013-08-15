@@ -43,7 +43,7 @@ public class RoleManager extends EntityManager<Role, Long> {
 	 * 删除角色.
 	 * <br>删除角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
 	 */
-    @CacheEvict(value = { CacheConstants.ROLE_ALL},allEntries = true)
+    @CacheEvict(value = { CacheConstants.ROLE_ALL_CACHE},allEntries = true)
 	@Override
 	public void deleteByIds(List<Long> ids) throws DaoException,
 			SystemException, ServiceException {
@@ -53,7 +53,7 @@ public class RoleManager extends EntityManager<Role, Long> {
 	 * 新增或修改角色.
 	 * <br>修改角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
 	 */
-    @CacheEvict(value = {  CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE},allEntries = true)
+    @CacheEvict(value = {  CacheConstants.ROLE_ALL_CACHE,CacheConstants.RESOURCE_NAV_TREE_CACHE},allEntries = true)
     public void saveOrUpdate(Role entity) throws DaoException,SystemException,ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		roleDao.saveOrUpdate(entity);
@@ -64,22 +64,22 @@ public class RoleManager extends EntityManager<Role, Long> {
 	 * 新增或修改角色.
 	 * <br>修改角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
 	 */
-    @CacheEvict(value = { CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.ROLE_ALL_CACHE,CacheConstants.RESOURCE_NAV_TREE_CACHE},allEntries = true)
     public void merge(Role entity) throws DaoException,SystemException,ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		roleDao.merge(entity);
 		logger.warn("保存色Role:{}",entity.getId());
 	}
 
-    @CacheEvict(value = { CacheConstants.ROLE_ALL,CacheConstants.MENU_NAVTREE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.ROLE_ALL_CACHE,CacheConstants.RESOURCE_NAV_TREE_CACHE},allEntries = true)
     @Override
     public void saveEntity(Role entity) throws DaoException, SystemException, ServiceException {
         super.saveEntity(entity);
     }
 
-    @Cacheable(value = { CacheConstants.ROLE_ALL })
+    @Cacheable(value = { CacheConstants.ROLE_ALL_CACHE})
     public List<Role> getAll() throws DaoException,SystemException,ServiceException {
-		logger.debug("缓存:{}",CacheConstants.ROLE_ALL);
+		logger.debug("缓存:{}",CacheConstants.ROLE_ALL_CACHE);
 		return roleDao.getAll();
 	}
 

@@ -98,7 +98,7 @@ function logout() {
 	</div>
 	<div style="float: right; position: absolute; bottom: 20px; right: 10px">
 	    <div style="text-align: right;">您好,<span style="color: red;">${user.loginName}</span>[${user.roleNames}] 欢迎您！</div>
-		<a href="javascript:void(0);" class="easyui-menubutton" menu="#layout_north_pfMenu" iconCls="icon-user_red">更换皮肤</a> 
+		<a href="javascript:void(0);" class="easyui-menubutton" menu="#layout_north_pfMenu" iconCls="icon-user_red">更换皮肤</a>
 		<div id="layout_north_pfMenu" style="width: 120px; display: none;">
 			<div onclick="eu.changeTheme('bootstrap');">bootstrap</div>
 			<div onclick="eu.changeTheme('default');">蓝色</div>
@@ -107,7 +107,7 @@ function logout() {
 			<div onclick="eu.changeTheme('metro');">metro</div>
 		</div>
 	
-	    <a href="javascript:void(0);" class="easyui-menubutton" menu="#layout_north_kzmbMenu" iconCls="icon-help">控制面板</a> 
+	    <a href="javascript:void(0);" class="easyui-menubutton" menu="#layout_north_kzmbMenu" iconCls="icon-help">控制面板</a>
 		<div id="layout_north_kzmbMenu" style="width: 100px; display: none;">
 			<div onclick="editLoginUserPassword();" iconCls="icon-edit">修改密码</div>
 			<div class="menu-sep"></div>

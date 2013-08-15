@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.eryansky.common.utils.StringUtils;
+import com.eryansky.entity.base.Resource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,68 +23,67 @@ import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.orm.hibernate.HibernateDao;
 import com.eryansky.common.utils.collections.Collections3;
-import com.eryansky.entity.base.Menu;
 import com.eryansky.entity.base.Role;
 import com.eryansky.entity.base.User;
 import com.eryansky.entity.base.state.StatusState;
 import com.eryansky.utils.CacheConstants;
 
 /**
- * 菜单Menu管理 Service层实现类.
- * <br>树形菜单使用缓存 当保存、删除操作时清除缓存
+ * 资源Resource管理 Service层实现类.
+ * <br>树形资源使用缓存 当保存、删除操作时清除缓存
  * @author 尔演&Eryan eryanwcp@gmail.com
  * @date 2012-10-11 下午4:26:46
  */
 @Service
-public class MenuManager extends EntityManager<Menu, Long> {
+public class ResourceManager extends EntityManager<Resource, Long> {
 
 
 	@Autowired
 	private UserManager userManager;
 	
-	private HibernateDao<Menu, Long> menuDao;// 默认的泛型DAO成员变量.
+	private HibernateDao<Resource, Long> resourceDao;// 默认的泛型DAO成员变量.
 	
 	/**
 	 * 通过注入的sessionFactory初始化默认的泛型DAO成员变量.
 	 */
 	@Autowired
 	public void setSessionFactory(final SessionFactory sessionFactory) {
-		menuDao = new HibernateDao<Menu, Long>(sessionFactory, Menu.class);
+		resourceDao = new HibernateDao<Resource, Long>(sessionFactory, Resource.class);
 	}
 
 	@Override
-	protected HibernateDao<Menu, Long> getEntityDao() {
-		return menuDao;
+	protected HibernateDao<Resource, Long> getEntityDao() {
+		return resourceDao;
 	}
 
 	/**
 	 * 保存或修改.
 	 */
 	//清除缓存
-	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE,CacheConstants.MENU_ALLINTERCEPTORURLS },allEntries = true)
-	public void saveOrUpdate(Menu entity) throws DaoException, SystemException,
+	@CacheEvict(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE,
+			CacheConstants.RESOURCE_TREE_CACHE,CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE},allEntries = true)
+	public void saveOrUpdate(Resource entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
-		menuDao.saveOrUpdate(entity);
+		resourceDao.saveOrUpdate(entity);
 	}
 	
 	/**
 	 * 保存或修改.
 	 */
 	//清除缓存
-	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE,CacheConstants.MENU_ALLINTERCEPTORURLS },allEntries = true)
-	public void merge(Menu entity) throws DaoException, SystemException,
+	@CacheEvict(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE,
+			CacheConstants.RESOURCE_TREE_CACHE,CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE},allEntries = true)
+	public void merge(Resource entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
-		menuDao.merge(entity);
+		resourceDao.merge(entity);
 	}
 
-    @CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-            CacheConstants.MENU_TREE,CacheConstants.MENU_ALLINTERCEPTORURLS },allEntries = true)
+    @CacheEvict(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE,
+            CacheConstants.RESOURCE_TREE_CACHE,CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE},allEntries = true)
     @Override
-    public void saveEntity(Menu entity) throws DaoException, SystemException, ServiceException {
+    public void saveEntity(Resource entity) throws DaoException, SystemException, ServiceException {
         super.saveEntity(entity);
     }
 
@@ -91,24 +91,24 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 * 自定义删除方法.
 	 */
 	//清除缓存
-	@CacheEvict(value = { CacheConstants.MENU_NAVTREE,
-			CacheConstants.MENU_TREE ,CacheConstants.MENU_ALLINTERCEPTORURLS},allEntries = true)
+	@CacheEvict(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE,
+			CacheConstants.RESOURCE_TREE_CACHE,CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE},allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException, SystemException,
 			ServiceException {
 		if(!Collections3.isEmpty(ids)){
 			for (Long id:ids) {
-				List<Menu> subMenus = getByParentId(id,
-						StatusState.normal.getValue());
-				if (subMenus.isEmpty() == false) {// 如果存在子菜单 则将所有子菜单一起删除
-					for (Menu m : subMenus) {
-						menuDao.delete(m);
+				List<Resource> subResources = getByParentId(id,
+						StatusState.normal.getValue(),null);
+				if (subResources.isEmpty() == false) {// 如果存在子资源 则将所有子资源一起删除
+					for (Resource m : subResources) {
+						resourceDao.delete(m);
 					}
 				}
-				// deleteMenuById(id);
-				// 不直接通过id删除对象 (因为有可能在删除子菜单的时候就被删除了)
-				Menu menu = loadById(id);
-				if (menu != null) {
-					menuDao.delete(menu);
+				// deleteResourceById(id);
+				// 不直接通过id删除对象 (因为有可能在删除子资源的时候就被删除了)
+				Resource resource = loadById(id);
+				if (resource != null) {
+					resourceDao.delete(resource);
 				}
 			}
 		}else{
@@ -119,41 +119,43 @@ public class MenuManager extends EntityManager<Menu, Long> {
 
 	/**
 	 * 
-	 * 根据name得到Menu.
+	 * 根据name得到Resource.
 	 * 
 	 * @param name
-	 *            菜单名称
+	 *            资源名称
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	public Menu getByName(String name) throws DaoException, SystemException,
+	public Resource getByName(String name) throws DaoException, SystemException,
 			ServiceException {
 		if (StringUtils.isBlank(name)) {
 			return null;
 		}
 		name = StringUtils.strip(name);// 去除两边空格
-		return menuDao.findUniqueBy("name", name);
+		return resourceDao.findUniqueBy("name", name);
 	}
 
 	/**
 	 * 
-	 * 根据父ID得到 Menu. <br>
+	 * 根据父ID得到 Resource. <br>
 	 * 默认按 orderNo asc,id asc排序.
 	 * 
 	 * @param parentId
-	 *            父节点ID(当该参数为null的时候查询顶级菜单列表)
+	 *            父节点ID(当该参数为null的时候查询顶级资源列表)
 	 * @param status 
 	 *            数据状态 @see com.eryansky.entity.base.state.StatusState
 	 *            <br>status传null则使用默认值 默认值:StatusState.normal.getValue()
+     * @param type
+     *            资源状态 @see com.eryansky.entity.base.state.ResourceState
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Menu> getByParentId(Long parentId, Integer status)
+	public List<Resource> getByParentId(Long parentId, Integer status,Integer type)
 			throws DaoException, SystemException, ServiceException {
 		//默认值 正常
 		if(status == null){
@@ -161,55 +163,60 @@ public class MenuManager extends EntityManager<Menu, Long> {
 		}
 		StringBuilder sb = new StringBuilder();
 		Object[] objs;
-		sb.append("from Menu m where m.status = ? and m.parentMenu.id ");
-		if (parentId == null) {
+		sb.append("from Resource r where r.status = ?  ");
+        if(type != null){
+            sb.append(" and r.type = ")
+            .append(type);
+        };
+        sb.append(" and r.parentResource.id ");
+        if (parentId == null) {
 			sb.append(" is null ");
 			objs = new Object[] { status };
 		} else {
 			sb.append(" = ? ");
 			objs = new Object[] { status, parentId };
 		}
-		sb.append(" order by m.orderNo asc,m.id asc");
+		sb.append(" order by r.orderNo asc,r.id asc");
 
-		List<Menu> list = menuDao.createQuery(sb.toString(), objs).list();
+		List<Resource> list = resourceDao.createQuery(sb.toString(), objs).list();
 		return list;
 	}
 
 	/**
-	 * 获取所有导航菜单（无权限限制）.
+	 * 获取所有导航资源（无权限限制）.
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-	public List<TreeNode> getNavTree() throws DaoException, SystemException,
+	public List<TreeNode> getNavTree(Integer type) throws DaoException, SystemException,
 			ServiceException {
 		List<TreeNode> treeNodes = Lists.newArrayList();
-		// 顶级菜单
-		List<Menu> parentList = getByParentId(null,
-				StatusState.normal.getValue());
+		// 顶级资源
+		List<Resource> parentList = getByParentId(null,
+				StatusState.normal.getValue(),type);
 		for (int i = 0; i < parentList.size(); i++) {
-			Menu parenMenu = parentList.get(i);
-			TreeNode treeNode1 = new TreeNode(parenMenu.getId() + "",
-					parenMenu.getName(), parenMenu.getIco());
+			Resource parenResource = parentList.get(i);
+			TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
+					parenResource.getName(), parenResource.getIco());
             // 自定义属性 url
             Map<String, Object> attributes1 = Maps.newHashMap();
-//            attributes1.put("url", parenMenu.getUrl());
-            attributes1.put("markUrl",parenMenu.getMarkUrl());
+//            attributes1.put("url", parenResource.getUrl());
+            attributes1.put("markUrl", parenResource.getMarkUrl());
             treeNode1.setAttributes(attributes1);
 			treeNodes.add(treeNode1);
 
 			// 第二级
-			List<Menu> subList = getByParentId(parenMenu.getId(),
-					StatusState.normal.getValue());
+			List<Resource> subList = getByParentId(parenResource.getId(),
+					StatusState.normal.getValue(),type);
 			for (int j = 0; j < subList.size(); j++) {
-				Menu subMenu = subList.get(j);
-				TreeNode treeNode2 = new TreeNode(subMenu.getId() + "",
-						subMenu.getName(), subMenu.getIco());
+				Resource subResource = subList.get(j);
+				TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
+						subResource.getName(), subResource.getIco());
 				// 自定义属性 url
 				Map<String, Object> attributes2 = Maps.newHashMap();
-				attributes2.put("url", subMenu.getUrl());
-                attributes2.put("markUrl",subMenu.getMarkUrl());
+				attributes2.put("url", subResource.getUrl());
+                attributes2.put("markUrl", subResource.getMarkUrl());
 				treeNode2.setAttributes(attributes2);
 				// 将节点赋值到顶级节点 作为父级的子节点
 				treeNode1.addChild(treeNode2);
@@ -220,7 +227,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	}
 
 	/**
-	 * 根据用户ID得到导航栏菜单（权限控制）.
+	 * 根据用户ID得到导航栏资源（权限控制）.
 	 * @param userId 用户ID
 	 * @return
 	 * @throws DaoException
@@ -228,34 +235,34 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 * @throws ServiceException
 	 */
 	//使用缓存
-	@Cacheable(value = { CacheConstants.MENU_NAVTREE })
-	public List<TreeNode> getNavTree(Long userId) throws DaoException,
+	@Cacheable(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE})
+	public List<TreeNode> getNavTree(Long userId,Integer type) throws DaoException,
 			SystemException, ServiceException {
 		// Assert.notNull(userId, "参数[userId]为空!");
-		logger.debug("缓存:{}", CacheConstants.MENU_NAVTREE);
+		logger.debug("缓存:{}", CacheConstants.RESOURCE_NAV_TREE_CACHE);
 		List<TreeNode> treeNodes = Lists.newArrayList();
-		List<Menu> parentList = new ArrayList<Menu>();// 顶级菜单
-		List<Menu> subList = new ArrayList<Menu>();// 子级菜单集合
+		List<Resource> parentList = new ArrayList<Resource>();// 顶级资源
+		List<Resource> subList = new ArrayList<Resource>();// 子级资源集合
 		User user = userManager.loadById(userId);
 		User superUser = userManager.getSuperUser();
 		if (user != null && superUser != null
 				&& user.getId() == superUser.getId()) {// 超级用户
-			return this.getNavTree();
+			return this.getNavTree(type);
 		} else if (user != null) {
 			List<Role> roles = user.getRoles();
 			for (Role r : roles) {
-				List<Menu> menus = r.getMenus();
-				for (Menu m : menus) {
-					if (m.getParentMenu() == null) {
-						// 去除顶级重复菜单
+				List<Resource> resources = r.getResources();
+				for (Resource m : resources) {
+					if (m.getParentResource() == null) {
+						// 去除顶级重复资源
 						if (!parentList.contains(m)) {
-							//过滤禁用的菜单
+							//过滤禁用的资源
 							if(m.getStatus() == StatusState.normal.getValue()){
 								parentList.add(m);
 							}
 						}
 					} else {
-						//过滤禁用的菜单
+						//过滤禁用的资源
 						if(m.getStatus() == StatusState.normal.getValue()){
 							subList.add(m);
 						}
@@ -264,32 +271,32 @@ public class MenuManager extends EntityManager<Menu, Long> {
 			}
 
 			for (int i = 0; i < parentList.size(); i++) {
-				Menu parenMenu = parentList.get(i);
-				TreeNode treeNode1 = new TreeNode(parenMenu.getId() + "",
-						parenMenu.getName(), parenMenu.getIco());
+				Resource parenResource = parentList.get(i);
+				TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
+						parenResource.getName(), parenResource.getIco());
                 // 自定义属性 url
                 Map<String, Object> attributes1 = Maps.newHashMap();
-                attributes1.put("url", parenMenu.getUrl());
-                attributes1.put("markUrl",parenMenu.getMarkUrl());
+                attributes1.put("url", parenResource.getUrl());
+                attributes1.put("markUrl", parenResource.getMarkUrl());
                 treeNode1.setAttributes(attributes1);
                 treeNodes.add(treeNode1);
-				List<Menu> subList2 = new ArrayList<Menu>();
-				for (Menu mm : subList) {
-					if (mm.getParentMenu().getId() == parenMenu.getId()) {
-						// 去除二级重复菜单
+				List<Resource> subList2 = new ArrayList<Resource>();
+				for (Resource mm : subList) {
+					if (mm.getParentResource().getId() == parenResource.getId()) {
+						// 去除二级重复资源
 						if (!subList2.contains(mm)) {
 							subList2.add(mm);
 						}
 					}
 				}
 				for (int j = 0; j < subList2.size(); j++) {
-					Menu subMenu = subList2.get(j);
-					TreeNode treeNode2 = new TreeNode(subMenu.getId() + "",
-							subMenu.getName(), subMenu.getIco());
+					Resource subResource = subList2.get(j);
+					TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
+							subResource.getName(), subResource.getIco());
 					// 自定义属性 url
 					Map<String, Object> attributes = Maps.newHashMap();
-					attributes.put("url", subMenu.getUrl());
-                    attributes.put("markUrl",subMenu.getMarkUrl());
+					attributes.put("url", subResource.getUrl());
+                    attributes.put("markUrl", subResource.getMarkUrl());
 					treeNode2.setAttributes(attributes);
 					// 将节点赋值到顶级节点 作为父级的子节点
 					treeNode1.addChild(treeNode2);
@@ -308,7 +315,7 @@ public class MenuManager extends EntityManager<Menu, Long> {
      */
     public List<String> getUserAuthoritysByUserId(Long userId){
         List<String> userAuthoritys = Lists.newArrayList();
-        List<TreeNode> treeNodes = this.getNavTree(userId);
+        List<TreeNode> treeNodes = this.getNavTree(userId,null);
         for(TreeNode node : treeNodes){
             Object obj = node.getAttributes().get("markUrl");
             if(obj != null){
@@ -356,16 +363,16 @@ public class MenuManager extends EntityManager<Menu, Long> {
      * 查找需要拦截的所有url规则
      * @return
      */
-    @Cacheable(value = { CacheConstants.MENU_ALLINTERCEPTORURLS })
+    @Cacheable(value = { CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE})
     public List<String> getAllInterceptorUrls(){
-        logger.debug("缓存:{}", CacheConstants.MENU_ALLINTERCEPTORURLS);
+        logger.debug("缓存:{}", CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE);
         List<String> markUrls = Lists.newArrayList();
-        //查找所有菜单
-//        List<Menu> menus = this.findBy("NEI_status",StatusState.delete.getValue());
-        List<Menu> menus = this.getAll();
-        for(Menu menu:menus){
-              if(StringUtils.isNotBlank(menu.getMarkUrl())){
-                  markUrls.add(menu.getMarkUrl());
+        //查找所有资源
+//        List<Resource> resources = this.findBy("NEI_status",StatusState.delete.getValue());
+        List<Resource> resources = this.getAll();
+        for(Resource resource : resources){
+              if(StringUtils.isNotBlank(resource.getMarkUrl())){
+                  markUrls.add(resource.getMarkUrl());
               }
         }
         return markUrls;
@@ -390,41 +397,41 @@ public class MenuManager extends EntityManager<Menu, Long> {
     }
 
 	/**
-	 * 返回所有Menu树列表(仅限两级).
+	 * 返回所有Resource树列表(仅限两级).
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
 	//缓存数据
-	@Cacheable(value = { CacheConstants.MENU_TREE })
+	@Cacheable(value = { CacheConstants.RESOURCE_TREE_CACHE})
 	public List<TreeNode> getTree() throws DaoException, SystemException,
 			ServiceException {
-		logger.debug("缓存:{}", CacheConstants.MENU_TREE);
+		logger.debug("缓存:{}", CacheConstants.RESOURCE_TREE_CACHE);
 		List<TreeNode> treeNodes = Lists.newArrayList();
-		// 顶级菜单
-		List<Menu> parentList = getByParentId(null,
-				StatusState.normal.getValue());
+		// 顶级资源
+		List<Resource> parentList = getByParentId(null,
+				StatusState.normal.getValue(),null);
 		for (int i = 0; i < parentList.size(); i++) {
-			Menu parenMenu = parentList.get(i);
-			TreeNode treeNode1 = new TreeNode(parenMenu.getId() + "",
-					parenMenu.getName(), parenMenu.getIco());
-			if(!Collections3.isEmpty(parenMenu.getSubMenus())){
+			Resource parenResource = parentList.get(i);
+			TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
+					parenResource.getName(), parenResource.getIco());
+			if(!Collections3.isEmpty(parenResource.getSubResources())){
 				treeNode1.setState(TreeNode.STATE_CLOASED);
 			}
 			
 			treeNodes.add(treeNode1);
 
 			// 第二级
-			List<Menu> subList = getByParentId(parenMenu.getId(),
-					StatusState.normal.getValue());
+			List<Resource> subList = getByParentId(parenResource.getId(),
+					StatusState.normal.getValue(),null);
 			for (int j = 0; j < subList.size(); j++) {
-				Menu subMenu = subList.get(j);
-				TreeNode treeNode2 = new TreeNode(subMenu.getId() + "",
-						subMenu.getName(), subMenu.getIco());
+				Resource subResource = subList.get(j);
+				TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
+						subResource.getName(), subResource.getIco());
 				// 自定义属性 url
 				Map<String, Object> attributes = Maps.newHashMap();
-				attributes.put("url", subMenu.getUrl());
+				attributes.put("url", subResource.getUrl());
 				treeNode2.setAttributes(attributes);
 				// 将节点赋值到顶级节点 作为父级的子节点
 				treeNode1.addChild(treeNode2);
@@ -440,8 +447,8 @@ public class MenuManager extends EntityManager<Menu, Long> {
 	 */
 	public Integer getMaxSort() throws DaoException, SystemException,
 			ServiceException {
-		Iterator<?> iterator = menuDao.createQuery(
-				"select max(m.orderNo)from Menu m ").iterate();
+		Iterator<?> iterator = resourceDao.createQuery(
+				"select max(m.orderNo)from Resource m ").iterate();
 		Integer max = 0;
 		while (iterator.hasNext()) {
 			// Object[] row = (Object[]) iterator.next();

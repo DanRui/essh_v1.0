@@ -42,21 +42,21 @@ public class DictionaryTypeManager extends
 		return dictionaryTypeDao;
 	}
 
-    @CacheEvict(value = { CacheConstants.DICTIONARYTYPE_ALL},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE},allEntries = true)
 	public void saveOrUpdate(DictionaryType entity) throws DaoException,
 			SystemException, ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		dictionaryTypeDao.saveOrUpdate(entity);
 	}
 
-    @CacheEvict(value = { CacheConstants.DICTIONARYTYPE_ALL},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE},allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException, SystemException,
 			ServiceException {
 		super.deleteByIds(ids);
 	}
 
 
-    @CacheEvict(value = { CacheConstants.DICTIONARYTYPE_ALL},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE},allEntries = true)
     @Override
     public void saveEntity(DictionaryType entity) throws DaoException, SystemException, ServiceException {
         super.saveEntity(entity);
@@ -109,10 +109,10 @@ public class DictionaryTypeManager extends
 	}
 
 
-    @Cacheable(value = { CacheConstants.DICTIONARYTYPE_ALL })
+    @Cacheable(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE})
 	public List<DictionaryType> getAll() throws DaoException, SystemException,
 			ServiceException {
-		logger.debug("缓存:{}", CacheConstants.DICTIONARYTYPE_ALL);
+		logger.debug("缓存:{}", CacheConstants.DICTIONARY_TYPE_ALL_CACHE);
 		return dictionaryTypeDao.getAll();
 	}
 

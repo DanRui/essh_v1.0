@@ -8,8 +8,6 @@ import javax.persistence.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
@@ -30,7 +28,7 @@ import com.eryansky.utils.CacheConstants;
 @Table(name = "T_BASE_ROLE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
-@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler" , "menus","users"})
+@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler" , "resources","users"})
 public class Role
         extends BaseEntity
         implements Serializable {
@@ -44,26 +42,26 @@ public class Role
      */
     private String description;
     /**
-     * 关联的菜单
+     * 关联的资源
      */
-    private List<Menu> menus = Lists.newArrayList();
+    private List<Resource> resources = Lists.newArrayList();
     
     /**
      * 关联的用户
      */
     private List<User> users = Lists.newArrayList();
     
-    private List<Long> menuIds = Lists.newArrayList();
+    private List<Long> resourceIds = Lists.newArrayList();
 
     public Role() {
 
     }
 
-    public Role(String name, String description, List<Menu> menus) {
+    public Role(String name, String description, List<Resource> resources) {
 
         this.name = name;
         this.description = description;
-        this.menus = menus;
+        this.resources = resources;
     }
     
 	@Column(length = 100,nullable = false,unique = true)
@@ -89,23 +87,23 @@ public class Role
 //    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
-    public List<Menu> getMenus() {
-        return menus;
+    public List<Resource> getResources() {
+        return resources;
     }
 
-    public void setMenus(List<Menu> menus) {
-        this.menus = menus;
+    public void setResources(List<Resource> resources) {
+        this.resources = resources;
     }
 
     /**
-     * 角色拥有的菜单字符串,多个之间以","分割
+     * 角色拥有的资源字符串,多个之间以","分割
      * 
      * @return
      */
     @Transient
-    public String getMenuNames() {
-    	List<Menu> ms = Lists.newArrayList();
-    	for(Menu m:menus){
+    public String getResourceNames() {
+    	List<Resource> ms = Lists.newArrayList();
+    	for(Resource m: resources){
     		if(m.getStatus() == StatusState.normal.getValue()){
     			ms.add(m);
     		}
@@ -126,21 +124,21 @@ public class Role
     }
 
     /**
-     * 角色拥有的菜单id字符串集合
+     * 角色拥有的资源id字符串集合
      * 
      * @return
      */
     @Transient
     @SuppressWarnings("unchecked")
-    public List<Long> getMenuIds() {
-        if (!Collections3.isEmpty(menus)) {
-            menuIds = ConvertUtils.convertElementPropertyToList(menus, "id");
+    public List<Long> getResourceIds() {
+        if (!Collections3.isEmpty(resources)) {
+            resourceIds = ConvertUtils.convertElementPropertyToList(resources, "id");
         }
-        return menuIds;
+        return resourceIds;
     }
 
-    public void setMenuIds(List<Long> menuIds) {
-        this.menuIds = menuIds;
+    public void setResourceIds(List<Long> resourceIds) {
+        this.resourceIds = resourceIds;
     }
 
     @ManyToMany(mappedBy = "roles")

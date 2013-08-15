@@ -14,18 +14,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.google.common.collect.Maps;
-import com.eryansky.common.exception.DaoException;
-import com.eryansky.common.exception.ServiceException;
-import com.eryansky.common.exception.SystemException;
-import com.eryansky.common.model.User;
-import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.jdbc.JdbcDao;
 import com.eryansky.common.utils.io.PropertiesLoader;
 import com.eryansky.common.utils.mapper.JsonMapper;
-import com.eryansky.entity.base.Menu;
+import com.eryansky.entity.base.Resource;
 import com.eryansky.entity.base.Role;
 import com.eryansky.service.CommonManager;
-import com.eryansky.service.base.MenuManager;
+import com.eryansky.service.base.ResourceManager;
 import com.eryansky.service.base.RoleManager;
 /**
  * Account单元测试
@@ -38,7 +33,7 @@ public class AccountManagerTest {
     private static Properties pro;
 	
 	private static JdbcDao jdbcDao;
-	private static MenuManager menuManager;
+	private static ResourceManager resourceManager;
 	private static CommonManager commonManager;
 	private static RoleManager roleManager;
 	
@@ -47,7 +42,7 @@ public class AccountManagerTest {
 	public static void init() throws Exception{
 		ApplicationContext context = new ClassPathXmlApplicationContext("spring-jdbc.xml");
 		jdbcDao = (JdbcDao)context.getBean("jdbcDao");
-		menuManager = (MenuManager)context.getBean("menuManager");
+		resourceManager = (ResourceManager)context.getBean("resourceManager");
 		commonManager = (CommonManager)context.getBean("commonManager");
 		roleManager = (RoleManager)context.getBean("roleManager");
 		
@@ -58,7 +53,7 @@ public class AccountManagerTest {
     public void test2(){
 	    Map<String, String> map = Maps.newHashMap();
 	    map.put("name", "%");
-	    System.out.println(jdbcDao.findForListMap("select * from t_base_menu where name like :name ",  map));
+	    System.out.println(jdbcDao.findForListMap("select * from t_base_resource where name like :name ",  map));
     }
 	
 	
@@ -71,13 +66,13 @@ public class AccountManagerTest {
 	
 	@Test
     public void assertt(){
-		System.out.println(commonManager.getIdByProperty("Menu", "name", "菜单管理"));
+		System.out.println(commonManager.getIdByProperty("Resource", "name", "菜单管理"));
 		System.out.println(commonManager.getIdByTFO("T_BASE_MENU", "NAME", "菜 单管理"));
     }
 	@Test
     public void validator(){
 		try {
-			menuManager.save(new Menu());
+			resourceManager.save(new Resource());
 		} catch (Exception e) {
 			StringBuilder sb = new StringBuilder();
 			javax.validation.ConstraintViolationException ce = (javax.validation.ConstraintViolationException) e;
@@ -106,9 +101,9 @@ public class AccountManagerTest {
 			public void run() {
 				for(int i=0;i<1000;i++){
 					try {
-						Menu m = new Menu();
+						Resource m = new Resource();
 						m.setName(i+"");
-						menuManager.save(m);
+						resourceManager.save(m);
 						System.out.println(1+ " "+i);
 					} catch (Exception e) {
 						e.printStackTrace();

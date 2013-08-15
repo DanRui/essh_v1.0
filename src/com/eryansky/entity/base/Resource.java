@@ -1,5 +1,6 @@
 package com.eryansky.entity.base;
 
+import com.eryansky.entity.base.state.ResourceState;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -10,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
-import com.eryansky.entity.base.state.MenuState;
 import com.eryansky.utils.CacheConstants;
 
 import java.io.Serializable;
@@ -28,28 +28,32 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 /**
- * 受保护的资源菜案Menu.
+ * 受保护的资源菜案Resource.
  * Author 尔演&Eryan eryanwcp@gmail.com
  * Date 2013-3-21 上午12:27:49
  *
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "T_BASE_MENU")
+@Table(name = "T_BASE_RESOURCE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
-@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler" ,  "parentMenu",
-        "roles", "roleNames", "subMenus", "navigation" })
-public class Menu
+@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler" ,  "parentResource",
+        "roles", "roleNames", "subResources", "navigation" })
+public class Resource
         extends BaseEntity
         implements Serializable {
 
     /**
-     * 菜单名称
+     * 资源名称
      */
     private String name;
     /**
-     * 菜单url地址
+     * 资源编码
+     */
+    private String code;
+    /**
+     * 资源url地址
      */
     private String url;
     /**
@@ -61,11 +65,11 @@ public class Menu
      */
     private String ico;
     /**
-     * 父级Menu
+     * 父级Resource
      */
-    private Menu parentMenu;
+    private Resource parentResource;
     /**
-     * 父级MenuId @Transient
+     * 父级ResourceId @Transient
      */
     private Long parentId;
     /**
@@ -73,34 +77,22 @@ public class Menu
      */
     private String markUrl;
     /**
-     * 菜单类型 菜单(0) 按钮(1)
+     * 资源类型 资源(0) 功能(1)
      */
-    private Integer type = MenuState.menu.getValue();
+    private Integer type = ResourceState.menu.getValue();
     /**
      * 有序的关联对象集合
      */
     private List<Role> roles = Lists.newArrayList();
     /**
-     * @Transient 子Menu集合
+     * @Transient 子Resource集合
      */
-    private List<Menu> subMenus = Lists.newArrayList();
+    private List<Resource> subResources = Lists.newArrayList();
 
-    public Menu() {
+    public Resource() {
     }
 
-    public Menu(String name, String url, Integer orderNo, String ico,
-            Menu parentMenu, String markUrl,Integer type, List<Menu> subMenus) {
-        this.name = name;
-        this.url = url;
-        this.orderNo = orderNo;
-        this.ico = ico;
-        this.parentMenu = parentMenu;
-        this.markUrl = markUrl;
-        this.type = type;
-        this.subMenus = subMenus;
-    }
-
-    @Column(name = "MARK_URL",length = 255)
+    @Column(name = "MARK_URL",length = 2000)
     public String getMarkUrl() {
         return markUrl;
     }
@@ -109,8 +101,8 @@ public class Menu
         this.markUrl = markUrl;
     }
 
-    @NotBlank(message = "{menu_name.notblank}")
-    @Length(max = 20, message = "{menu_name.length}")
+    @NotBlank(message = "{resource_name.notblank}")
+    @Length(max = 20, message = "{resource_name.length}")
     @Column(length = 255,unique = true)
     public String getName() {
         return name;
@@ -118,6 +110,15 @@ public class Menu
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(length = 36)
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Column(length = 255)
@@ -157,15 +158,15 @@ public class Menu
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "PARENT_ID")
-    public Menu getParentMenu() {
-        return parentMenu;
+    public Resource getParentResource() {
+        return parentResource;
     }
 
-    public void setParentMenu(Menu parentMenu) {
-        this.parentMenu = parentMenu;
+    public void setParentResource(Resource parentResource) {
+        this.parentResource = parentResource;
     }
 
-    @ManyToMany(mappedBy = "menus")
+    @ManyToMany(mappedBy = "resources")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
     public List<Role> getRoles() {
         return roles;
@@ -176,7 +177,7 @@ public class Menu
     }
 
     /**
-     * 角色拥有的菜单字符串,多个之间以","分割
+     * 角色拥有的资源字符串,多个之间以","分割
      * 
      * @return
      */
@@ -186,31 +187,31 @@ public class Menu
                 ", ");
     }
 
-    @OneToMany(mappedBy = "parentMenu")
-    public List<Menu> getSubMenus() {
-        return subMenus;
+    @OneToMany(mappedBy = "parentResource")
+    public List<Resource> getSubResources() {
+        return subResources;
     }
 
-    public void setSubMenus(List<Menu> subMenus) {
-        this.subMenus = subMenus;
+    public void setSubResources(List<Resource> subResources) {
+        this.subResources = subResources;
     }
 
     @Transient
-    public List<Menu> getNavigation() {
-        ArrayList<Menu> arrayList = new ArrayList<Menu>();
-        Menu menu = this;
-        arrayList.add(menu);
-        while (null != menu.parentMenu) {
-            menu = menu.parentMenu;
-            arrayList.add(0, menu);
+    public List<Resource> getNavigation() {
+        ArrayList<Resource> arrayList = new ArrayList<Resource>();
+        Resource resource = this;
+        arrayList.add(resource);
+        while (null != resource.parentResource) {
+            resource = resource.parentResource;
+            arrayList.add(0, resource);
         }
         return arrayList;
     }
 
     @Transient
     public Long getParentId() {
-        if (parentMenu != null) {
-            parentId = parentMenu.getId();
+        if (parentResource != null) {
+            parentId = parentResource.getId();
         }
         return parentId;
     }

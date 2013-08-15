@@ -33,7 +33,7 @@ var user_loginName = function(value,param){
 }
 //[菜单管理]名称
 var menu_name = function(value,param){
-	var returnflag = ajax_check('Menu','name',value,param);
+	var returnflag = ajax_check('Resource','name',value,param);
 	return returnflag;
 }
 

@@ -24,7 +24,7 @@ $(function() {
 	    columns:[[  
             {field:'ck',checkbox:true},
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80}, 
-            {field:'menuNames',title:'关联菜单',width:165},
+            {field:'resourceNames',title:'关联资源',width:165},
 	        {field:'name',title:'角色名称',width:55}, 
 	        {field:'description',title:'描述',width:50}	               
 	    ]],

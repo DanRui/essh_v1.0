@@ -61,7 +61,7 @@ public class CommonManager extends DefaultEntityManager<Object,Long>{
 	 * 根据某个属性得到单个对象.
 	 * 
 	 * @param entityName
-	 *            BO名称 例如: "Menu"
+	 *            BO名称 例如: "Resource"
 	 * @param propertyName
 	 *            属性名 例如:"name"
 	 * @param propertyValue

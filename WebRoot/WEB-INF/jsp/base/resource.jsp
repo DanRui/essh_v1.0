@@ -2,17 +2,17 @@
 <%@ include file="/common/taglibs.jsp"%>
 <%@ include file="/common/meta.jsp"%>
 <script type="text/javascript">
-var menu_datagrid;//菜单列表
-var menu_tree;//菜单树(左边)
-var menu_search_form;//菜单搜索表单
+var resource_datagrid;//资源列表
+var resource_tree;//资源树(左边)
+var resource_search_form;//资源搜索表单
 
-var menu_dialog;//菜单表单弹出对话框
-var menu_form;//菜单表单
+var resource_dialog;//资源表单弹出对话框
+var resource_form;//资源表单
 $(function() {  
-	menu_search_form = $('#menu_search_form').form();
+	resource_search_form = $('#resource_search_form').form();
 	var selectedNode = null;//存放被选中的节点对象 临时变量
-	menu_tree = $("#menu_tree").tree({  
-        url : "${ctx}/base/menu!tree.action",
+	resource_tree = $("#resource_tree").tree({
+        url : "${ctx}/base/resource!tree.action",
         onClick:function(node){
         	search();
         },
@@ -38,8 +38,8 @@ $(function() {
         }
     });
     //数据列表
-    menu_datagrid = $('#menu_datagrid').datagrid({  
-	    url:'${ctx}/base/menu!datagrid.action',  
+    resource_datagrid = $('#resource_datagrid').datagrid({
+	    url:'${ctx}/base/resource!datagrid.action',
 	    pagination:true,//底部分页
 	    pagePosition:'bottom',//'top','bottom','both'.
 	    rownumbers:true,//显示行数
@@ -53,12 +53,12 @@ $(function() {
 		columns:[[  
             {field:'ck',checkbox:true,width:60},
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80}, 
-            {field:'ico',title:'菜单图标',width:60,align:'center',formatter:function(value,rowData,rowIndex){    
+            {field:'ico',title:'资源图标',width:60,align:'center',formatter:function(value,rowData,rowIndex){
 	            	return $.formatString('<span class="tree-icon tree-file {0}"></span>', value);
-		           // return "<div style='text-align:center;'><img src='${ctx}/img/menu/"+value +"' border='0' width='20px' height='20px'></div>";
+		           // return "<div style='text-align:center;'><img src='${ctx}/img/resource/"+value +"' border='0' width='20px' height='20px'></div>";
 	            }
             },
-	        {field:'name',title:'菜单名称',width:160},  
+	        {field:'name',title:'资源名称',width:160},
 	        {field:'url',title:'链接地址',width:260},
             {field:'markUrl',title:'标识地址',width:200},
 	        {field:'orderNo',title:'排序',align:'right',width:60,sortable:true}, 
@@ -76,7 +76,7 @@ $(function() {
 			e.preventDefault();
 			$(this).datagrid('unselectAll');
 			$(this).datagrid('selectRow', rowIndex);
-			$('#menu_datagrid_menu').menu('show', {
+			$('#resource_datagrid_menu').menu('show', {
 				left : e.pageX,
 				top : e.pageY
 			});
@@ -85,7 +85,7 @@ $(function() {
 });
 		//设置排序默认值
 		function setSortValue(){
-			$.get('${ctx}/base/menu!maxSort.action',function(data){
+			$.get('${ctx}/base/resource!maxSort.action',function(data){
 				if (data.code==1){
 					$('#orderNo').numberspinner('setValue',data.obj+1);
 				} 
@@ -93,8 +93,8 @@ $(function() {
 		}
 		
 		function formInit(){
-			menu_form = $('#menu_form').form({
-				url: '${ctx}/base/menu!save.action',
+			resource_form = $('#resource_form').form({
+				url: '${ctx}/base/resource!save.action',
 				onSubmit: function(param){  
 					param.replace = 1; //是否过滤特殊字符
 					$.messager.progress({
@@ -112,14 +112,14 @@ $(function() {
 					var json = $.parseJSON(data);
 					//var json = eval('('+ data+')'); //将后台传递的json字符串转换为javascript json对象 
 					if (json.code ==1){
-						menu_dialog.dialog('destroy');//销毁对话框 
-						menu_tree.tree('reload'); //重新加载树
-						menu_datagrid.datagrid('reload');//重新加载列表数据
+						resource_dialog.dialog('destroy');//销毁对话框
+						resource_tree.tree('reload'); //重新加载树
+						resource_datagrid.datagrid('reload');//重新加载列表数据
 						eu.showMsg(json.msg);//操作结果提示
 					}else if(json.code == 2){
 						$.messager.alert('提示信息！', json.msg, 'warning',function(){
 							if(json.obj){
-								$('#menu_form input[name="'+json.obj+'"]').focus();
+								$('#resource_form input[name="'+json.obj+'"]').focus();
 							}
 						});
 					}else {
@@ -131,25 +131,25 @@ $(function() {
 		//显示弹出窗口 新增：row为空 编辑:row有值 
 		function showDialog(row){
 			//弹出对话窗口
-			//menu_dialog = parent.$('<div/>').dialog({//基于父对象的对话框(全屏遮罩的效果)
-			menu_dialog = $('<div/>').dialog({//基于中心面板
-				title:'菜单详细信息',
+			//resource_dialog = parent.$('<div/>').dialog({//基于父对象的对话框(全屏遮罩的效果)
+			resource_dialog = $('<div/>').dialog({//基于中心面板
+				title:'资源详细信息',
 				width : 500,
 				height : 360,
 				modal : true,
 				maximizable:true,
-				href : '${ctx}/base/menu!input.action',
+				href : '${ctx}/base/resource!input.action',
 				buttons : [ {
 					text : '保存',
 					iconCls : 'icon-save',
 					handler : function() {
-						menu_form.submit();
+						resource_form.submit();
 					}
 				},{
 					text : '关闭',
 					iconCls : 'icon-cancel',
 					handler : function() {
-						menu_dialog.dialog('destroy');
+						resource_dialog.dialog('destroy');
 					}
 				}],
 				onClose : function() {
@@ -158,7 +158,7 @@ $(function() {
 				onLoad:function(){
 					formInit();
 					if(row){
-						menu_form.form('load', row);
+						resource_form.form('load', row);
 					}else{
 						$("input[name=status]:eq(0)").attr("checked",'checked');//状态 初始化值
 						setSortValue();
@@ -170,9 +170,9 @@ $(function() {
 		//编辑
 		function edit(){
 			//选中的所有行
-			var rows = menu_datagrid.datagrid('getSelections');
+			var rows = resource_datagrid.datagrid('getSelections');
 			//选中的行（第一次选择的行）
-			var row = menu_datagrid.datagrid('getSelected');
+			var row = resource_datagrid.datagrid('getSelected');
 			if (row){
 				if(rows.length>1){
 					row = rows[rows.length-1];
@@ -185,18 +185,18 @@ $(function() {
 		}
 		//删除
 		function del(){
-			var rows = menu_datagrid.datagrid('getSelections');
+			var rows = resource_datagrid.datagrid('getSelections');
 			if(rows.length >0){
-				$.messager.confirm('确认提示！','您确定要删除当前选中的所有行(未被选中的子菜单也将一起删除)?',function(r){
+				$.messager.confirm('确认提示！','您确定要删除当前选中的所有行(未被选中的子资源也将一起删除)?',function(r){
 					if (r){
 						var ids = new Object();
 						for(var i=0;i<rows.length;i++){
 							ids[i] = rows[i].id;
 						}
-						$.post('${ctx}/base/menu!remove.action',{ids:ids},function(data){
+						$.post('${ctx}/base/resource!remove.action',{ids:ids},function(data){
 							if (data.code==1){
-								menu_tree.tree('reload');  //重新加载树
-								menu_datagrid.datagrid('load');//重新加载列表数据
+								resource_tree.tree('reload');  //重新加载树
+								resource_datagrid.datagrid('load');//重新加载列表数据
 								eu.showMsg(data.msg);//操作结果提示
 							} else {
 								eu.showAlertMsg(data.msg,'error');
@@ -212,23 +212,23 @@ $(function() {
 		
 		//搜索
 		function search(){
-        	var name = $('#filter_LIKES_name').val();//搜索条件 菜单名称
-        	var node = menu_tree.tree('getSelected');//
+        	var name = $('#filter_LIKES_name').val();//搜索条件 资源名称
+        	var node = resource_tree.tree('getSelected');//
         	var id = '';
         	if(node != null){
-        		id = node.id; //搜索 id:主键 即是通过左边菜单树点击得到搜索结果
+        		id = node.id; //搜索 id:主键 即是通过左边资源树点击得到搜索结果
         	}
         	//将整个表单的数据作为查询条件 
-        	//menu_datagrid.datagrid('load',$.serializeObject(menu_search_form));
-        	menu_datagrid.datagrid('load',{filter_EQL_id_OR_parentMenu__id:id,filter_LIKES_name:name});
+        	//resource_datagrid.datagrid('load',$.serializeObject(resource_search_form));
+        	resource_datagrid.datagrid('load',{filter_EQL_id_OR_parentResource__id:id,filter_LIKES_name:name});
 		}
 </script>
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
 
-	<%-- 左边部分 菜单树形 --%>
-	<div data-options="region:'west',title:'菜单列表',split:false,collapsed:false,border:false"
+	<%-- 左边部分 资源树形 --%>
+	<div data-options="region:'west',title:'资源列表',split:false,collapsed:false,border:false"
 		style="width: 150px; text-align: left;padding:5px;">
-			<ul id="menu_tree"></ul>
+			<ul id="resource_tree"></ul>
 	</div>
 	
 	<%-- 中间部分 列表 --%>
@@ -236,17 +236,17 @@ $(function() {
 		style="padding: 0px; height: 100%;width:100%; overflow-y: hidden;">
 		
 		<%-- 列表右键 --%>
-		<div id="menu_datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
+		<div id="resource_datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
 			<div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
 			<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
 			<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
 		</div>
 		
 	   <%-- 工具栏 操作按钮 --%>
-	   <div id="menu_datagrid-toolbar">
+	   <div id="resource_datagrid-toolbar">
 	        <div style="margin-left:5px; float: left;">
-		        <form id="menu_search_form" style="padding: 0px;">
-					菜单名称:<input type="text" id="filter_LIKES_name" name="filter_LIKES_name" maxLength="8" placeholder="请输入菜单名称..." style="width: 160px"></input> 
+		        <form id="resource_search_form" style="padding: 0px;">
+                    资源名称:<input type="text" id="filter_LIKES_name" name="filter_LIKES_name" maxLength="8" placeholder="请输入资源名称..." style="width: 160px"></input>
 					<a href="javascript:search();" class="easyui-linkbutton"
 							iconCls="icon-search" plain="true" >查 询</a>
 				</form>
@@ -259,6 +259,6 @@ $(function() {
 				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="del()">删除</a> 
 			</div>
 		</div>
-	   <table id="menu_datagrid" toolbar="#menu_datagrid-toolbar" fit="true"></table>
+	   <table id="resource_datagrid" toolbar="#resource_datagrid-toolbar" fit="true"></table>
 	</div>
 </div>

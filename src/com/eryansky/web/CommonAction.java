@@ -20,7 +20,7 @@ public class CommonAction extends ActionSupport {
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 实体类名称 例如: "Menu"
+	 * 实体类名称 例如: "Resource"
 	 */
 	private String entityName;
 	/**

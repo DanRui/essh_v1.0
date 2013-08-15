@@ -48,7 +48,7 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	/**
 	 * 新增或修改 保存对象.
 	 */
-    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE},allEntries = true)
 	public void saveOrUpdate(Dictionary entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
@@ -58,14 +58,14 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	/**
 	 * 新增或修改 保存对象.
 	 */
-    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE},allEntries = true)
 	public void merge(Dictionary entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		dictionaryDao.merge(entity);
 	}
 
-    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE},allEntries = true)
     @Override
     public void saveEntity(Dictionary entity) throws DaoException, SystemException, ServiceException {
         super.saveEntity(entity);
@@ -109,13 +109,13 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-    @Cacheable(value = { CacheConstants.DICTIONARYS_BY_TYPE })
+    @Cacheable(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE})
 	@SuppressWarnings("unchecked")
 	public List<TreeNode> getByDictionaryTypeCode(Dictionary entity,
 			String dictionaryTypeCode, Long id, boolean isCascade)
 			throws DaoException, SystemException, ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
-		logger.debug("缓存:{}", CacheConstants.DICTIONARYS_BY_TYPE);
+		logger.debug("缓存:{}", CacheConstants.DICTIONARYS_BY_TYPE_CACHE);
 		List<Dictionary> list = Lists.newArrayList();
 		List<TreeNode> treeNodes = Lists.newArrayList();
 		if (StringUtils.isBlank(dictionaryTypeCode)) {

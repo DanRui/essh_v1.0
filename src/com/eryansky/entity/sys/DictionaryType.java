@@ -55,7 +55,7 @@ public class DictionaryType extends BaseEntity {
 	 *            类型名称
 	 * @param code
 	 *            类型编码
-	 * @param sort
+	 * @param orderNo
 	 *            排序
 	 */
 	public DictionaryType(String name, String code, Integer orderNo) {

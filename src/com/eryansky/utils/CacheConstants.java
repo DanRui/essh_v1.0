@@ -23,30 +23,30 @@ public class CacheConstants {
 	/**
 	 * 导航菜单(根据用户权限缓存).
 	 */
-	public static final String MENU_NAVTREE = "menu_navTree_cache";
+	public static final String RESOURCE_NAV_TREE_CACHE = "resource_navTree_cache";
 	/**
 	 * 导航tree树(无).
 	 */
-	public static final String MENU_TREE = "menu_tree_cache";
+	public static final String RESOURCE_TREE_CACHE = "resource_tree_cache";
     /**
      * 需要拦截的所有url规则.
      */
-    public static final String MENU_ALLINTERCEPTORURLS = "menu_allInterceptorUrls_cache";
+    public static final String RESOURCE_ALL_INTERCEPTOR_URLS_CACHE = "resource_allInterceptorUrls_cache";
 	
 	/**
 	 * 角色(无).
 	 */
-	public static final String ROLE_ALL = "role_all_cache";
+	public static final String ROLE_ALL_CACHE = "role_all_cache";
 	
 	
 	/**
 	 * 数据字典类型下的数据(根据数据字典类型缓存).
 	 */
-	public static final String DICTIONARYS_BY_TYPE = "dictionarys_byType_cache";
+	public static final String DICTIONARYS_BY_TYPE_CACHE = "dictionarys_byType_cache";
 	/**
 	 * 数据字典类型(无).
 	 */
-	public static final String DICTIONARYTYPE_ALL = "dictionaryType_all_cache";
+	public static final String DICTIONARY_TYPE_ALL_CACHE = "dictionaryType_all_cache";
 
 	
 }

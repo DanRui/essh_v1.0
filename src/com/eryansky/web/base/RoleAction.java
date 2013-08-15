@@ -2,6 +2,7 @@ package com.eryansky.web.base;
 
 import java.util.List;
 
+import com.eryansky.entity.base.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,9 +11,8 @@ import com.eryansky.common.model.Result;
 import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
-import com.eryansky.entity.base.Menu;
 import com.eryansky.entity.base.Role;
-import com.eryansky.service.base.MenuManager;
+import com.eryansky.service.base.ResourceManager;
 import com.eryansky.service.base.RoleManager;
 import com.eryansky.utils.SelectType;
 import com.google.common.collect.Lists;
@@ -29,9 +29,9 @@ public class RoleAction extends StrutsAction<Role> {
 	@Autowired
 	private RoleManager roleManager;
 	@Autowired
-	private MenuManager menuManager;
+	private ResourceManager resourceManager;
 	//角色管理菜单id集合
-	private List<Long> menuIds = Lists.newArrayList();
+	private List<Long> resourceIds = Lists.newArrayList();
 
 	@Override
 	public EntityManager<Role, Long> getEntityManager() {
@@ -72,12 +72,12 @@ public class RoleAction extends StrutsAction<Role> {
             }
             
             //设置用户角色信息
-			List<Menu> menuList = Lists.newArrayList();
-			for (Long menuId : menuIds) {
-				Menu menu = menuManager.loadById(menuId);
-				menuList.add(menu);
+			List<Resource> resourceList = Lists.newArrayList();
+			for (Long resourceId : resourceIds) {
+				Resource resource = resourceManager.loadById(resourceId);
+				resourceList.add(resource);
 			}
-			model.setMenus(menuList);
+			model.setResources(resourceList);
 			
 			roleManager.saveEntity(model);
             result = Result.successResult();
@@ -115,8 +115,8 @@ public class RoleAction extends StrutsAction<Role> {
 		}
 	}
 
-	public void setMenuIds(List<Long> menuIds) {
-		this.menuIds = menuIds;
+	public void setResourceIds(List<Long> resourceIds) {
+		this.resourceIds = resourceIds;
 	}
 
 

@@ -45,10 +45,10 @@
 		maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
 
-	<cache name="com.eryansky.entity.base.Menu" maxElementsInMemory="1000"
+	<cache name="com.eryansky.entity.base.Resourceurce" maxElementsInMemory="1000"
 		memoryStoreEvictionPolicy="LRU" eternal="true" diskPersistent="false"
 		overflowToDisk="true" maxElementsOnDisk="100000" />
-	<cache name="com.eryansky.entity.base.Menu.roles" maxElementsInMemory="1000"
+	<cache name="com.eryansky.entity.base.Resourceurce.roles" maxElementsInMemory="1000"
 		memoryStoreEvictionPolicy="LRU" eternal="true" diskPersistent="false"
 		overflowToDisk="true" maxElementsOnDisk="100000" />
 	<cache name="com.eryansky.entity.base.Role" maxElementsInMemory="1000"
@@ -57,7 +57,7 @@
 	<cache name="com.eryansky.entity.base.Role.users"
 		maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="100000" />
-	<cache name="com.eryansky.entity.base.Role.menus"
+	<cache name="resourcesrces"
 		maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="100000" />
     <cache name="com.eryansky.entity.base.Resource"
