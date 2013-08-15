@@ -16,7 +16,7 @@
 		    classpath*:applicationContext-ehcache.xml,
 		    <!-- classpath*:applicationContext-task.xml, -->
 		    <!-- classpath*:applicationContext-quartz.xml -->
-            classpath*:applicationContext-minaServer.xml
+            <!--classpath*:applicationContext-minaServer.xml-->
 		</param-value>
 	</context-param>
 
