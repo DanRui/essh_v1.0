@@ -48,7 +48,8 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	/**
 	 * 新增或修改 保存对象.
 	 */
-    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE,
+            CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE},allEntries = true)
 	public void saveOrUpdate(Dictionary entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
@@ -58,14 +59,16 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	/**
 	 * 新增或修改 保存对象.
 	 */
-    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE,
+            CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE},allEntries = true)
 	public void merge(Dictionary entity) throws DaoException, SystemException,
 			ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
 		dictionaryDao.merge(entity);
 	}
 
-    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE,
+            CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE},allEntries = true)
     @Override
     public void saveEntity(Dictionary entity) throws DaoException, SystemException, ServiceException {
         super.saveEntity(entity);
@@ -104,18 +107,18 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	 *            数据字典ID
 	 * @param isCascade
 	 *            是否级联加载
-	 * @return
+	 * @return List<TreeNode> 映射关系： TreeNode.text-->Dicitonary.text;TreeNode.id-->Dicitonary.code;
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-    @Cacheable(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE})
+    @Cacheable(value = { CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE})
 	@SuppressWarnings("unchecked")
 	public List<TreeNode> getByDictionaryTypeCode(Dictionary entity,
 			String dictionaryTypeCode, Long id, boolean isCascade)
 			throws DaoException, SystemException, ServiceException {
 		Assert.notNull(entity, "参数[entity]为空!");
-		logger.debug("缓存:{}", CacheConstants.DICTIONARYS_BY_TYPE_CACHE);
+		logger.debug("缓存:{}", CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE);
 		List<Dictionary> list = Lists.newArrayList();
 		List<TreeNode> treeNodes = Lists.newArrayList();
 		if (StringUtils.isBlank(dictionaryTypeCode)) {
@@ -167,6 +170,7 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	public TreeNode getTreeNode(Dictionary entity, Long id, boolean isCascade)
 			throws DaoException, SystemException, ServiceException {
 		TreeNode node = new TreeNode(entity.getCode(), entity.getName());
+//        node.getAttributes().put("code",entity.getCode());
 		// Map<String, Object> attributes = new HashMap<String, Object>();
 		// node.setAttributes(attributes);
 		List<Dictionary> subDictionaries = getByParentCode(entity.getCode());
@@ -225,17 +229,19 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	 * 
 	 * @param dictionaryTypeCode
 	 *            数据字典类型编码
-	 * @return
+	 * @return List<Combobox> 映射关系： Combobox.text-->Dicitonary.text;Combobox.value-->Dicitonary.value;
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
+    @Cacheable(value = { CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE})
 	public List<Combobox> getByDictionaryTypeCode(String dictionaryTypeCode)
 			throws DaoException, SystemException, ServiceException {
+        logger.debug("缓存:{}", CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE);
 		List<Dictionary> list = getDictionarysByDictionaryTypeCode(dictionaryTypeCode);
 		List<Combobox> cList = Lists.newArrayList();
 		for (Dictionary d : list) {
-			Combobox c = new Combobox(d.getCode(), d.getName());
+			Combobox c = new Combobox(d.getValue(), d.getName());
 			cList.add(c);
 		}
 		return cList;

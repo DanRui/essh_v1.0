@@ -8,7 +8,7 @@ var editRowData = undefined;
 var dictionary_search_form;
 var dictionaryTypeCode = undefined;
 var dictionary_filter_EQS_dictionaryType__code;
-$(function() {  
+$(function() {
 	dictionary_search_form = $('#dictionary_search_form').form();
     //数据列表
     dictionary_datagrid = $('#dictionary_datagrid').datagrid({  
@@ -60,7 +60,9 @@ $(function() {
 							var dictionaryTypeEditor = dictionary_datagrid.datagrid('getEditor',{index:editRow,field:'parentDictionaryCode'});
 							$(dictionaryTypeEditor.target).combotree('clear').combotree('reload');
 							var codeEditor = dictionary_datagrid.datagrid('getEditor',{index:editRow,field:'code'});
+                            var vallueEditor = dictionary_datagrid.datagrid('getEditor',{index:editRow,field:'value'})
 							$(codeEditor.target).val(dictionaryTypeCode);
+                            $(vallueEditor.target).val(dictionaryTypeCode);
 							$(codeEditor.target).validatebox('validate');
 				        }
 					}
@@ -89,7 +91,7 @@ $(function() {
 			}, {
 				field : 'name',
 				title : '名称',
-				width : 200,
+				width : 150,
 				editor : {
 					type : 'validatebox',
 					options : {
@@ -112,7 +114,17 @@ $(function() {
 						validType:['minLength[1]','legalInput']
 					}
 				}
-			}, {
+			},{
+                field : 'value',
+                title : '属性值',
+                width : 100,
+                sortable:true,
+                editor : {
+                    type : 'validatebox',
+                        options : {
+                        }
+                }
+            }, {
 				field : 'remark',
 				title : '备注',
 				width : 160,
@@ -125,7 +137,7 @@ $(function() {
 				field : 'orderNo',
 				title : '排序',
 				align : 'right',
-				width : 80,
+				width : 60,
 				sortable:true,
 				editor : {
 					type : 'numberspinner',
@@ -152,13 +164,14 @@ $(function() {
 				}else{
 					$(this).datagrid('beginEdit', rowIndex);
 					$(this).datagrid('unselectAll');
+                    bindCodeEvent(rowIndex);
 				}
 			},
 			onBeforeEdit:function(rowIndex, rowData) {
-				editRow = rowIndex;
+                editRow = rowIndex;
 				editRowData = rowData;
 				dictionaryTypeCode = rowData.dictionaryTypeCode;
-			},
+            },
 			onAfterEdit : function(rowIndex, rowData, changes) {
 				$.messager.progress({
 					title : '提示信息！',
@@ -191,13 +204,14 @@ $(function() {
 					}
 			    }, 'json');
 			},
-			onLoadSuccess:function(){
+			onLoadSuccess:function(data){
 				$(this).datagrid('clearSelections');//取消所有的已选择项
 		    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
 				editRow = undefined;
 				editRowData = undefined;
 				dictionaryTypeCode = undefined;
-			},
+
+            },
 			onRowContextMenu : function(e, rowIndex, rowData) {
 				e.preventDefault();
 				$(this).datagrid('unselectAll');
@@ -219,6 +233,15 @@ $(function() {
     });
 });
 
+    //字典编码 editor绑定change事件
+    function bindCodeEvent(rowIndex){
+        // 绑定事件监听
+        var codeEditor = dictionary_datagrid.datagrid('getEditor', {index:rowIndex,field:'code'});
+        var valueEditor =  dictionary_datagrid.datagrid('getEditor', {index:rowIndex,field:'value'});
+        codeEditor.target.bind('change', function(){
+            $(valueEditor.target).val($(this).val())
+        });
+    }
     //字典类型管理
     function dictionaryType(){
     	//parent.layout_center_tabs 指向父级layout_center_tabs选项卡(center.jsp)
@@ -251,6 +274,7 @@ $(function() {
 			var rowIndex = dictionary_datagrid.datagrid('getRowIndex',row);//返回指定行的索引
 			var sortEdit = dictionary_datagrid.datagrid('getEditor',{index:rowIndex,field:'orderNo'});
 			setSortValue(sortEdit.target);
+            bindCodeEvent(rowIndex);
 		}
 	}
 
@@ -273,6 +297,7 @@ $(function() {
 				editRow = dictionary_datagrid.datagrid('getRowIndex', row);
 				dictionary_datagrid.datagrid('beginEdit', editRow);
 				cancelSelect();
+                bindCodeEvent(editRow);
 			}
 		} else {
 			if(editRow != undefined){
@@ -357,7 +382,8 @@ $(function() {
 		
 	   <%-- 工具栏 操作按钮 --%>
 	   <div id="dictionary_toolbar">
-			<div style="margin-bottom:5px">    
+			<div style="margin-bottom:5px">
+                <span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-folder" plain="true" onclick="dictionaryType()">字典类型管理</a>
 				<span class="toolbar-btn-separator"></span>
 		        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>
@@ -370,9 +396,13 @@ $(function() {
 				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelEdit()">取消编辑</a> 
 				<span class="toolbar-btn-separator"></span>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelSelect()">取消选中</a> 
-		    </div>    
-		    <div>   
+				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelSelect()">取消选中</a>
+
+                <%--提示小图标--%>
+                <span class="tree-icon tree-file icon-tip easyui-tooltip" data-options="position:'left'" style="float: right;margin-right: 10px;"
+                      title="[名称]用于字典的显示、[属性值]用于combobox字典的存储、[编码]用于ombotree字典的存储;[属性值]默认与[编码]相同，可自行修改." ></span>
+		    </div>
+		    <div>
 			     <form id="dictionary_search_form" style="padding: 0px;">
 			                               字典类型:<select id="filter_EQS_dictionaryType__code" name="filter_EQS_dictionaryType__code" class="easyui-combobox" ></select> 
 					         名称或编码: <input type="text" id="filter_LIKES_name_OR_code" name="filter_LIKES_name_OR_code" placeholder="请输入名称或编码..."  maxLength="25" style="width: 160px"></input> 

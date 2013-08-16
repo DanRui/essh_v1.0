@@ -42,7 +42,11 @@ public class CacheConstants {
 	/**
 	 * 数据字典类型下的数据(根据数据字典类型缓存).
 	 */
-	public static final String DICTIONARYS_BY_TYPE_CACHE = "dictionarys_byType_cache";
+	public static final String DICTIONARYS_CONBOTREE_BY_TYPE_CACHE = "dictionarys_conbotree_byType_cache";
+    /**
+     * 数据字典类型下的数据(根据数据字典类型缓存).
+     */
+    public static final String DICTIONARYS_CONBOBOX_BY_TYPE_CACHE = "dictionarys_conbobox_byType_cache";
 	/**
 	 * 数据字典类型(无).
 	 */

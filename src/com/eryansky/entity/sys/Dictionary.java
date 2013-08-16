@@ -41,9 +41,13 @@ public class Dictionary extends BaseEntity{
 	 */
 	private String name;
 	/**
-	 * 参数编码/参数值
+	 * 参数编码
 	 */
 	private String code;
+    /**
+     * 参数值
+     */
+    private String value;
 	/**
 	 * 备注
 	 */
@@ -133,7 +137,16 @@ public class Dictionary extends BaseEntity{
 		this.code = code;
 	}
 
-	public String getRemark() {
+    @Column(length = 100)
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getRemark() {
 		return remark;
 	}
 

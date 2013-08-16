@@ -61,13 +61,13 @@ $(function() {
 <script type="text/javascript">
 	//加载bug类型
 	function loadBugType(){
-		$('#filter_EQS_type').combobox({  
+		$('#filter_EQS_type').combobox({
 	        url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug&selectType=all',
 		    multiple:false,//是否可多选
 		    //editable:false,//是否可编辑
 		    width:120,
 		    valueField:'value',
-	        displayField:'text',
+	        displayField:'text'
 		});
 	}
     function formInit(){
