@@ -53,12 +53,12 @@ $(function() {
 		columns:[[  
             {field:'ck',checkbox:true,width:60},
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80}, 
-            {field:'ico',title:'资源图标',width:60,align:'center',formatter:function(value,rowData,rowIndex){
+            {field:'ico',title:'图标',width:60,align:'center',formatter:function(value,rowData,rowIndex){
 	            	return $.formatString('<span class="tree-icon tree-file {0}"></span>', value);
 		           // return "<div style='text-align:center;'><img src='${ctx}/img/resource/"+value +"' border='0' width='20px' height='20px'></div>";
 	            }
             },
-	        {field:'name',title:'资源名称',width:160},
+	        {field:'name',title:'资源名称',width:120},
             {field:'code',title:'资源编码',width:120},
 	        {field:'url',title:'链接地址',width:260},
             {field:'markUrl',title:'标识地址',width:200},
