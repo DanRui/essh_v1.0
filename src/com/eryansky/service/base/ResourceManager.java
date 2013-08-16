@@ -137,6 +137,26 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 		return resourceDao.findUniqueBy("name", name);
 	}
 
+
+    /**
+     *
+     * 根据编码得到Resource.
+     *
+     * @param code
+     *            资源编码
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public Resource getByCode(String code) throws DaoException, SystemException,
+            ServiceException {
+        if (StringUtils.isBlank(code)) {
+            return null;
+        }
+        return resourceDao.findUniqueBy("code", code);
+    }
+
 	/**
 	 * 
 	 * 根据父ID得到 Resource. <br>
@@ -203,6 +223,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
             Map<String, Object> attributes1 = Maps.newHashMap();
 //            attributes1.put("url", parenResource.getUrl());
             attributes1.put("markUrl", parenResource.getMarkUrl());
+            attributes1.put("code", parenResource.getCode());
             treeNode1.setAttributes(attributes1);
 			treeNodes.add(treeNode1);
 
@@ -217,6 +238,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 				Map<String, Object> attributes2 = Maps.newHashMap();
 				attributes2.put("url", subResource.getUrl());
                 attributes2.put("markUrl", subResource.getMarkUrl());
+                attributes1.put("code", parenResource.getCode());
 				treeNode2.setAttributes(attributes2);
 				// 将节点赋值到顶级节点 作为父级的子节点
 				treeNode1.addChild(treeNode2);
@@ -278,6 +300,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
                 Map<String, Object> attributes1 = Maps.newHashMap();
                 attributes1.put("url", parenResource.getUrl());
                 attributes1.put("markUrl", parenResource.getMarkUrl());
+                attributes1.put("code", parenResource.getCode());
                 treeNode1.setAttributes(attributes1);
                 treeNodes.add(treeNode1);
 				List<Resource> subList2 = new ArrayList<Resource>();
@@ -297,6 +320,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 					Map<String, Object> attributes = Maps.newHashMap();
 					attributes.put("url", subResource.getUrl());
                     attributes.put("markUrl", subResource.getMarkUrl());
+                    attributes1.put("code", parenResource.getCode());
 					treeNode2.setAttributes(attributes);
 					// 将节点赋值到顶级节点 作为父级的子节点
 					treeNode1.addChild(treeNode2);

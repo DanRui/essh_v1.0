@@ -1,6 +1,7 @@
 package com.eryansky.entity.base;
 
 import com.eryansky.entity.base.state.ResourceState;
+import com.eryansky.entity.base.state.StatusState;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -218,6 +219,19 @@ public class Resource
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
+    }
+
+    /**
+     * 资源类型描述
+     */
+    @Transient
+    public String getTypeDesc() {
+        ResourceState r = ResourceState.getResourceState(type);
+        String str = "";
+        if(r != null){
+            str = r.getDescription();
+        }
+        return str;
     }
 
     @Override

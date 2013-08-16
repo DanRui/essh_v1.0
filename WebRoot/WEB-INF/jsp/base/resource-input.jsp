@@ -77,8 +77,10 @@
             <label>资源编码:</label>
             <input type="text" id="code" name="code"
                    maxLength="20" class="easyui-validatebox" placeholder="请输入资源编码..."
-                   data-options="required:true,missingMessage:'请输入资源编码.',validType:['minLength[1]']" />
-            <span style="color: red">*</span>
+                   data-options="validType:['minLength[1]']" />
+            <%--提示小图标--%>
+            <span class="tree-icon tree-file icon-tip easyui-tooltip"
+                  title="资源识别的唯一标识;主要用于[功能]类型的资源能够根据编码进行权限控制." ></span>
         </div>
 		<div>
 			<label>链接地址:</label>

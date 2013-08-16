@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50153
 File Encoding         : 65001
 
-Date: 2013-08-16 00:01:55
+Date: 2013-08-16 08:47:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -68,27 +68,27 @@ CREATE TABLE `t_base_role` (
   `description` varchar(255) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_base_role
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for t_base_role_menu
+-- Table structure for t_base_role_resource
 -- ----------------------------
-DROP TABLE IF EXISTS `t_base_role_menu`;
-CREATE TABLE `t_base_role_menu` (
+DROP TABLE IF EXISTS `t_base_role_resource`;
+CREATE TABLE `t_base_role_resource` (
   `ROLE_ID` bigint(20) NOT NULL,
-  `MENU_ID` bigint(20) NOT NULL,
-  KEY `FK2A18CAE5B28AED45` (`MENU_ID`),
+  `RESOURCE_ID` bigint(20) NOT NULL,
   KEY `FK2A18CAE5CBF981E5` (`ROLE_ID`),
-  CONSTRAINT `FK2A18CAE5B28AED45` FOREIGN KEY (`MENU_ID`) REFERENCES `t_base_resource` (`id`),
-  CONSTRAINT `FK2A18CAE5CBF981E5` FOREIGN KEY (`ROLE_ID`) REFERENCES `t_base_role` (`id`)
+  KEY `FK99003E9476B5CD65` (`RESOURCE_ID`),
+  CONSTRAINT `FK2A18CAE5CBF981E5` FOREIGN KEY (`ROLE_ID`) REFERENCES `t_base_role` (`id`),
+  CONSTRAINT `FK99003E9476B5CD65` FOREIGN KEY (`RESOURCE_ID`) REFERENCES `t_base_resource` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of t_base_role_menu
+-- Records of t_base_role_resource
 -- ----------------------------
 
 -- ----------------------------
@@ -112,7 +112,7 @@ CREATE TABLE `t_base_user` (
   `sex` int(11) DEFAULT NULL,
   `tel` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_base_user
@@ -152,7 +152,7 @@ CREATE TABLE `t_sys_bug` (
   `title` varchar(255) DEFAULT NULL,
   `type` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_sys_bug
@@ -182,7 +182,7 @@ CREATE TABLE `t_sys_dictionary` (
   KEY `FK79C52CB3BD49F8CB` (`PARENT_CODE`),
   CONSTRAINT `FK79C52CB373CC8B3F` FOREIGN KEY (`DICTIONARYTYPE_CODE`) REFERENCES `t_sys_dictionarytype` (`code`),
   CONSTRAINT `FK79C52CB3BD49F8CB` FOREIGN KEY (`PARENT_CODE`) REFERENCES `t_sys_dictionary` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_sys_dictionary
@@ -206,7 +206,7 @@ CREATE TABLE `t_sys_dictionarytype` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`),
   UNIQUE KEY `code_2` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_sys_dictionarytype

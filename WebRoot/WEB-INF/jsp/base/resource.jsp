@@ -59,9 +59,11 @@ $(function() {
 	            }
             },
 	        {field:'name',title:'资源名称',width:160},
+            {field:'code',title:'资源编码',width:120},
 	        {field:'url',title:'链接地址',width:260},
             {field:'markUrl',title:'标识地址',width:200},
-	        {field:'orderNo',title:'排序',align:'right',width:60,sortable:true}, 
+	        {field:'orderNo',title:'排序',align:'right',width:60,sortable:true},
+            {field:'typeDesc',title:'资源类型',align:'center',width:100},
 	        {field:'statusDesc',title:'状态',align:'center',width:60}
 	    ]],
 	    onLoadSuccess:function(){
@@ -82,7 +84,10 @@ $(function() {
 			});
 		}
 	});
+
+    loadResourceType();
 });
+
 		//设置排序默认值
 		function setSortValue(){
 			$.get('${ctx}/base/resource!maxSort.action',function(data){
@@ -209,18 +214,30 @@ $(function() {
 				eu.showMsg("请选择要操作的对象！");
 			}
 		}
-		
+
+        //搜索输入框加载资源类型
+        function loadResourceType(){
+            $('#filter_EQI_type').combobox({
+                url:'${ctx}/base/resource!resourceTypeCombobox.action?selectType=all',
+                multiple:false,//是否可多选
+                editable:false,//是否可编辑
+                width:120,
+                valueField:'value',
+                displayField:'text'
+            });
+        }
 		//搜索
 		function search(){
         	var name = $('#filter_LIKES_name').val();//搜索条件 资源名称
         	var node = resource_tree.tree('getSelected');//
+            var type = $('#filter_EQI_type').combobox('getValue');
         	var id = '';
         	if(node != null){
         		id = node.id; //搜索 id:主键 即是通过左边资源树点击得到搜索结果
         	}
         	//将整个表单的数据作为查询条件 
         	//resource_datagrid.datagrid('load',$.serializeObject(resource_search_form));
-        	resource_datagrid.datagrid('load',{filter_EQL_id_OR_parentResource__id:id,filter_LIKES_name:name});
+        	resource_datagrid.datagrid('load',{filter_EQL_id_OR_parentResource__id:id,filter_LIKES_name:name,filter_EQI_type:type});
 		}
 </script>
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
@@ -247,7 +264,9 @@ $(function() {
 	        <div style="margin-left:5px; float: left;">
 		        <form id="resource_search_form" style="padding: 0px;">
                     资源名称:<input type="text" id="filter_LIKES_name" name="filter_LIKES_name" maxLength="8" placeholder="请输入资源名称..." style="width: 160px"></input>
-					<a href="javascript:search();" class="easyui-linkbutton"
+
+                    资源类型:<input id="filter_EQI_type" name="filter_EQI_type" class="easyui-combobox"/>
+                    <a href="javascript:search();" class="easyui-linkbutton"
 							iconCls="icon-search" plain="true" >查 询</a>
 				</form>
 			</div>

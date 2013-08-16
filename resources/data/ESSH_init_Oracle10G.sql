@@ -11,7 +11,7 @@ Target Server Type    : ORACLE
 Target Server Version : 100200
 File Encoding         : 65001
 
-Date: 2013-08-15 23:47:44
+Date: 2013-08-16 08:40:09
 */
 
 
@@ -46,7 +46,7 @@ COMMENT ON COLUMN "ESSH"."T_BASE_RESOURCE"."CODE" IS '资源编码';
 -- ----------------------------
 -- Records of T_BASE_RESOURCE
 -- ----------------------------
-INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('1352', TO_TIMESTAMP(' 2013-08-15 23:35:02:964000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-15 23:35:45:932000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '2', 'icon-folder', '/sys/dictionary-type*', '字典类型', '6', '0', '/sys/dictionary-type.action', '52', 'sys_dictionaryType');
+INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('1352', TO_TIMESTAMP(' 2013-08-15 23:35:02:964000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-16 00:34:32:402000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '3', 'icon-folder', '/sys/dictionary-type*', '字典类型', '6', '1', '/sys/dictionary-type.action', '52', 'sys_dictionaryType');
 INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('1', TO_TIMESTAMP(' 2013-03-25 08:54:51:000000', 'YYYY-MM-DD HH24:MI:SS:FF6'), '系统', '0', TO_TIMESTAMP(' 2013-08-15 19:56:59:454000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '15', 'icon-application', null, '权限管理', '1', '0', null, null, null);
 INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('52', TO_TIMESTAMP(' 2013-03-25 08:59:36:665000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-15 19:57:06:894000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '11', 'icon-application', null, '系统配置', '5', '0', null, null, null);
 INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('2', TO_TIMESTAMP(' 2013-03-25 08:55:19:000000', 'YYYY-MM-DD HH24:MI:SS:FF6'), '系统', '0', TO_TIMESTAMP(' 2013-08-15 23:33:03:590000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '16', 'icon-vcard', '/base/resource*', '资源管理', '2', '0', '/base/resource.action', '1', 'base_resource');
@@ -81,12 +81,12 @@ NOCACHE
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for T_BASE_ROLE_MENU
+-- Table structure for T_BASE_ROLE_RESOURCE
 -- ----------------------------
-DROP TABLE "ESSH"."T_BASE_ROLE_MENU";
-CREATE TABLE "ESSH"."T_BASE_ROLE_MENU" (
+DROP TABLE "ESSH"."T_BASE_ROLE_RESOURCE";
+CREATE TABLE "ESSH"."T_BASE_ROLE_RESOURCE" (
 "ROLE_ID" NUMBER(19) NOT NULL ,
-"MENU_ID" NUMBER(19) NOT NULL 
+"RESOURCE_ID" NUMBER(19) NOT NULL 
 )
 LOGGING
 NOCOMPRESS
@@ -95,7 +95,7 @@ NOCACHE
 ;
 
 -- ----------------------------
--- Records of T_BASE_ROLE_MENU
+-- Records of T_BASE_ROLE_RESOURCE
 -- ----------------------------
 
 -- ----------------------------
@@ -297,10 +297,10 @@ ALTER TABLE "ESSH"."T_BASE_ROLE" ADD CHECK ("ID" IS NOT NULL);
 ALTER TABLE "ESSH"."T_BASE_ROLE" ADD PRIMARY KEY ("ID");
 
 -- ----------------------------
--- Checks structure for table T_BASE_ROLE_MENU
+-- Checks structure for table T_BASE_ROLE_RESOURCE
 -- ----------------------------
-ALTER TABLE "ESSH"."T_BASE_ROLE_MENU" ADD CHECK ("ROLE_ID" IS NOT NULL);
-ALTER TABLE "ESSH"."T_BASE_ROLE_MENU" ADD CHECK ("MENU_ID" IS NOT NULL);
+ALTER TABLE "ESSH"."T_BASE_ROLE_RESOURCE" ADD CHECK ("ROLE_ID" IS NOT NULL);
+ALTER TABLE "ESSH"."T_BASE_ROLE_RESOURCE" ADD CHECK ("RESOURCE_ID" IS NOT NULL);
 
 -- ----------------------------
 -- Indexes structure for table T_BASE_USER
@@ -382,10 +382,10 @@ ALTER TABLE "ESSH"."T_SYS_DICTIONARYTYPE" ADD PRIMARY KEY ("ID");
 ALTER TABLE "ESSH"."T_BASE_RESOURCE" ADD FOREIGN KEY ("PARENT_ID") REFERENCES "ESSH"."T_BASE_RESOURCE" ("ID");
 
 -- ----------------------------
--- Foreign Key structure for table "ESSH"."T_BASE_ROLE_MENU"
+-- Foreign Key structure for table "ESSH"."T_BASE_ROLE_RESOURCE"
 -- ----------------------------
-ALTER TABLE "ESSH"."T_BASE_ROLE_MENU" ADD FOREIGN KEY ("MENU_ID") REFERENCES "ESSH"."T_BASE_RESOURCE" ("ID");
-ALTER TABLE "ESSH"."T_BASE_ROLE_MENU" ADD FOREIGN KEY ("ROLE_ID") REFERENCES "ESSH"."T_BASE_ROLE" ("ID");
+ALTER TABLE "ESSH"."T_BASE_ROLE_RESOURCE" ADD FOREIGN KEY ("RESOURCE_ID") REFERENCES "ESSH"."T_BASE_RESOURCE" ("ID");
+ALTER TABLE "ESSH"."T_BASE_ROLE_RESOURCE" ADD FOREIGN KEY ("ROLE_ID") REFERENCES "ESSH"."T_BASE_ROLE" ("ID");
 
 -- ----------------------------
 -- Foreign Key structure for table "ESSH"."T_BASE_USER_ROLE"
