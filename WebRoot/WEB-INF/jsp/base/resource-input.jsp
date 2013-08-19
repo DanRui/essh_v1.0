@@ -100,7 +100,6 @@
             <label>资源类型:</label>
             <input id="type" name="type" class="easyui-combobox"
                    data-options="required:true,missingMessage:'请选择资源类型.'" />
-            <span style="color: red">*</span>
         </div>
 		<div>
 			<label>状态:</label>

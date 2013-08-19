@@ -53,7 +53,10 @@ $(function() {
 				left : e.pageX,
 				top : e.pageY
 			});
-		}
+		} ,
+        onDblClickRow:function(rowIndex, rowData){
+            edit(rowIndex, rowData);
+        }
 	});
     loadBugType();
 });
@@ -146,7 +149,12 @@ $(function() {
 	}
 	
 	//编辑
-	function edit(){
+    function edit(rowIndex, rowData){
+        //响应双击事件
+        if(rowIndex != undefined) {
+            showDialog(rowData);
+            return;
+        }
 		//选中的所有行
 		var rows = bug_datagrid.datagrid('getSelections');
 		//选中的行（第一次选择的行）

@@ -46,8 +46,11 @@ $(function() {
                 });
             }
 
+        },
+        onDblClickRow:function(row){
+            edit(row);
         }
-		});
+	});
 
     loadGroupDictionaryType();
 });
@@ -155,7 +158,11 @@ $(function() {
     }
 
     //编辑
-    function edit(){
+    function edit(row){
+        if(row != undefined){
+            showDialog(row);
+            return;
+        }
         //选中的所有行
         var rows = dictionaryType_treegrid.treegrid('getSelections');
         //选中的行（第一次选择的行）
