@@ -130,7 +130,11 @@ public class UserManager extends EntityManager<User, Long> {
 	 * @throws ServiceException
 	 */
 	public User getSuperUser() throws DaoException,SystemException,ServiceException {
-		return userDao.load(1l);//超级用户ID为1
+        User superUser = userDao.load(1l);//超级用户ID为1
+        if(superUser == null){
+            throw new SystemException("系统未设置超级用户.");
+        }
+        return superUser;
 	}
 	/**
 	 * 根据登录名、密码查找用户.
