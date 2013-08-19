@@ -183,7 +183,7 @@ $(function() {
         var rows = dictionaryType_treegrid.treegrid('getSelections');
 
         if(rows.length >0){
-            $.messager.confirm('确认提示！','您确定要删除选中的所有行？',function(r){
+            $.messager.confirm('确认提示！','您确定要删除选中的所有行(如果存在子节点，子节点也一起会被删除)？',function(r){
                 if (r){
                     var ids = new Object();
                     for(var i=0;i<rows.length;i++){
