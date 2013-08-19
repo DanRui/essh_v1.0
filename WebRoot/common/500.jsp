@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>页面访问出错</title>
-    <script src="${ctx}/js/jquery.js" type="text/javascript"></script>
+    <script src="${ctx}/js/jquery/jquery.js" type="text/javascript"></script>
 </head>
 <%
     Throwable ex = null;
@@ -26,7 +26,7 @@
     </div>
     <div>
         <button onclick="history.back();">返回</button>
-        <button onclick="$('#detail_error_msg').toggle();">显示详细信息</button>
+        <button onclick="$('#detail_error_msg').toggle();">显示/隐藏详细信息</button>
     </div>
 </div>
 
