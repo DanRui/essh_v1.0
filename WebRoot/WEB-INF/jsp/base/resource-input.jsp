@@ -64,14 +64,12 @@
 			<input id="ico" name="ico"
 				class="easyui-combobox"
 				data-options="tipPosition:'left',required:true,missingMessage:'请选择资源图标.',url:'${ctx}/js/json/resource.json'" />
-				<span style="color: red">*</span>
 		</div>
 		<div>
 			<label>资源名称:</label>
 			<input type="text" id="name" name="name"
 				maxLength="20" class="easyui-validatebox" placeholder="请输入资源名称..."
 				data-options="required:true,missingMessage:'请输入资源名称.',validType:['minLength[1]']" />
-		    <span style="color: red">*</span>
 		</div>
         <div>
             <label>资源编码:</label>
@@ -108,7 +106,6 @@
 			<label>状态:</label>
             <input type="radio" name="status" style="width: 20px;" value="0" /> 启用 
             <input type="radio" name="status" style="width: 20px;" value="3" /> 停用
-		    <span style="color: red">*</span>
 		</div>
 	</form>
 </div>

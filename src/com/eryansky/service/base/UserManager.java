@@ -3,8 +3,10 @@ package com.eryansky.service.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eryansky.utils.CacheConstants;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -39,12 +41,51 @@ public class UserManager extends EntityManager<User, Long> {
 	protected HibernateDao<User, Long> getEntityDao() {
 		return userDao;
 	}
-	
+
+    /**
+     * 新增或修改角色.
+     * <br>修改角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
+     */
+    @CacheEvict(value = {  CacheConstants.ROLE_ALL_CACHE,
+            CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE,
+            CacheConstants.RESOURCE_USER_MENU_TREE_CACHE,
+            CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},allEntries = true)
+    public void saveOrUpdate(User entity) throws DaoException,SystemException,ServiceException {
+        logger.debug("清空缓存:{}",CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE
+                +","+CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE);
+        Assert.notNull(entity, "参数[entity]为空!");
+        userDao.saveOrUpdate(entity);
+    }
+
+    /**
+     * 新增或修改角色.
+     * <br>修改角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
+     */
+    @CacheEvict(value = {  CacheConstants.ROLE_ALL_CACHE,
+            CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE,
+            CacheConstants.RESOURCE_USER_MENU_TREE_CACHE,
+            CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},allEntries = true)
+    public void merge(User entity) throws DaoException,SystemException,ServiceException {
+        logger.debug("清空缓存:{}",CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE
+                +","+CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE);
+        Assert.notNull(entity, "参数[entity]为空!");
+        userDao.merge(entity);
+    }
+
 	/**
 	 * 自定义删除方法.
 	 */
+    @CacheEvict(value = {
+            CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE,
+            CacheConstants.RESOURCE_USER_MENU_TREE_CACHE,
+            CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException,SystemException,ServiceException {
 		if(!Collections3.isEmpty(ids)){
+            logger.debug("清空缓存:{}",CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                    +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE
+                    +","+CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE);
 			for(Long id :ids){
 				User superUser = this.getSuperUser();
 				if (id.equals(superUser.getId())) {

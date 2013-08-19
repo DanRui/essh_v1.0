@@ -6,14 +6,14 @@
 			<label>新密码:</label> 
 			<input type="password" id="newPassword" name="newPassword"
 				class="easyui-validatebox" required="true" missingMessage="请输入新密码."
-				validType="safepass" /><span style="color: red">*</span>
+				validType="safepass" />
 		</div>
 		<div>
 			<label>确认新密码:</label> 
 			<input type="password" id="newPassword2" name="newPassword2"
 				class="easyui-validatebox" required="true"
 				missingMessage="请再次输入新密码." validType="equalTo['#newPassword']"
-				invalidMessage="两次输入密码不匹配." /><span style="color: red">*</span>
+				invalidMessage="两次输入密码不匹配." />
 		</div>
 	</form>
 </div>

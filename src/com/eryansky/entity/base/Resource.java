@@ -86,7 +86,7 @@ public class Resource
      */
     private List<Role> roles = Lists.newArrayList();
     /**
-     * @Transient 子Resource集合
+     * 子Resource集合
      */
     private List<Resource> subResources = Lists.newArrayList();
 

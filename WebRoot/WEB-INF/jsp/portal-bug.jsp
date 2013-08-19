@@ -5,17 +5,18 @@ $(function() {
     //数据列表
     $('#bug_datagrid').datagrid({  
 	    url:'${ctx}/sys/bug!datagrid.action',  
-	    pagination:true,//底部分页
-	    rownumbers:true,//显示行数
+	    pagination:false,//底部分页
+	    rownumbers:false,//显示行数
 	    fitColumns:true,//自适应列宽
 	    striped:true,//显示条纹
 	    singleSelect:true,
+        showHeader:false,
 	    pageSize:10,//每页记录数
 	    sortName:'id',//默认排序字段
 		sortOrder:'asc',//默认排序方式 'desc' 'asc'
 		idField : 'id',
 		frozenColumns:[[ 
-              {field:'title',title:'bug标题',width:800,formatter:function(value,rowData,rowIndex){  
+              {field:'title',title:'bug标题',width:600,formatter:function(value,rowData,rowIndex){
             	     var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
             	     var title = $.formatString("<a href='javascript:eu.addTab(window.parent.layout_center_tabs, \"{0}\",\"{1}\", true)' >{2}</a>",value,url, value);
             	     return title;

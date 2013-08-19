@@ -18,6 +18,10 @@ public class Combobox {
 	 * 文本域
 	 */
 	private String text;
+    /**
+     * 分组
+     */
+    private String group;
 	/**
 	 * 是否选中
 	 */
@@ -27,17 +31,33 @@ public class Combobox {
 		super();
 	}
 
+    /**
+     *
+     * @param value
+     *            值域
+     * @param text
+     *            文本域
+     */
+    public Combobox(String value, String text) {
+        super();
+        this.value = value;
+        this.text = text;
+    }
+
 	/**
 	 * 
 	 * @param value
 	 *            值域
 	 * @param text
 	 *            文本域
+     * @param group
+     *            分组
 	 */
-	public Combobox(String value, String text) {
+	public Combobox(String value, String text, String group) {
 		super();
 		this.value = value;
 		this.text = text;
+        this.group = group;
 	}
 
 	/**
@@ -46,13 +66,16 @@ public class Combobox {
 	 *            值域
 	 * @param text
 	 *            文本域
-	 * @param selected
-	 *            是否选中
+	 * @param group
+	 *            分组
+     * @param selected
+     *            是否选中
 	 */
-	public Combobox(String value, String text, boolean selected) {
+	public Combobox(String value, String text, String group, boolean selected) {
 		super();
 		this.value = value;
 		this.text = text;
+        this.group = group;
 		this.selected = selected;
 	}
 
@@ -62,7 +85,10 @@ public class Combobox {
 	public String getValue() {
 		return value;
 	}
-
+    /**
+     * 设置值域
+     * @param value   文本域
+     */
 	public void setValue(String value) {
 		this.value = value;
 	}
@@ -74,11 +100,32 @@ public class Combobox {
 		return text;
 	}
 
+    /**
+     * 设置文本域
+     * @param text   文本域
+     */
 	public void setText(String text) {
 		this.text = text;
 	}
 
-	/**
+
+    /**
+     * 分组
+     * @return
+     */
+    public String getGroup() {
+        return group;
+    }
+
+    /**
+     * 设置分组
+     * @param group
+     */
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    /**
 	 * 是否选中
 	 */
 	public boolean isSelected() {

@@ -1,10 +1,10 @@
 package com.eryansky.entity.sys;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -12,6 +12,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.eryansky.common.excel.annotation.Excel;
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.utils.CacheConstants;
+
+import java.util.List;
 
 /**
  * 系统字典类型Entity.
@@ -23,7 +25,8 @@ import com.eryansky.utils.CacheConstants;
 @Entity
 @Table(name = "T_SYS_DICTIONARYTYPE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_SYS)
-@JsonIgnoreProperties(value = { "hibernateLazyInitializer" , "handler","fieldHandler" })
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer" , "handler","fieldHandler",
+        "groupDictionaryType","subDictionaryTypes" })
 @SuppressWarnings("serial")
 public class DictionaryType extends BaseEntity {
 
@@ -37,6 +40,27 @@ public class DictionaryType extends BaseEntity {
 	 */
 	@Excel(exportName="类型编码", exportFieldWidth = 20)
 	private String code;
+
+    /**
+     * 父级类型 即分组
+     */
+    private DictionaryType groupDictionaryType;
+    /**
+     * @Transient 父级类型 即分组名称
+     */
+    private String groupDictionaryTypeName;
+    /**
+     * @Transient 父级类型 即分组编码
+     */
+    private String groupDictionaryTypeCode;
+    /**
+     * 子DictionaryType集合
+     */
+    private List<DictionaryType> subDictionaryTypes = Lists.newArrayList();
+    /**
+     * 备注
+     */
+    private String remark;
 
 	/**
 	 * 排序
@@ -83,7 +107,59 @@ public class DictionaryType extends BaseEntity {
 		this.code = code;
 	}
 
-	@Column(name = "ORDER_NO")
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "GROUP_CODE", referencedColumnName = "CODE")
+    public DictionaryType getGroupDictionaryType() {
+        return groupDictionaryType;
+    }
+
+    public void setGroupDictionaryType(DictionaryType groupDictionaryType) {
+        this.groupDictionaryType = groupDictionaryType;
+    }
+
+    @Transient
+    public String getGroupDictionaryTypeName() {
+        if(groupDictionaryType != null){
+            groupDictionaryTypeName = groupDictionaryType.getName();
+        }
+        return groupDictionaryTypeName;
+    }
+
+    public void setGroupDictionaryTypeName(String groupDictionaryTypeName) {
+        this.groupDictionaryTypeName = groupDictionaryTypeName;
+    }
+
+    @Transient
+    @JsonProperty("_parentId")
+    public String getGroupDictionaryTypeCode() {
+        if(groupDictionaryType != null){
+            groupDictionaryTypeCode = groupDictionaryType.getCode();
+        }
+        return groupDictionaryTypeCode;
+    }
+
+    public void setGroupDictionaryTypeCode(String groupDictionaryTypeCode) {
+        this.groupDictionaryTypeCode = groupDictionaryTypeCode;
+    }
+
+    @OneToMany(mappedBy = "groupDictionaryType")
+    public List<DictionaryType> getSubDictionaryTypes() {
+        return subDictionaryTypes;
+    }
+
+    public void setSubDictionaryTypes(List<DictionaryType> subDictionaryTypes) {
+        this.subDictionaryTypes = subDictionaryTypes;
+    }
+    @Column(name = "REMARK")
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    @Column(name = "ORDER_NO")
 	public Integer getOrderNo() {
 		return orderNo;
 	}

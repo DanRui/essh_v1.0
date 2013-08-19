@@ -55,6 +55,7 @@ $(function() {
 						editable:false,//是否可编辑
 						valueField:'value',
 				        displayField:'text',
+                        groupField:'group',
 				        onSelect:function(record){
 				        	dictionaryTypeCode = record.value;
 							var dictionaryTypeEditor = dictionary_datagrid.datagrid('getEditor',{index:editRow,field:'parentDictionaryCode'});
@@ -103,7 +104,6 @@ $(function() {
 			}, {
 				field : 'code',
 				title : '编码',
-				align : 'right',
 				width : 100,
 				sortable:true,
 				editor : {
@@ -229,7 +229,8 @@ $(function() {
 	    editable:false,//是否可编辑
 	    width:120,
         valueField:'value',
-        displayField:'text'
+        displayField:'text',
+        groupField:'group'
     });
 });
 
@@ -399,14 +400,14 @@ $(function() {
 				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelSelect()">取消选中</a>
 
                 <%--提示小图标--%>
-                <span class="tree-icon tree-file icon-tip easyui-tooltip" data-options="position:'left'" style="float: right;margin-right: 10px;"
-                      title="[名称]用于字典的显示、[属性值]用于combobox字典的存储、[编码]用于ombotree字典的存储;[属性值]默认与[编码]相同，可自行修改." ></span>
-		    </div>
+                <span class="tree-icon tree-file icon-tip easyui-tooltip" style="float: right;margin-right: 10px;"
+                      data-options="content:'提示：<br>1、双击列表行或者点击【编辑】按钮即可直接编辑行数据；<br>2、[名称]用于字典的显示、[属性值]用于combobox字典的存储、[编码]用于ombotree字典的存储;<br>3、[属性值]默认与[编码]相同，可自行修改. '"></span>
+            </div>
 		    <div>
 			     <form id="dictionary_search_form" style="padding: 0px;">
-			                               字典类型:<select id="filter_EQS_dictionaryType__code" name="filter_EQS_dictionaryType__code" class="easyui-combobox" ></select> 
-					         名称或编码: <input type="text" id="filter_LIKES_name_OR_code" name="filter_LIKES_name_OR_code" placeholder="请输入名称或编码..."  maxLength="25" style="width: 160px"></input> 
-						<a href="javascript:search();" class="easyui-linkbutton"
+                       字典分组:<select id="filter_EQS_dictionaryType__code" name="filter_EQS_dictionaryType__code" class="easyui-combobox" ></select>
+					   名称或编码: <input type="text" id="filter_LIKES_name_OR_code" name="filter_LIKES_name_OR_code" placeholder="请输入名称或编码..."  maxLength="25" style="width: 160px"></input>
+					   <a href="javascript:search();" class="easyui-linkbutton"
 								iconCls="icon-search" plain="true" >查 询</a>  
 				</form>  
 		    </div>  

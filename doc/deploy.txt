@@ -26,5 +26,5 @@
 	Hibernate validator4.3.1(后台校验框架,基于BO注解)
     前台:
     jQuery1.9.1
-    jQuery EasyUI1.3.3(前台ui组件)
+    jQuery EasyUI1.3.4(前台ui组件)
 

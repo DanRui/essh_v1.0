@@ -1,7 +1,6 @@
 package com.eryansky.web;
 
 import com.eryansky.common.model.TreeNode;
-import com.eryansky.entity.base.state.ResourceState;
 import com.eryansky.service.base.ResourceManager;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
@@ -140,7 +139,7 @@ public class LoginAction
             User user = (User) Struts2Utils
                     .getSessionAttribute(SysConstants.SESSION_USER);
             if (user != null) {
-                treeNodes = resourceManager.getNavTree(user.getId(), ResourceState.menu.getValue());
+                treeNodes = resourceManager.getNavMenuTreeByUserId(user.getId());
             }
             Struts2Utils.renderJson(treeNodes);
         } catch (Exception e) {

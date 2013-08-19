@@ -49,6 +49,7 @@ $(function() {
         remoteSort:false,//是否通过远程服务器对数据排序
 		sortName:'orderNo',//默认排序字段
 		sortOrder:'asc',//默认排序方式 'desc' 'asc'
+//        multiSort:true,//支持多字段排序
 		idField : 'id',
 		columns:[[  
             {field:'ck',checkbox:true,width:60},

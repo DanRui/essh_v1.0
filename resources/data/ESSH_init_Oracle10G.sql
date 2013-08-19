@@ -11,7 +11,7 @@ Target Server Type    : ORACLE
 Target Server Version : 100200
 File Encoding         : 65001
 
-Date: 2013-08-16 08:40:09
+Date: 2013-08-19 08:26:26
 */
 
 
@@ -46,7 +46,8 @@ COMMENT ON COLUMN "ESSH"."T_BASE_RESOURCE"."CODE" IS '资源编码';
 -- ----------------------------
 -- Records of T_BASE_RESOURCE
 -- ----------------------------
-INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('1352', TO_TIMESTAMP(' 2013-08-15 23:35:02:964000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-16 00:34:32:402000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '3', 'icon-folder', '/sys/dictionary-type*', '字典类型', '6', '1', '/sys/dictionary-type.action', '52', 'sys_dictionaryType');
+INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('1352', TO_TIMESTAMP(' 2013-08-15 23:35:02:964000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-18 22:07:30:755000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '4', 'icon-folder', '/sys/dictionary-type*', '字典类型', '6', '0', '/sys/dictionary-type.action', '52', 'sys_dictionaryType');
+INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('1375', TO_TIMESTAMP(' 2013-08-18 21:56:01:181000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-18 21:58:36:385000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '1', null, '/sys/bug!datagrid*', '首页权限', '9', '1', null, '52', null);
 INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('1', TO_TIMESTAMP(' 2013-03-25 08:54:51:000000', 'YYYY-MM-DD HH24:MI:SS:FF6'), '系统', '0', TO_TIMESTAMP(' 2013-08-15 19:56:59:454000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '15', 'icon-application', null, '权限管理', '1', '0', null, null, null);
 INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('52', TO_TIMESTAMP(' 2013-03-25 08:59:36:665000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-15 19:57:06:894000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '11', 'icon-application', null, '系统配置', '5', '0', null, null, null);
 INSERT INTO "ESSH"."T_BASE_RESOURCE" VALUES ('2', TO_TIMESTAMP(' 2013-03-25 08:55:19:000000', 'YYYY-MM-DD HH24:MI:SS:FF6'), '系统', '0', TO_TIMESTAMP(' 2013-08-15 23:33:03:590000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '16', 'icon-vcard', '/base/resource*', '资源管理', '2', '0', '/base/resource.action', '1', 'base_resource');
@@ -79,6 +80,7 @@ NOCACHE
 -- ----------------------------
 -- Records of T_BASE_ROLE
 -- ----------------------------
+INSERT INTO "ESSH"."T_BASE_ROLE" VALUES ('1373', TO_TIMESTAMP(' 2013-08-18 14:58:12:152000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-18 22:21:10:183000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '3', null, '系统配置');
 
 -- ----------------------------
 -- Table structure for T_BASE_ROLE_RESOURCE
@@ -97,6 +99,10 @@ NOCACHE
 -- ----------------------------
 -- Records of T_BASE_ROLE_RESOURCE
 -- ----------------------------
+INSERT INTO "ESSH"."T_BASE_ROLE_RESOURCE" VALUES ('1373', '52');
+INSERT INTO "ESSH"."T_BASE_ROLE_RESOURCE" VALUES ('1373', '1352');
+INSERT INTO "ESSH"."T_BASE_ROLE_RESOURCE" VALUES ('1373', '54');
+INSERT INTO "ESSH"."T_BASE_ROLE_RESOURCE" VALUES ('1373', '106');
 
 -- ----------------------------
 -- Table structure for T_BASE_USER
@@ -128,6 +134,7 @@ NOCACHE
 -- ----------------------------
 -- Records of T_BASE_USER
 -- ----------------------------
+INSERT INTO "ESSH"."T_BASE_USER" VALUES ('1372', TO_TIMESTAMP(' 2013-08-18 14:57:53:418000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-19 08:18:31:390000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '8', null, null, 'eryan', null, '汉子', 'aec60231d83fe6cf81444bc536596887', '2', null);
 INSERT INTO "ESSH"."T_BASE_USER" VALUES ('1', TO_TIMESTAMP(' 2013-03-25 08:53:46:000000', 'YYYY-MM-DD HH24:MI:SS:FF6'), '系统', '0', TO_TIMESTAMP(' 2013-07-16 14:43:17:621000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '9', null, null, 'admin', null, null, '5f4dcc3b5aa765d61d8327deb882cf99', '1', null);
 
 -- ----------------------------
@@ -147,6 +154,7 @@ NOCACHE
 -- ----------------------------
 -- Records of T_BASE_USER_ROLE
 -- ----------------------------
+INSERT INTO "ESSH"."T_BASE_USER_ROLE" VALUES ('1372', '1373');
 
 -- ----------------------------
 -- Table structure for T_SYS_BUG
@@ -187,7 +195,8 @@ CREATE TABLE "ESSH"."T_SYS_DICTIONARY" (
 "ORDER_NO" NUMBER(10) NULL ,
 "REMARK" VARCHAR2(255 CHAR) NULL ,
 "DICTIONARYTYPE_CODE" VARCHAR2(12 CHAR) NULL ,
-"PARENT_CODE" VARCHAR2(36 CHAR) NULL 
+"PARENT_CODE" VARCHAR2(36 CHAR) NULL ,
+"VALUE" VARCHAR2(100 CHAR) NULL 
 )
 LOGGING
 NOCOMPRESS
@@ -198,12 +207,6 @@ NOCACHE
 -- ----------------------------
 -- Records of T_SYS_DICTIONARY
 -- ----------------------------
-INSERT INTO "ESSH"."T_SYS_DICTIONARY" VALUES ('178', TO_TIMESTAMP(' 2013-05-12 21:59:48:953000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'user001', '系统管理员', '7', null, 'user', null);
-INSERT INTO "ESSH"."T_SYS_DICTIONARY" VALUES ('701', TO_TIMESTAMP(' 2013-06-07 12:56:04:661000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-07 11:29:01:965000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '1', 'bug001', '功能性问题', '8', null, 'bug', null);
-INSERT INTO "ESSH"."T_SYS_DICTIONARY" VALUES ('967', TO_TIMESTAMP(' 2013-07-04 19:18:23:431000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-08 08:25:21:481000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '1', 'bug002', '新闻', '9', null, 'bug', null);
-INSERT INTO "ESSH"."T_SYS_DICTIONARY" VALUES ('1232', TO_TIMESTAMP(' 2013-08-05 15:11:06:746000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-08 08:25:44:731000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '1', 'user002', '管理员', '10', null, 'user', 'user001');
-INSERT INTO "ESSH"."T_SYS_DICTIONARY" VALUES ('149', TO_TIMESTAMP(' 2013-05-06 20:00:17:213000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-08-14 21:57:20:156000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '4', 'org001', '省中心', '1', 'test', 'org', null);
-INSERT INTO "ESSH"."T_SYS_DICTIONARY" VALUES ('150', TO_TIMESTAMP(' 2013-05-06 20:00:36:369000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'org001001', '市中心', '2', null, 'org', 'org001');
 
 -- ----------------------------
 -- Table structure for T_SYS_DICTIONARYTYPE
@@ -219,7 +222,9 @@ CREATE TABLE "ESSH"."T_SYS_DICTIONARYTYPE" (
 "VERSION" NUMBER(10) NULL ,
 "CODE" VARCHAR2(12 CHAR) NULL ,
 "NAME" VARCHAR2(100 CHAR) NULL ,
-"ORDER_NO" NUMBER(10) NULL 
+"ORDER_NO" NUMBER(10) NULL ,
+"REMARK" VARCHAR2(255 CHAR) NULL ,
+"GROUP_CODE" VARCHAR2(12 CHAR) NULL 
 )
 LOGGING
 NOCOMPRESS
@@ -230,9 +235,6 @@ NOCACHE
 -- ----------------------------
 -- Records of T_SYS_DICTIONARYTYPE
 -- ----------------------------
-INSERT INTO "ESSH"."T_SYS_DICTIONARYTYPE" VALUES ('177', TO_TIMESTAMP(' 2013-05-12 21:59:26:578000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'user', '用户类型', '2');
-INSERT INTO "ESSH"."T_SYS_DICTIONARYTYPE" VALUES ('242', TO_TIMESTAMP(' 2013-06-03 08:28:17:807000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'bug', 'Bug缺陷', '3');
-INSERT INTO "ESSH"."T_SYS_DICTIONARYTYPE" VALUES ('148', TO_TIMESTAMP(' 2013-05-06 19:59:58:728000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'org', '组织机构', '1');
 
 -- ----------------------------
 -- Sequence structure for ESSH_COMMON_SEQUENCE
@@ -253,7 +255,7 @@ CREATE SEQUENCE "ESSH"."HIBERNATE_SEQUENCE"
  INCREMENT BY 1
  MINVALUE 1
  MAXVALUE 99999999999999999999
- START WITH 1370
+ START WITH 1390
  CACHE 20;
 
 -- ----------------------------
@@ -398,3 +400,8 @@ ALTER TABLE "ESSH"."T_BASE_USER_ROLE" ADD FOREIGN KEY ("ROLE_ID") REFERENCES "ES
 -- ----------------------------
 ALTER TABLE "ESSH"."T_SYS_DICTIONARY" ADD FOREIGN KEY ("DICTIONARYTYPE_CODE") REFERENCES "ESSH"."T_SYS_DICTIONARYTYPE" ("CODE");
 ALTER TABLE "ESSH"."T_SYS_DICTIONARY" ADD FOREIGN KEY ("PARENT_CODE") REFERENCES "ESSH"."T_SYS_DICTIONARY" ("CODE");
+
+-- ----------------------------
+-- Foreign Key structure for table "ESSH"."T_SYS_DICTIONARYTYPE"
+-- ----------------------------
+ALTER TABLE "ESSH"."T_SYS_DICTIONARYTYPE" ADD FOREIGN KEY ("GROUP_CODE") REFERENCES "ESSH"."T_SYS_DICTIONARYTYPE" ("CODE");

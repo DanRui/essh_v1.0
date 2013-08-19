@@ -94,7 +94,7 @@ public class ResourceAction extends StrutsAction<Resource> {
 	public void tree() throws Exception {
 		List<TreeNode> treeNodes = Lists.newArrayList();
 		try {
-			treeNodes = resourceManager.getTree();
+			treeNodes = resourceManager.getResourceTree();
 			Struts2Utils.renderJson(treeNodes);
 		} catch (Exception e) {
 			throw e;
@@ -140,7 +140,7 @@ public class ResourceAction extends StrutsAction<Resource> {
 		try {
 			List<TreeNode> titleList = Lists.newArrayList();
 			List<Resource> list = resourceManager.getByParentId(null,
-					StatusState.normal.getValue(),null);
+					StatusState.normal.getValue());
 			for (Resource m : list) {
 				node = new TreeNode(m.getId() + "", m.getName(), m.getIco());
 				treeNodes.add(node);

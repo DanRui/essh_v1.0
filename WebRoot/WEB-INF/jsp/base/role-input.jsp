@@ -42,9 +42,9 @@
 </script>
 <div>
 	<form id="role_form" method="post" novalidate>
-	    <input type="hidden"  name="id"></input> 
+	    <input type="hidden"  name="id" />
 	    <!-- 用户版本控制字段 version -->
-        <input type="hidden" id="version" name="version" ></input>
+        <input type="hidden" id="version" name="version" />
         <div>
 			<label>关联资源:</label>
 		    <input id="resourceIds" name="resourceIds"  style="width:200px" />
@@ -53,7 +53,6 @@
 			<label>角色名称:</label>
 		    <input name="name" type="text" class="easyui-validatebox"
 				maxLength="100" data-options="required:true,missingMessage:'请输入角色名称.',validType:['minLength[1]','legalInput']">
-		    <span style="color: red">*</span>
 		</div>
 		<div>
 			<label >描述:</label>

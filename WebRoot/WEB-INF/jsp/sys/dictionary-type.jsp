@@ -2,254 +2,212 @@
 <%@ include file="/common/taglibs.jsp"%>
 <%@ include file="/common/meta.jsp"%>
 <script type="text/javascript">
-var dictionaryType_datagrid;
-var editRow = undefined;
+var dictionaryType_treegrid;
+var dictionaryType_form;
+var dictionaryType_dialog;
 var dictionaryType_search_form;
 $(function() {  
-	dictionaryType_search_form = $('#dictionaryType_search_form').form();
-	
     //数据列表
-    dictionaryType_datagrid = $('#dictionaryType_datagrid').datagrid({  
-	    url:'${ctx}/sys/dictionary-type!datagrid.action',  
-	    pagination:true,//底部分页
-	    pagePosition:'bottom',//'top','bottom','both'.
+    dictionaryType_treegrid = $('#dictionaryType_treegrid').treegrid({
+	    url:'${ctx}/sys/dictionary-type!treegrid.action',
 	    fitColumns:true,//自适应列宽
 	    striped:true,//显示条纹
 	    pageSize:20,//每页记录数
 	    singleSelect:false,//单选模式
 	    rownumbers:true,//显示行数
-	    checkbox:true,
 		nowrap : false,
 		border : false,
+        singleSelect:true,
         remoteSort:false,//是否通过远程服务器对数据排序
 		sortName:'orderNo',//默认排序字段
 		sortOrder:'asc',//默认排序方式 'desc' 'asc'
-		idField : 'id',
+		idField : 'code',
+        treeField:"name",
 		fitColumns:false,//自适应宽度
-		columns:[ [ {
-				field : 'ck',
-				checkbox : true,
-				width : 60
-			}, {
-				field : 'id',
-				title : '主键',
-				hidden : true,
-				sortable:true,
-				align : 'right',
-				width : 80
-			}, {
-				field : 'name',
-				title : '类型名称',
-				width : 260,
-				editor : {
-					type : 'validatebox',
-					options : {
-						required : true,
-						validType:['minLength[1]','legalInput'],
-						missingMessage:'请输入类型名称！'
-					}
-				}
-			}, {
-				field : 'code',
-				title : '类型编码',
-				align : 'right',
-				width : 100,
-				sortable:true,
-				editor : {
-					type : 'validatebox',
-					options : {
-						required : true,
-						validType:['minLength[1]','alphanum'],
-						missingMessage:'请输入类型编码！'
-					}
-				}
-			}, {
-				field : 'orderNo',
-				title : '排序',
-				align : 'right',
-				width : 80,
-				sortable:true,
-				editor : {
-					type : 'numberspinner'
-				}
-			} ] ],
-			onDblClickRow : function(rowIndex, rowData) {
-				if (editRow != undefined) {
-					eu.showMsg("请先保存正在编辑的数据！");
-					//结束编辑 自动保存
-					//dictionaryType_datagrid.datagrid('endEdit', editRow);
-				}else{
-					$(this).datagrid('beginEdit', rowIndex);
-					editRow = rowIndex;
-					$(this).datagrid('unselectAll');
-				}
-			},
-			onAfterEdit : function(rowIndex, rowData, changes) {
-				$.messager.progress({
-					title : '提示信息！',
-					text : '数据处理中，请稍后....'
-				});
-				var inserted = dictionaryType_datagrid.datagrid('getChanges', 'inserted');
-				var updated = dictionaryType_datagrid.datagrid('getChanges', 'updated');
-				if (inserted.length < 1 && updated.length < 1) {
-					editRow = undefined;
-					$(this).datagrid('unselectAll');
-					return;
-				}
-				$.post('${ctx}/sys/dictionary-type!save.action',rowData,
-						function(data) {
-					$.messager.progress('close');
-					if (data.code == 1) {
-						dictionaryType_datagrid.datagrid('acceptChanges');
-						editRow = undefined;
-						editRowData = undefined;
-						dictionaryType_datagrid.datagrid('reload');
-						eu.showMsg(data.msg);
-					}else if((data.code == 2)){//警告信息
-						$.messager.alert('提示信息！', data.msg, 'warning',function(){
-							dictionaryType_datagrid.datagrid('beginEdit', editRow);
-							if(data.obj){
-								var validateEdit = dictionaryType_datagrid.datagrid('getEditor',{index:rowIndex,field:data.obj});
-								$(validateEdit.target).focus();
-							}
-						});
-					} else {
-						dictionaryType_datagrid.datagrid('rejectChanges');
-						dictionaryType_datagrid.datagrid('beginEdit', editRow);
-						eu.showAlertMsg(data.msg, 'error');
-					}
-			    }, 'json');
-			},
-			onLoadSuccess:function(){
-				$(this).datagrid('clearSelections');//取消所有的已选择项
-		    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
-				editRow = undefined;
-			},
-			onRowContextMenu : function(e, rowIndex, rowData) {
-				e.preventDefault();
-				$(this).datagrid('unselectAll');
-				$(this).datagrid('selectRow', rowIndex);
-				$('#dictionaryType_menu').menu('show', {
-					left : e.pageX,
-					top : e.pageY
-				});
-			}
+		columns:[ [
+            {field : 'id',title : '主键',hidden : true,sortable:true,align : 'right',width : 80},
+            {field : 'name',title : '名称', width : 150},
+            {field : 'code',title : '类型编码',align : 'right',width : 100,sortable:true},
+            {field : 'orderNo',title : '排序',align : 'right',width : 80,sortable:true } ,
+            {field : 'remark', title : '备注',width : 200,sortable:true}
+        ] ],
+        onContextMenu : function(e, row) {
+            e.preventDefault();
+            $(this).treegrid('select', row.code);
+            if(row._parentId){ //仅编辑或删除
+                $('#dictionaryType_menu').menu('show', {
+                    left : e.pageX,
+                    top : e.pageY
+                });
+            } else{ //增加子项、编辑或删除
+                $('#dictionaryType_group_menu').menu('show', {
+                    left : e.pageX,
+                    top : e.pageY
+                });
+            }
+
+        }
 		});
+
+    loadGroupDictionaryType();
 });
-	//设置排序默认值
-	function setSortValue(target) {
-		$.get('${ctx}/sys/dictionary-type!maxSort.action', function(data) {
-			if (data.code == 1) {
-				$(target).numberbox({value:data.obj + 1});
-				$(target).numberbox('validate');
-			}
-		}, 'json');
-	}
 
-	//新增
-	function add() {
-		if (editRow != undefined) {
-			//eu.showMsg("请先保存正在编辑的数据！");
-			dictionaryType_datagrid.datagrid('endEdit', editRow);
-		}else{
-			cancelSelect();
-			var row = {id : ''};
-			dictionaryType_datagrid.datagrid('appendRow', row);
-			editRow = dictionaryType_datagrid.datagrid('getRows').length - 1;
-			dictionaryType_datagrid.datagrid('selectRow', editRow);
-			dictionaryType_datagrid.datagrid('beginEdit', editRow);
-			var rowIndex = dictionaryType_datagrid.datagrid('getRowIndex',row);//返回指定行的索引
-			var sortEdit = dictionaryType_datagrid.datagrid('getEditor',{index:rowIndex,field:'orderNo'});
-			setSortValue(sortEdit.target);
-		}
-	}
+    //设置排序默认值
+    function setSortValue() {
+        $.get('${ctx}/sys/dictionary-type!maxSort.action', function(data) {
+            if (data.code == 1) {
+                $('#orderNo').numberspinner('setValue',data.obj+1);
+            }
+        }, 'json');
+    }
 
-	//编辑
-	function edit() {
-		//选中的所有行
-		var rows = dictionaryType_datagrid.datagrid('getSelections');
-		//选中的行（第一次选择的行）
-		var row = dictionaryType_datagrid.datagrid('getSelected');
-		if (row){
-			if(rows.length>1){
-				row = rows[rows.length-1];
-				eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
-			}
-			if (editRow != undefined) {
-				eu.showMsg("请先保存正在编辑的数据！");
-				//结束编辑 自动保存
-				//dictionaryType_datagrid.datagrid('endEdit', editRow);
-			} else {
-				editRow = dictionaryType_datagrid.datagrid('getRowIndex', row);
-				dictionaryType_datagrid.datagrid('beginEdit', editRow);
-				dictionaryType_datagrid.datagrid('unselectAll');
-			}
-		}else  {
-			if(editRow != undefined){
-				eu.showMsg("请先保存正在编辑的数据！");
-			} else{
-			    eu.showMsg("请选择要操作的对象！");
-			}
-		}
-	}
+    function formInit(){
+        dictionaryType_form = $('#dictionaryType_form').form({
+            url: '${ctx}/sys/dictionary-type!save.action',
+            onSubmit: function(param){
+                $.messager.progress({
+                    title : '提示信息！',
+                    text : '数据处理中，请稍后....'
+                });
+                var isValid = $(this).form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                return isValid;
+            },
+            success: function(data){
+                $.messager.progress('close');
+                var json = $.parseJSON(data);
+                if (json.code ==1){
+                    dictionaryType_dialog.dialog('destroy');//销毁对话框
+                    dictionaryType_treegrid.treegrid('reload');//重新加载列表数据
+                    eu.showMsg(json.msg);//操作结果提示
+                }else if(json.code == 2){
+                    $.messager.alert('提示信息！', json.msg, 'warning',function(){
+                        if(json.obj){
+                            $('#dictionaryType_form input[name="'+json.obj+'"]').focus();
+                        }
+                    });
+                }else {
+                    eu.showAlertMsg(json.msg,'error');
+                }
+            },
+            onLoadSuccess:function(data){
+                if(data && data._parentId){
+                    //$('#_parentId')是弹出-input页面的对象 代表所属分组
+                    $('#_parentId').combobox('setValue',data._parentId);
+                }
+                //如果存在子节点 即为分组节点
+                if(data.children){
+                    //将类别分组设置为只读 $('#_parentId')是弹出页面的对象
+                    $('#_parentId').combobox('disable',true);
+                }
+            }
+        });
+    }
+    //显示弹出窗口 新增：row为空 编辑:row有值
+    function showDialog(row){
+        //弹出对话窗口
+        dictionaryType_dialog = $('<div/>').dialog({
+            title:'字典类型详细信息',
+            width : 500,
+            height : 360,
+            modal : true,
+            maximizable:true,
+            href : '${ctx}/sys/dictionary-type!input.action',
+            buttons : [ {
+                text : '保存',
+                iconCls : 'icon-save',
+                handler : function() {
+                    dictionaryType_form.submit();
+                }
+            },{
+                text : '关闭',
+                iconCls : 'icon-cancel',
+                handler : function() {
+                    dictionaryType_dialog.dialog('destroy');
+                }
+            }],
+            onClose : function() {
+                $(this).dialog('destroy');
+            },
+            onLoad:function(){
+                formInit();
+                if(row){
+                    dictionaryType_form.form('load', row);
+                } else{
+                    setSortValue();
+                    var selectedNode = dictionaryType_treegrid.treegrid('getSelected');
+                    if(selectedNode){
+                        var initFormData = {};
+                        if(selectedNode._parentId){  //选中子项点击新增
+                            var groupNode = dictionaryType_treegrid.treegrid('getParent',selectedNode.code);
+                            initFormData = {'groupDictionaryTypeCode':[selectedNode._parentId],'code':groupNode.code};
+                        }else{   //选分组点击新增
+                            initFormData = {'groupDictionaryTypeCode':[selectedNode.code],'code':selectedNode.code};
+                        }
+                        dictionaryType_form.form('load',initFormData );
+                    }
+                }
+            }
+        }).dialog('open');
 
-	//保存
-	function save(rowData) {
-		if (editRow != undefined) {
-			//结束编辑 自动保存
-			dictionaryType_datagrid.datagrid('endEdit', editRow);
-		} else {
-			eu.showMsg("请选择要操作的对象！");
-		}
-	}
-	
-	//取消编辑
-	function cancelEdit() {
-		cancelSelect();
-		dictionaryType_datagrid.datagrid('rejectChanges');
-		editRow = undefined;
-		editRowData = undefined;
-	}
-	//取消选择
-	function cancelSelect() {
-		dictionaryType_datagrid.datagrid('unselectAll');
-	}
+    }
 
-	//删除
-	function del() {
-		var rows = dictionaryType_datagrid.datagrid('getSelections');
-		if (rows.length > 0) {
-			if(editRow != undefined){
-				eu.showMsg("请先保存正在编辑的数据！");
-				return;
-			}
-			$.messager.confirm('确认提示！', '您确定要删除当前选中的所有行？', function(r) {
-				if (r) {
-					var ids = new Object();
-					for(var i=0;i<rows.length;i++){
-						ids[i] = rows[i].id;
-					}
-					$.post('${ctx}/sys/dictionary-type!remove.action',{ids : ids},
-							function(data) {
-								if (data.code == 1) {
-									dictionaryType_datagrid.datagrid('clearSelections');//取消所有的已选择项
-									dictionaryType_datagrid.datagrid('load');//重新加载列表数据
-									eu.showMsg(data.msg);//操作结果提示
-								} else {
-									eu.showAlertMsg(data.msg,'error');
-								}
-				    }, 'json');
-				}
-			});
-		} else {
-			eu.showMsg("请选择要操作的对象！");
-		}
-	}
+    //编辑
+    function edit(){
+        //选中的所有行
+        var rows = dictionaryType_treegrid.treegrid('getSelections');
+        //选中的行（第一次选择的行）
+        var row = dictionaryType_treegrid.treegrid('getSelected');
+        if (row){
+            if(rows.length>1){
+                row = rows[rows.length-1];
+                eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+            }
+            showDialog(row);
+        }else{
+            eu.showMsg("请选择要操作的对象！");
+        }
+    }
 
-	//搜索
-	function search() {
-		dictionaryType_datagrid.datagrid('load',$.serializeObject(dictionaryType_search_form));
-	}
+    //删除
+    function del(){
+        var rows = dictionaryType_treegrid.treegrid('getSelections');
+
+        if(rows.length >0){
+            $.messager.confirm('确认提示！','您确定要删除选中的所有行？',function(r){
+                if (r){
+                    var ids = new Object();
+                    for(var i=0;i<rows.length;i++){
+                        ids[i] = rows[i].id;
+                    }
+                    $.post('${ctx}/sys/dictionary-type!remove.action',{ids:ids},function(data){
+                        if (data.code==1){
+                            dictionaryType_treegrid.treegrid('load');	// reload the user data
+                            eu.showMsg(data.msg);//操作结果提示
+                        } else {
+                            eu.showAlertMsg(data.msg,'error');
+                        }
+                    },'json');
+
+                }
+            });
+        }else{
+            eu.showMsg("请选择要操作的对象！");
+        }
+    }
+
+    function loadGroupDictionaryType(){
+        $('#filter_EQS_groupDictionaryType__code').combobox({
+            url:'${ctx}/sys/dictionary-type!group_combobox.action?selectType=all',
+            multiple:false,//是否可多选
+            editable:false,//是否可编辑
+            width:120,
+            valueField:'value',
+            displayField:'text'
+        });
+    }
 </script>
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
 	
@@ -258,36 +216,34 @@ $(function() {
 		style="padding: 0px; height: 100%;width:100%; overflow-y: hidden;">
 		
 		<%-- 列表右键 --%>
-		<div id="dictionaryType_menu" class="easyui-menu" style="width:120px;display: none;">
-			<div onclick="add();" data-options="iconCls:'icon-add'">新增</div>
+		<div id="dictionaryType_group_menu" class="easyui-menu" style="width:120px;display: none;">
+            <div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
 			<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
 			<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
 		</div>
+        <div id="dictionaryType_menu" class="easyui-menu" style="width:120px;display: none;">
+            <div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
+            <div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
+        </div>
 		
 	   <%-- 工具栏 操作按钮 --%>
 	   <div id="dictionaryType_toolbar">
 			<div style="margin-bottom:5px">    
-		       <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>
+		       <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
 				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
 				<span class="toolbar-btn-separator"></span>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a> 
-				<span class="toolbar-btn-separator"></span>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="save()">保存</a> 
-				<span class="toolbar-btn-separator"></span>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelEdit()">取消编辑</a> 
-				<span class="toolbar-btn-separator"></span>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelSelect()">取消选中</a> 
-		    </div>    
-		    <div>    
+		    </div>
+		    <%--<div>
 			    <form id="dictionaryType_search_form" style="padding: 0px;">
-				          类型名称或编码: <input type="text" id="filter_LIKES_name_OR_code" name="filter_LIKES_name_OR_code" placeholder="请输入类型名称或编码..." maxLength="25" style="width: 160px"></input> 
+				    类型名称或编码: <input type="text" id="filter_LIKES_name_OR_code" name="filter_LIKES_name_OR_code" placeholder="请输入类型名称或编码..." maxLength="25" style="width: 160px"></input>
 					<a href="javascript:search();" class="easyui-linkbutton"
-							iconCls="icon-search" plain="true" >查 询</a>  
-				</form>  
-		    </div>  
+							iconCls="icon-search" plain="true" >查 询</a>
+                </form>
+		    </div>--%>
 		</div>
-	   <table id="dictionaryType_datagrid" toolbar="#dictionaryType_toolbar" fit="true"></table>
+	   <table id="dictionaryType_treegrid" toolbar="#dictionaryType_toolbar" fit="true"></table>
 
 	</div>
 </div>

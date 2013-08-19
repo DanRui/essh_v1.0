@@ -2,7 +2,10 @@ package com.eryansky.service.sys;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.eryansky.entity.sys.DictionaryType;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ import com.eryansky.utils.CacheConstants;
 public class DictionaryManager extends EntityManager<Dictionary, Long> {
 
 	private HibernateDao<Dictionary, Long> dictionaryDao;
+    @Autowired
+    private DictionaryTypeManager dictionaryTypeManager;
 
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
@@ -48,29 +53,41 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	/**
 	 * 新增或修改 保存对象.
 	 */
-    @CacheEvict(value = { CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE,
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE,
+            CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE,
             CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE},allEntries = true)
 	public void saveOrUpdate(Dictionary entity) throws DaoException, SystemException,
 			ServiceException {
-		Assert.notNull(entity, "参数[entity]为空!");
+        logger.debug("清空缓存:{}", CacheConstants.DICTIONARYS_BY_TYPE_CACHE
+                +","+CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE
+                +","+CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE);
+        Assert.notNull(entity, "参数[entity]为空!");
 		dictionaryDao.saveOrUpdate(entity);
 	}
 	
 	/**
 	 * 新增或修改 保存对象.
 	 */
-    @CacheEvict(value = { CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE,
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE,
+            CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE,
             CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE},allEntries = true)
 	public void merge(Dictionary entity) throws DaoException, SystemException,
 			ServiceException {
-		Assert.notNull(entity, "参数[entity]为空!");
+        logger.debug("清空缓存:{}", CacheConstants.DICTIONARYS_BY_TYPE_CACHE
+                +","+CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE
+                +","+CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE);
+        Assert.notNull(entity, "参数[entity]为空!");
 		dictionaryDao.merge(entity);
 	}
 
-    @CacheEvict(value = { CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE,
+    @CacheEvict(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE,
+            CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE,
             CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE},allEntries = true)
     @Override
     public void saveEntity(Dictionary entity) throws DaoException, SystemException, ServiceException {
+        logger.debug("清空缓存:{}", CacheConstants.DICTIONARYS_BY_TYPE_CACHE
+                +","+CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE
+                +","+CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE);
         super.saveEntity(entity);
     }
 
@@ -112,14 +129,13 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
-    @Cacheable(value = { CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE})
+    @Cacheable(value = { CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE} )
 	@SuppressWarnings("unchecked")
 	public List<TreeNode> getByDictionaryTypeCode(Dictionary entity,
 			String dictionaryTypeCode, Long id, boolean isCascade)
 			throws DaoException, SystemException, ServiceException {
-		Assert.notNull(entity, "参数[entity]为空!");
-		logger.debug("缓存:{}", CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE);
-		List<Dictionary> list = Lists.newArrayList();
+        Assert.notNull(entity, "参数[entity]为空!");
+        List<Dictionary> list = Lists.newArrayList();
 		List<TreeNode> treeNodes = Lists.newArrayList();
 		if (StringUtils.isBlank(dictionaryTypeCode)) {
 			return treeNodes;
@@ -149,6 +165,7 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 			}
 
 		}
+        logger.debug("缓存:{}", CacheConstants.DICTIONARYS_CONBOTREE_BY_TYPE_CACHE);
 		return treeNodes;
 	}
 
@@ -208,20 +225,22 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 	/**
 	 * 根据数据字典类型编码得到数据字典列表.
 	 * 
-	 * @param dictionaryTypeCode
+	 * @param dictionaryTypeCode 字典分类编码
 	 * @return
 	 * @throws DaoException
 	 *             ,SystemException,ServiceException
 	 */
+    @Cacheable(value = { CacheConstants.DICTIONARYS_BY_TYPE_CACHE})
 	@SuppressWarnings("unchecked")
 	public List<Dictionary> getDictionarysByDictionaryTypeCode(
 			String dictionaryTypeCode) throws DaoException, SystemException,
 			ServiceException {
-		Assert.notNull(dictionaryTypeCode, "参数[dictionaryTypeCode]为空!");
-		List<Dictionary> list = dictionaryDao.createQuery(
+        Assert.notNull(dictionaryTypeCode, "参数[dictionaryTypeCode]为空!");
+        List<Dictionary> list = dictionaryDao.createQuery(
 				"from Dictionary d where d.dictionaryType.code = ? ",
 				new Object[] { dictionaryTypeCode }).list();
-		return list;
+        logger.debug("缓存:{}", CacheConstants.DICTIONARYS_BY_TYPE_CACHE+" 参数：dictionaryTypeCode="+dictionaryTypeCode);
+        return list;
 	}
 
 	/**
@@ -237,14 +256,14 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
     @Cacheable(value = { CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE})
 	public List<Combobox> getByDictionaryTypeCode(String dictionaryTypeCode)
 			throws DaoException, SystemException, ServiceException {
-        logger.debug("缓存:{}", CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE);
 		List<Dictionary> list = getDictionarysByDictionaryTypeCode(dictionaryTypeCode);
-		List<Combobox> cList = Lists.newArrayList();
-		for (Dictionary d : list) {
-			Combobox c = new Combobox(d.getValue(), d.getName());
-			cList.add(c);
-		}
-		return cList;
+        List<Combobox> cList = Lists.newArrayList();
+        for (Dictionary d : list) {
+            Combobox c = new Combobox(d.getValue(), d.getName());
+            cList.add(c);
+        }
+        logger.debug("缓存:{}", CacheConstants.DICTIONARYS_CONBOBOX_BY_TYPE_CACHE+" 参数：dictionaryTypeCode="+dictionaryTypeCode);
+        return cList;
 
 	}
 
@@ -299,4 +318,23 @@ public class DictionaryManager extends EntityManager<Dictionary, Long> {
 		}
 		return max;
 	}
+
+    /**
+     * 根据字典类型编码 查找
+     * @param groupDictionaryTypeCode 字典分类分组编码
+     * @return Map<String, List<Dictionary>> key:分类编码（即子类编码） value: 数据字典项集合List<Dictionary>
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public Map<String, List<Dictionary>> getDictionaryTypesByGroupDictionaryTypeCode(String groupDictionaryTypeCode)
+            throws DaoException, SystemException,ServiceException {
+        Map<String, List<Dictionary>> map = Maps.newHashMap();
+        DictionaryType dictionaryType = dictionaryTypeManager.getByCode(groupDictionaryTypeCode);
+        for (DictionaryType subDictionaryType : dictionaryType.getSubDictionaryTypes()) {
+            List<Dictionary> dictionaries = this.getDictionarysByDictionaryTypeCode(subDictionaryType.getCode());
+            map.put(subDictionaryType.getCode(), dictionaries);
+        }
+        return map;
+    }
 }

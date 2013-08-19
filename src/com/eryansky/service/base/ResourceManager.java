@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.entity.base.Resource;
+import com.eryansky.entity.base.state.ResourceState;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -60,10 +61,14 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 	 * 保存或修改.
 	 */
 	//清除缓存
-	@CacheEvict(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE,
-			CacheConstants.RESOURCE_TREE_CACHE,CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE},allEntries = true)
+	@CacheEvict(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE,
+            CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE,
+            CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},allEntries = true)
 	public void saveOrUpdate(Resource entity) throws DaoException, SystemException,
 			ServiceException {
+        logger.debug("清空缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE
+                +","+CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE);
 		Assert.notNull(entity, "参数[entity]为空!");
 		resourceDao.saveOrUpdate(entity);
 	}
@@ -72,18 +77,26 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 	 * 保存或修改.
 	 */
 	//清除缓存
-	@CacheEvict(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE,
-			CacheConstants.RESOURCE_TREE_CACHE,CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE,
+            CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE,
+            CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},allEntries = true)
 	public void merge(Resource entity) throws DaoException, SystemException,
 			ServiceException {
+        logger.debug("清空缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE
+                +","+CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE);
 		Assert.notNull(entity, "参数[entity]为空!");
 		resourceDao.merge(entity);
 	}
 
-    @CacheEvict(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE,
-            CacheConstants.RESOURCE_TREE_CACHE,CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE,
+            CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE,
+            CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},allEntries = true)
     @Override
     public void saveEntity(Resource entity) throws DaoException, SystemException, ServiceException {
+        logger.debug("清空缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE
+                +","+CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE);
         super.saveEntity(entity);
     }
 
@@ -91,14 +104,18 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 	 * 自定义删除方法.
 	 */
 	//清除缓存
-	@CacheEvict(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE,
-			CacheConstants.RESOURCE_TREE_CACHE,CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE,
+            CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE,
+            CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException, SystemException,
 			ServiceException {
+        logger.debug("清空缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE
+                +","+CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE);
 		if(!Collections3.isEmpty(ids)){
 			for (Long id:ids) {
 				List<Resource> subResources = getByParentId(id,
-						StatusState.normal.getValue(),null);
+						StatusState.normal.getValue());
 				if (subResources.isEmpty() == false) {// 如果存在子资源 则将所有子资源一起删除
 					for (Resource m : subResources) {
 						resourceDao.delete(m);
@@ -117,7 +134,176 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 		
 	}
 
-	/**
+    /**
+     * 用户导航菜单(排除非菜单资源).
+     * @param userId 用户ID
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    @Cacheable(value = { CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},key = "#userId +'getNavMenuTreeByUserId'")
+    public List<TreeNode> getNavMenuTreeByUserId(Long userId) throws DaoException,
+            SystemException, ServiceException {
+        List<TreeNode> menuNodes = this.getResourceTreeByUserId(userId);
+        Iterator<TreeNode> iterator = menuNodes.iterator();
+        while (iterator.hasNext()){
+            TreeNode parentNode = iterator.next();
+            if(parentNode.getAttributes().get("type") == ResourceState.menu.getValue()) {
+                List<TreeNode> childrenNodes = parentNode.getChildren();
+                Iterator<TreeNode> childrenIterator = childrenNodes.iterator();
+                while(childrenIterator.hasNext()){
+                    TreeNode childrenNode = childrenIterator.next();
+                    if(childrenNode.getAttributes().get("type") != ResourceState.menu.getValue()) {
+                        childrenIterator.remove();
+                    }
+                }
+            }else{
+                iterator.remove();
+            }
+        }
+        logger.debug("缓存:{}", CacheConstants.RESOURCE_USER_MENU_TREE_CACHE +" 参数：userId="+userId);
+        return menuNodes;
+    }
+    /**
+     * 根据用户ID得到导航栏资源（权限控制）.
+     * @param userId 用户ID
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    //使用缓存
+    @Cacheable(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},key = "#userId +'getResourceTreeByUserId'")
+    public List<TreeNode> getResourceTreeByUserId(Long userId) throws DaoException,
+            SystemException, ServiceException {
+        // Assert.notNull(userId, "参数[userId]为空!");
+        List<TreeNode> treeNodes = Lists.newArrayList();
+        List<Resource> parentList = new ArrayList<Resource>();// 顶级资源
+        List<Resource> subList = new ArrayList<Resource>();// 子级资源集合
+        User user = userManager.loadById(userId);
+        User superUser = userManager.getSuperUser();
+        if (user != null && superUser != null
+                && user.getId() == superUser.getId()) {// 超级用户
+            logger.debug("缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE +" 参数：userId="+userId);
+            return this.getResourceTree();
+        } else if (user != null) {
+            List<Role> roles = user.getRoles();
+            for (Role r : roles) {
+                List<Resource> resources = r.getResources();
+                for (Resource m : resources) {
+                    if (m.getParentResource() == null) {
+                        // 去除顶级重复资源
+                        if (!parentList.contains(m)) {
+                            //过滤禁用的资源
+                            if(m.getStatus() == StatusState.normal.getValue()){
+                                parentList.add(m);
+                            }
+                        }
+                    } else {
+                        //过滤禁用的资源
+                        if(m.getStatus() == StatusState.normal.getValue()){
+                            subList.add(m);
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < parentList.size(); i++) {
+                Resource parenResource = parentList.get(i);
+                TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
+                        parenResource.getName(), parenResource.getIco());
+                // 自定义属性 url
+                Map<String, Object> attributes1 = Maps.newHashMap();
+                attributes1.put("url", parenResource.getUrl());
+                attributes1.put("markUrl", parenResource.getMarkUrl());
+                attributes1.put("code", parenResource.getCode());
+                attributes1.put("type",parenResource.getType());
+                treeNode1.setAttributes(attributes1);
+                treeNodes.add(treeNode1);
+                List<Resource> subList2 = new ArrayList<Resource>();
+                for (Resource mm : subList) {
+                    if (mm.getParentResource().getId() == parenResource.getId()) {
+                        // 去除二级重复资源
+                        if (!subList2.contains(mm)) {
+                            subList2.add(mm);
+                        }
+                    }
+                }
+                for (int j = 0; j < subList2.size(); j++) {
+                    Resource subResource = subList2.get(j);
+                    TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
+                            subResource.getName(), subResource.getIco());
+                    // 自定义属性 url
+                    Map<String, Object> attributes = Maps.newHashMap();
+                    attributes.put("url", subResource.getUrl());
+                    attributes.put("markUrl", subResource.getMarkUrl());
+                    attributes.put("code", subResource.getCode());
+                    attributes.put("type",subResource.getType());
+                    treeNode2.setAttributes(attributes);
+                    // 将节点赋值到顶级节点 作为父级的子节点
+                    treeNode1.addChild(treeNode2);
+                }
+            }
+        } else {
+            throw new SystemException("非法用户.");
+        }
+        logger.debug("缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE +" 参数：userId="+userId);
+        return treeNodes;
+    }
+
+
+    /**
+     * 获取所有导航资源（无权限限制）.
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public List<TreeNode> getResourceTree() throws DaoException, SystemException,
+            ServiceException {
+        List<TreeNode> treeNodes = Lists.newArrayList();
+        // 顶级资源
+        List<Resource> parentList = getByParentId(null,
+                StatusState.normal.getValue());
+        for (int i = 0; i < parentList.size(); i++) {
+            Resource parenResource = parentList.get(i);
+            TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
+                    parenResource.getName(), parenResource.getIco());
+            // 自定义属性 url
+            Map<String, Object> attributes1 = Maps.newHashMap();
+//            attributes1.put("url", parenResource.getUrl());
+            attributes1.put("markUrl", parenResource.getMarkUrl());
+            attributes1.put("code", parenResource.getCode());
+            attributes1.put("type",parenResource.getType());
+            treeNode1.setAttributes(attributes1);
+            treeNodes.add(treeNode1);
+
+            // 第二级
+            List<Resource> subList = getByParentId(parenResource.getId(),
+                    StatusState.normal.getValue());
+            for (int j = 0; j < subList.size(); j++) {
+                Resource subResource = subList.get(j);
+                TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
+                        subResource.getName(), subResource.getIco());
+                // 自定义属性 url
+                Map<String, Object> attributes2 = Maps.newHashMap();
+                attributes2.put("url", subResource.getUrl());
+                attributes2.put("markUrl", subResource.getMarkUrl());
+                attributes2.put("code", subResource.getCode());
+                attributes2.put("type",subResource.getType());
+                treeNode2.setAttributes(attributes2);
+                // 将节点赋值到顶级节点 作为父级的子节点
+                treeNode1.addChild(treeNode2);
+            }
+        }
+        return treeNodes;
+
+    }
+
+
+
+    /**
 	 * 
 	 * 根据name得到Resource.
 	 * 
@@ -167,15 +353,13 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 	 * @param status 
 	 *            数据状态 @see com.eryansky.entity.base.state.StatusState
 	 *            <br>status传null则使用默认值 默认值:StatusState.normal.getValue()
-     * @param type
-     *            资源状态 @see com.eryansky.entity.base.state.ResourceState
 	 * @return
 	 * @throws DaoException
 	 * @throws SystemException
 	 * @throws ServiceException
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Resource> getByParentId(Long parentId, Integer status,Integer type)
+	public List<Resource> getByParentId(Long parentId, Integer status)
 			throws DaoException, SystemException, ServiceException {
 		//默认值 正常
 		if(status == null){
@@ -184,10 +368,6 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 		StringBuilder sb = new StringBuilder();
 		Object[] objs;
 		sb.append("from Resource r where r.status = ?  ");
-        if(type != null){
-            sb.append(" and r.type = ")
-            .append(type);
-        };
         sb.append(" and r.parentResource.id ");
         if (parentId == null) {
 			sb.append(" is null ");
@@ -202,156 +382,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 		return list;
 	}
 
-	/**
-	 * 获取所有导航资源（无权限限制）.
-	 * @return
-	 * @throws DaoException
-	 * @throws SystemException
-	 * @throws ServiceException
-	 */
-	public List<TreeNode> getNavTree(Integer type) throws DaoException, SystemException,
-			ServiceException {
-		List<TreeNode> treeNodes = Lists.newArrayList();
-		// 顶级资源
-		List<Resource> parentList = getByParentId(null,
-				StatusState.normal.getValue(),type);
-		for (int i = 0; i < parentList.size(); i++) {
-			Resource parenResource = parentList.get(i);
-			TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
-					parenResource.getName(), parenResource.getIco());
-            // 自定义属性 url
-            Map<String, Object> attributes1 = Maps.newHashMap();
-//            attributes1.put("url", parenResource.getUrl());
-            attributes1.put("markUrl", parenResource.getMarkUrl());
-            attributes1.put("code", parenResource.getCode());
-            treeNode1.setAttributes(attributes1);
-			treeNodes.add(treeNode1);
 
-			// 第二级
-			List<Resource> subList = getByParentId(parenResource.getId(),
-					StatusState.normal.getValue(),type);
-			for (int j = 0; j < subList.size(); j++) {
-				Resource subResource = subList.get(j);
-				TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
-						subResource.getName(), subResource.getIco());
-				// 自定义属性 url
-				Map<String, Object> attributes2 = Maps.newHashMap();
-				attributes2.put("url", subResource.getUrl());
-                attributes2.put("markUrl", subResource.getMarkUrl());
-                attributes1.put("code", parenResource.getCode());
-				treeNode2.setAttributes(attributes2);
-				// 将节点赋值到顶级节点 作为父级的子节点
-				treeNode1.addChild(treeNode2);
-			}
-		}
-		return treeNodes;
-
-	}
-
-	/**
-	 * 根据用户ID得到导航栏资源（权限控制）.
-	 * @param userId 用户ID
-	 * @return
-	 * @throws DaoException
-	 * @throws SystemException
-	 * @throws ServiceException
-	 */
-	//使用缓存
-	@Cacheable(value = { CacheConstants.RESOURCE_NAV_TREE_CACHE})
-	public List<TreeNode> getNavTree(Long userId,Integer type) throws DaoException,
-			SystemException, ServiceException {
-		// Assert.notNull(userId, "参数[userId]为空!");
-		logger.debug("缓存:{}", CacheConstants.RESOURCE_NAV_TREE_CACHE);
-		List<TreeNode> treeNodes = Lists.newArrayList();
-		List<Resource> parentList = new ArrayList<Resource>();// 顶级资源
-		List<Resource> subList = new ArrayList<Resource>();// 子级资源集合
-		User user = userManager.loadById(userId);
-		User superUser = userManager.getSuperUser();
-		if (user != null && superUser != null
-				&& user.getId() == superUser.getId()) {// 超级用户
-			return this.getNavTree(type);
-		} else if (user != null) {
-			List<Role> roles = user.getRoles();
-			for (Role r : roles) {
-				List<Resource> resources = r.getResources();
-				for (Resource m : resources) {
-					if (m.getParentResource() == null) {
-						// 去除顶级重复资源
-						if (!parentList.contains(m)) {
-							//过滤禁用的资源
-							if(m.getStatus() == StatusState.normal.getValue()){
-								parentList.add(m);
-							}
-						}
-					} else {
-						//过滤禁用的资源
-						if(m.getStatus() == StatusState.normal.getValue()){
-							subList.add(m);
-						}
-					}
-				}
-			}
-
-			for (int i = 0; i < parentList.size(); i++) {
-				Resource parenResource = parentList.get(i);
-				TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
-						parenResource.getName(), parenResource.getIco());
-                // 自定义属性 url
-                Map<String, Object> attributes1 = Maps.newHashMap();
-                attributes1.put("url", parenResource.getUrl());
-                attributes1.put("markUrl", parenResource.getMarkUrl());
-                attributes1.put("code", parenResource.getCode());
-                treeNode1.setAttributes(attributes1);
-                treeNodes.add(treeNode1);
-				List<Resource> subList2 = new ArrayList<Resource>();
-				for (Resource mm : subList) {
-					if (mm.getParentResource().getId() == parenResource.getId()) {
-						// 去除二级重复资源
-						if (!subList2.contains(mm)) {
-							subList2.add(mm);
-						}
-					}
-				}
-				for (int j = 0; j < subList2.size(); j++) {
-					Resource subResource = subList2.get(j);
-					TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
-							subResource.getName(), subResource.getIco());
-					// 自定义属性 url
-					Map<String, Object> attributes = Maps.newHashMap();
-					attributes.put("url", subResource.getUrl());
-                    attributes.put("markUrl", subResource.getMarkUrl());
-                    attributes1.put("code", parenResource.getCode());
-					treeNode2.setAttributes(attributes);
-					// 将节点赋值到顶级节点 作为父级的子节点
-					treeNode1.addChild(treeNode2);
-				}
-			}
-		} else {
-			throw new SystemException("非法用户.");
-		}
-		return treeNodes;
-	}
-
-    /**
-     * 根据用户ID查找用户拥有的URL权限
-     * @param userId   用户ID
-     * @return    List<String> 用户拥有的markUrl地址
-     */
-    public List<String> getUserAuthoritysByUserId(Long userId){
-        List<String> userAuthoritys = Lists.newArrayList();
-        List<TreeNode> treeNodes = this.getNavTree(userId,null);
-        for(TreeNode node : treeNodes){
-            Object obj = node.getAttributes().get("markUrl");
-            if(obj != null){
-                String markUrl = (String)obj ;
-                if(StringUtils.isNotBlank(markUrl)){
-                    userAuthoritys.add(markUrl);
-                }
-            }
-
-        }
-        return  userAuthoritys;
-    }
 
     /**
      * 根据请求地址判断用户是否有权访问该url
@@ -359,6 +390,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @param userId 用户ID
      * @return
      */
+    @Cacheable(value = {CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE},key = "#requestUrl + #userId +'isAuthority'")
     public boolean isAuthority(String requestUrl,Long userId){
         //如果是超级管理员 直接允许被授权
         if(userManager.getSuperUser().getId().equals(userId)) {
@@ -379,25 +411,24 @@ public class ResourceManager extends EntityManager<Resource, Long> {
             }
             return false;
         }
-
+        logger.debug("缓存:{}", CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE +"参数：requestUrl="+requestUrl+",userId="+userId);
         return true;
     }
+
 
     /**
      * 查找需要拦截的所有url规则
      * @return
      */
-    @Cacheable(value = { CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE})
     public List<String> getAllInterceptorUrls(){
-        logger.debug("缓存:{}", CacheConstants.RESOURCE_ALL_INTERCEPTOR_URLS_CACHE);
         List<String> markUrls = Lists.newArrayList();
         //查找所有资源
 //        List<Resource> resources = this.findBy("NEI_status",StatusState.delete.getValue());
         List<Resource> resources = this.getAll();
         for(Resource resource : resources){
-              if(StringUtils.isNotBlank(resource.getMarkUrl())){
-                  markUrls.add(resource.getMarkUrl());
-              }
+            if(StringUtils.isNotBlank(resource.getMarkUrl())){
+                markUrls.add(resource.getMarkUrl());
+            }
         }
         return markUrls;
     }
@@ -420,51 +451,40 @@ public class ResourceManager extends EntityManager<Resource, Long> {
         return false;
     }
 
-	/**
-	 * 返回所有Resource树列表(仅限两级).
-	 * @return
-	 * @throws DaoException
-	 * @throws SystemException
-	 * @throws ServiceException
-	 */
-	//缓存数据
-	@Cacheable(value = { CacheConstants.RESOURCE_TREE_CACHE})
-	public List<TreeNode> getTree() throws DaoException, SystemException,
-			ServiceException {
-		logger.debug("缓存:{}", CacheConstants.RESOURCE_TREE_CACHE);
-		List<TreeNode> treeNodes = Lists.newArrayList();
-		// 顶级资源
-		List<Resource> parentList = getByParentId(null,
-				StatusState.normal.getValue(),null);
-		for (int i = 0; i < parentList.size(); i++) {
-			Resource parenResource = parentList.get(i);
-			TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
-					parenResource.getName(), parenResource.getIco());
-			if(!Collections3.isEmpty(parenResource.getSubResources())){
-				treeNode1.setState(TreeNode.STATE_CLOASED);
-			}
-			
-			treeNodes.add(treeNode1);
 
-			// 第二级
-			List<Resource> subList = getByParentId(parenResource.getId(),
-					StatusState.normal.getValue(),null);
-			for (int j = 0; j < subList.size(); j++) {
-				Resource subResource = subList.get(j);
-				TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
-						subResource.getName(), subResource.getIco());
-				// 自定义属性 url
-				Map<String, Object> attributes = Maps.newHashMap();
-				attributes.put("url", subResource.getUrl());
-				treeNode2.setAttributes(attributes);
-				// 将节点赋值到顶级节点 作为父级的子节点
-				treeNode1.addChild(treeNode2);
-			}
-		}
-		return treeNodes;
-	}
+    /**
+     * 根据用户ID查找用户拥有的URL权限
+     * @param userId   用户ID
+     * @return    List<String> 用户拥有的markUrl地址
+     */
+    public List<String> getUserAuthoritysByUserId(Long userId){
+        List<String> userAuthoritys = Lists.newArrayList();
+        List<TreeNode> treeNodes = this.getResourceTreeByUserId(userId);
+        for(TreeNode node : treeNodes){
+            Object obj = node.getAttributes().get("markUrl");
+            if(obj != null){
+                String markUrl = (String)obj ;
+                if(StringUtils.isNotBlank(markUrl)){
+                    userAuthoritys.add(markUrl);
+                }
+            }
+            //二级目录
+            List<TreeNode> childrenNodes =  node.getChildren();
+            for(TreeNode childrenNode : childrenNodes){
+                Object childrenObj = childrenNode.getAttributes().get("markUrl");
+                if(childrenObj != null){
+                    String markUrl = (String)childrenObj ;
+                    if(StringUtils.isNotBlank(markUrl)){
+                        userAuthoritys.add(markUrl);
+                    }
+                }
+            }
+        }
+        return  userAuthoritys;
+    }
 
-	/**
+
+    /**
 	 * 得到排序字段的最大值.
 	 * 
 	 * @return 返回排序字段的最大值

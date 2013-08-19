@@ -2,7 +2,9 @@ package com.eryansky.service.sys;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,23 +44,32 @@ public class DictionaryTypeManager extends
 		return dictionaryTypeDao;
 	}
 
-    @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE,
+            CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE},allEntries = true)
 	public void saveOrUpdate(DictionaryType entity) throws DaoException,
 			SystemException, ServiceException {
-		Assert.notNull(entity, "参数[entity]为空!");
+        logger.debug("清空缓存:{}", CacheConstants.DICTIONARY_TYPE_ALL_CACHE
+                +","+CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE);
+        Assert.notNull(entity, "参数[entity]为空!");
 		dictionaryTypeDao.saveOrUpdate(entity);
 	}
 
-    @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE,
+            CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE},allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException, SystemException,
 			ServiceException {
+        logger.debug("清空缓存:{}", CacheConstants.DICTIONARY_TYPE_ALL_CACHE
+                +","+CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE);
 		super.deleteByIds(ids);
 	}
 
 
-    @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE},allEntries = true)
+    @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE,
+    CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE},allEntries = true)
     @Override
     public void saveEntity(DictionaryType entity) throws DaoException, SystemException, ServiceException {
+        logger.debug("清空缓存:{}", CacheConstants.DICTIONARY_TYPE_ALL_CACHE
+                +","+CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE);
         super.saveEntity(entity);
     }
 
@@ -84,6 +95,25 @@ public class DictionaryTypeManager extends
 						new Object[] { name }).list();
 		return list.isEmpty() ? null : list.get(0);
 	}
+
+    /**
+     * 根据分组编码以及名称查找对象
+     * @param groupDictionaryTypeCode 分组类型编码
+     * @param name   类型名称
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public DictionaryType getByGroupCode_Name(String groupDictionaryTypeCode,String name) throws DaoException,
+            SystemException, ServiceException {
+        Assert.notNull(groupDictionaryTypeCode, "参数[groupDictionaryTypeCode]为空!");
+        Assert.notNull(name, "参数[name]为空!");
+        List<DictionaryType> list = dictionaryTypeDao
+                .createQuery("from DictionaryType d where d.groupDictionaryType.code = ? and d.name = ?",
+                        new Object[] { groupDictionaryTypeCode,name }).list();
+        return list.isEmpty() ? null : list.get(0);
+    }
 
 	/**
 	 * 根据编码code得到对象.
@@ -138,5 +168,22 @@ public class DictionaryTypeManager extends
 		}
 		return max;
 	}
+
+    /**
+     * 查找所有分组列表.
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    @Cacheable(value = {CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE})
+    public List<DictionaryType> getGroupDictionaryTypes() throws DaoException, SystemException,
+            ServiceException {
+        List<DictionaryType> list = dictionaryTypeDao.createQuery(
+                "from DictionaryType d where d.groupDictionaryType is null").list();
+        logger.debug("缓存:{}", CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE);
+        return list;
+    }
+
 
 }

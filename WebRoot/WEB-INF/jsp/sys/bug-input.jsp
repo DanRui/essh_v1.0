@@ -36,19 +36,17 @@ function loadBugType(){
 </script>
 <div>
 	<form id="bug_form" method="post" novalidate>
-	    <input type="hidden"  name="id"></input> 
+	    <input type="hidden"  name="id"/>
 	    <!-- 用户版本控制字段 version -->
-        <input type="hidden" id="version" name="version" ></input>
+        <input type="hidden" id="version" name="version"/>
         <div>
 			<label>bug类型:</label>
 		    <input id="type" name="type" type="text" class="easyui-combobox"  data-options="required:true">
-		    <span style="color: red">*</span>
 		</div>
 		<div>
 			<label>bug标题:</label>
 		    <input name="title" type="text" class="easyui-validatebox"
 				maxLength="100" data-options="required:true,missingMessage:'请输入bug标题.',validType:['minLength[1]','legalInput']">
-		    <span style="color: red">*</span>
 		</div>
 		<div>
 			<label >bug描述:</label>

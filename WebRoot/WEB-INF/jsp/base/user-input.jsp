@@ -18,9 +18,9 @@
 </script>
 <div>
 	<form id="user_form"  method="post" novalidate>
-			<input type="hidden" id="user_form_id" name="id"></input> 
+			<input type="hidden" id="user_form_id" name="id" />
 			<!-- 用户版本控制字段 version -->
-            <input type="hidden" id="version" name="version" ></input>
+            <input type="hidden" id="version" name="version" />
 		    <!-- 	
 		    <div class="fitem">
 				<label>角色设置:</label>
@@ -32,14 +32,12 @@
 				<input type="text" id="loginName" name="loginName" maxLength="36"
 					class="easyui-validatebox"
 					data-options="required:true,missingMessage:'请输入登录名.',validType:['minLength[1]','legalInput']"/> 
-				<span style="color: red">*</span>
 		</div>
 			<div id="password_div">
 			<label>密码:</label> 
 			<input type="password" id="password"
 				name="password" class="easyui-validatebox" maxLength="36"
 				data-options="required:true,missingMessage:'请输入密码.',validType:['safepass']"> 
-			<span style="color: red">*</span>
 		</div>
 		<div id="repassword_div">
 			<label>确认密码:</label> 
@@ -47,7 +45,6 @@
 				name="repassword" class="easyui-validatebox" required="true"
 				missingMessage="请再次填写密码." validType="equalTo['#password']"
 				invalidMessage="两次输入密码不匹配.">
-			<span style="color: red">*</span>
 		</div>
 		<div>
 				<label>姓名:</label>
@@ -73,7 +70,6 @@
 			    <label>状态:</label>
 				<input type="radio" name="status" style="width: 20px;" value="0" /> 启用 
 	            <input type="radio" name="status" style="width: 20px;" value="3" /> 停用
-			    <span style="color: red">*</span>
 			</div>
 		</form>
 </div>

@@ -15,14 +15,13 @@
 		panels = [ {
 			id : 'p1',
 			title : 'bug(或新闻)',
-			height : 460,
-			collapsible : false,
+			height : 360,
+			collapsible : true,
 			href:'${ctx}/fileRedirect.action?toPage=portal-bug.jsp'
 		}, {
 			id : 'p2',
 			title : '技术架构',
-			width:200,
-			height : 460,
+			height : 360,
 			collapsible : true,
 			href : '${ctx}/fileRedirect.action?toPage=portal-component.jsp'
 		}];
@@ -34,7 +33,7 @@
 				$.cookie('portal-state', getPortalState(), {
 					expires : 7
 				});
-			}
+            }
 		});
 		var state = $.cookie('portal-state');
 		if (!state) {
@@ -91,7 +90,8 @@
 			<div></div>
 		</div>	
 	</div>
-	<div data-options="region:'east',title:'日历',href:'${ctx}/fileRedirect.action?toPage=portal-east.jsp'" style="height: 100%;width:200px;overflow: hidden;">
+	<div  style="height: 100%;width:200px;overflow: hidden;"
+          data-options="region:'east',title:'日历',href:'${ctx}/fileRedirect.action?toPage=portal-east.jsp'">
 	</div>
 </div>
 

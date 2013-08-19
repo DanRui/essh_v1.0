@@ -3,6 +3,3 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>  
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>  
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<script type="text/javascript" charset="utf-8">
-var ctx = "${ctx}";
-</script>

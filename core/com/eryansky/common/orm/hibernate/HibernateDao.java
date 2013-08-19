@@ -382,6 +382,9 @@ public class HibernateDao<T, PK extends Serializable> extends
 			break;
 		case GT:
 			criterion = Restrictions.gt(propertyName, propertyValue);
+            break;
+        case ISNULL:
+            criterion = Restrictions.isNull(propertyName);
 		}
 		return criterion;
 	}
