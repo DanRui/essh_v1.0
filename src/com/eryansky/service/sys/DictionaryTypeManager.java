@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.eryansky.common.utils.collections.Collections3;
+import com.eryansky.entity.base.state.StatusState;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
@@ -60,12 +62,23 @@ public class DictionaryTypeManager extends
 			ServiceException {
         logger.debug("清空缓存:{}", CacheConstants.DICTIONARY_TYPE_ALL_CACHE
                 +","+CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE);
-		super.deleteByIds(ids);
+        if(!Collections3.isEmpty(ids)){
+            for (Long id:ids) {
+                DictionaryType dictionaryType = this.getById(id);
+                List<DictionaryType> subDictionaryTypes = dictionaryType.getSubDictionaryTypes();
+                if (!subDictionaryTypes.isEmpty()) {
+                    dictionaryTypeDao.deleteAll(subDictionaryTypes);
+                }
+                dictionaryTypeDao.delete(dictionaryType);
+            }
+        }else{
+            logger.warn("参数[ids]为空.");
+        }
 	}
 
 
     @CacheEvict(value = { CacheConstants.DICTIONARY_TYPE_ALL_CACHE,
-    CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE},allEntries = true)
+            CacheConstants.DICTIONARY_TYPE_GROUPS_CACHE},allEntries = true)
     @Override
     public void saveEntity(DictionaryType entity) throws DaoException, SystemException, ServiceException {
         logger.debug("清空缓存:{}", CacheConstants.DICTIONARY_TYPE_ALL_CACHE

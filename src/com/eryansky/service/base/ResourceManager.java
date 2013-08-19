@@ -391,7 +391,8 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @return
      */
     @Cacheable(value = {CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE},key = "#requestUrl + #userId +'isAuthority'")
-    public boolean isAuthority(String requestUrl,Long userId){
+    public boolean isAuthority(String requestUrl,Long userId)
+            throws DaoException,SystemException,ServiceException{
         //如果是超级管理员 直接允许被授权
         if(userManager.getSuperUser().getId().equals(userId)) {
             return true;
@@ -420,7 +421,8 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * 查找需要拦截的所有url规则
      * @return
      */
-    public List<String> getAllInterceptorUrls(){
+    public List<String> getAllInterceptorUrls()
+            throws DaoException,SystemException,ServiceException{
         List<String> markUrls = Lists.newArrayList();
         //查找所有资源
 //        List<Resource> resources = this.findBy("NEI_status",StatusState.delete.getValue());
@@ -438,7 +440,8 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @param requestUrl 检查的URL地址
      * @return
      */
-    public boolean isInterceptorUrl(String requestUrl){
+    public boolean isInterceptorUrl(String requestUrl)
+            throws DaoException,SystemException,ServiceException{
         List<String> markUrlList = this.getAllInterceptorUrls();
         for(String markUrl :markUrlList){
             String[] markUrls = markUrl.split(";");
@@ -457,7 +460,8 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @param userId   用户ID
      * @return    List<String> 用户拥有的markUrl地址
      */
-    public List<String> getUserAuthoritysByUserId(Long userId){
+    public List<String> getUserAuthoritysByUserId(Long userId)
+            throws DaoException,SystemException,ServiceException{
         List<String> userAuthoritys = Lists.newArrayList();
         List<TreeNode> treeNodes = this.getResourceTreeByUserId(userId);
         for(TreeNode node : treeNodes){
