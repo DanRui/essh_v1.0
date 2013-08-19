@@ -26,10 +26,10 @@ $(function() {
 		fitColumns:false,//自适应宽度
 		columns:[ [
             {field : 'id',title : '主键',hidden : true,sortable:true,align : 'right',width : 80},
-            {field : 'name',title : '名称', width : 150},
-            {field : 'code',title : '类型编码',align : 'right',width : 100,sortable:true},
+            {field : 'name',title : '名称', width : 150,sortable:true},
+            {field : 'code',title : '类型编码',width : 100,sortable:true},
             {field : 'orderNo',title : '排序',align : 'right',width : 80,sortable:true } ,
-            {field : 'remark', title : '备注',width : 200,sortable:true}
+            {field : 'remark', title : '备注',width : 200}
         ] ],
         onContextMenu : function(e, row) {
             e.preventDefault();
