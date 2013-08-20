@@ -98,7 +98,7 @@ $(function() {
 					options : {
 						required : true,
 						missingMessage:'请输入名称！',
-						validType:['minLength[1]','legalInput']
+						validType:['minLength[1]','length[1,64]','legalInput']
 					}
 				}
 			}, {
@@ -111,7 +111,7 @@ $(function() {
 					options : {
 						required : true,
 						missingMessage:'请输入编码！',
-						validType:['minLength[1]','legalInput']
+						validType:['minLength[1]','length[1,36]','legalInput']
 					}
 				}
 			},{

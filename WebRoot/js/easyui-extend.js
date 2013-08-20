@@ -1,4 +1,4 @@
-/**
+z/**
  * 包含easyui的扩展和常用的jQuery方法扩展.
  * @author 尔演&Eryan eryanwcp@gmail.com
  * @version 2013-05-26

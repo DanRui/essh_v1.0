@@ -98,7 +98,7 @@ public class DictionaryType extends BaseEntity {
 		this.name = name;
 	}
 
-	@Column(length = 12, unique = true)
+	@Column(length = 20, unique = true)
 	public String getCode() {
 		return code;
 	}

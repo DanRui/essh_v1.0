@@ -35,7 +35,7 @@
 		</div>
 		<div>
 			<label>类型名称:</label>
-			<input type="text" id="name" name="name"  maxLength="36"
+			<input type="text" id="name" name="name"  maxLength="20"
 				class="easyui-validatebox"   placeholder="请输入类型名称..."
 				data-options="required:true,missingMessage:'请输入类型名称.'" />
 		</div>
