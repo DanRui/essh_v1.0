@@ -375,7 +375,7 @@ $(function() {
 		
 		<%-- 列表右键 --%>
 		<div id="dictionary_menu" class="easyui-menu" style="width:120px;display: none;">
-		    <div onclick="dictionaryType();" data-options="iconCls:'icon-folder'">字典类型管理</div>
+		    <%--<div onclick="dictionaryType();" data-options="iconCls:'icon-folder'">字典类型管理</div>--%>
 			<div onclick="add();" data-options="iconCls:'icon-add'">新增</div>
 			<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
 			<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
@@ -384,8 +384,7 @@ $(function() {
 	   <%-- 工具栏 操作按钮 --%>
 	   <div id="dictionary_toolbar">
 			<div style="margin-bottom:5px">
-                <span class="toolbar-btn-separator"></span>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-folder" plain="true" onclick="dictionaryType()">字典类型管理</a>
+				<%--<a href="#" class="easyui-linkbutton" iconCls="icon-folder" plain="true" onclick="dictionaryType()">字典类型管理</a>--%>
 				<span class="toolbar-btn-separator"></span>
 		        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>
 				<span class="toolbar-btn-separator"></span>

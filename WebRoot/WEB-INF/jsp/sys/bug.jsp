@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ include file="/common/taglibs.jsp"%>
+<%-- 引入kindEditor插件 --%>
+<link rel="stylesheet" href="${ctx}/js/kindeditor-4.1.7/themes/default/default.css">
+<script type="text/javascript" src="${ctx}/js/kindeditor-4.1.7/kindeditor-all-min.js" charset="utf-8"></script>
 <%@ include file="/common/meta.jsp"%>
 <script type="text/javascript">
 var bug_datagrid;

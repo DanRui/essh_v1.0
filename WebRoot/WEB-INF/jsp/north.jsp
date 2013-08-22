@@ -11,7 +11,7 @@ function showAbout(){
 		width : 400,
 		height : 220,
 		modal : true,
-		href : '${ctx}/${ctx}/fileRedirect.action?toPage=about.jsp',
+		href : '${ctx}/fileRedirect.action?toPage=about.jsp',
 		buttons : [{
 			text : '关闭',
 			iconCls : 'icon-cancel',

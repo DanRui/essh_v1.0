@@ -45,6 +45,10 @@ public class LoginAction
      * 提示信息
      */
     private String msg;
+    /**
+     * 主题
+     */
+    private String theme;
 
     /**
      * 操作员管理Service
@@ -171,7 +175,13 @@ public class LoginAction
      * @throws Exception
      */
     public String index() throws Exception {
-        return "index";
+        //根据客户端指定的参数跳转至 不同的主题 如果未指定 默认:index
+        if(StringUtils.isNotBlank(theme) && (theme.equals("app") || theme.equals("index"))){
+            return theme;
+        }else{
+            return "index";
+        }
+//        return "app";
     }
     
     /**
@@ -197,4 +207,11 @@ public class LoginAction
         return msg;
     }
 
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
 }
