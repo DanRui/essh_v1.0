@@ -154,8 +154,8 @@ public class UserManager extends EntityManager<User, Long> {
 		Assert.notNull(loginName, "参数[loginName]为空!");
 		Assert.notNull(password, "参数[password]为空!");
 		List<User> list = userDao.createQuery(
-					"from User u where u.loginName = ? and u.password = ?",
-					new Object[] { loginName, password }).list();
+					"from User u where u.loginName = ? and u.password = ? and u.status <> ?",
+					new Object[] { loginName, password,StatusState.delete.getValue() }).list();
 		return list.isEmpty() ? null:list.get(0);
 	}
 
