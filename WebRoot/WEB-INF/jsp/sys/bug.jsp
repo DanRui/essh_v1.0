@@ -1,9 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ include file="/common/taglibs.jsp"%>
+<%@ include file="/common/meta.jsp"%>
 <%-- 引入kindEditor插件 --%>
 <link rel="stylesheet" href="${ctx}/js/kindeditor-4.1.7/themes/default/default.css">
 <script type="text/javascript" src="${ctx}/js/kindeditor-4.1.7/kindeditor-all-min.js" charset="utf-8"></script>
-<%@ include file="/common/meta.jsp"%>
+<%--<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/jquery.easyui.kindeditor.js" charset="utf-8"></script>--%>
 <script type="text/javascript">
 var bug_datagrid;
 var bug_form;
@@ -12,7 +13,7 @@ var bug_dialog;
 
 var bug_import_dialog;//bug导入表单弹出对话框
 var bug_import_form;
-$(function() {  
+$(function() {
 	bug_form = $('#bug_form').form();
 	bug_search_form = $('#bug_search_form').form();
     //数据列表

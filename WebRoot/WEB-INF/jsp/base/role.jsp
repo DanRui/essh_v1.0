@@ -31,6 +31,8 @@ $(function() {
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
 	    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
+            //鼠标移动提示列表信息tooltip
+            $(this).datagrid('showTooltip');
 		},
 	    onRowContextMenu : function(e, rowIndex, rowData) {
 			e.preventDefault();

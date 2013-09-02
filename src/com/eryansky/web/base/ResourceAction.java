@@ -3,6 +3,11 @@ package com.eryansky.web.base;
 import java.util.List;
 
 import com.eryansky.common.model.Combobox;
+import com.eryansky.common.model.Datagrid;
+import com.eryansky.common.orm.Page;
+import com.eryansky.common.orm.PropertyFilter;
+import com.eryansky.common.orm.hibernate.HibernateWebUtils;
+import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Resource;
 import com.eryansky.entity.base.state.ResourceState;
 import org.apache.commons.collections.ListUtils;
@@ -31,22 +36,35 @@ public class ResourceAction extends StrutsAction<Resource> {
 
 	@Autowired
 	private ResourceManager resourceManager;
-	/**
-	 * 父级资源ID
-	 */
-	private Long parentId;
 
 	@Override
 	public EntityManager<Resource, Long> getEntityManager() {
 		return resourceManager;
 	}
-	
-	/**
+
+    public String treegrid() throws Exception {
+        try {
+            List<PropertyFilter> filters = Lists.newArrayList();
+            // 自动构造属性过滤器
+//            List<PropertyFilter> filters = HibernateWebUtils
+//                    .buildPropertyFilters(Struts2Utils.getRequest());
+            List<Resource> list = getEntityManager().find(filters,sort,order);
+            Datagrid<Resource> dg = new Datagrid<Resource>(list.size(), list);
+            Struts2Utils.renderJson(dg);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
+
+
+    /**
 	 * 保存.
 	 */
 	public String save() throws Exception {
 		Result result = null;
 		try {
+            model.setParentResource(null);
 			// 名称重复校验
 			Resource resource = resourceManager.getByName(model.getName());
 			if (resource != null && !resource.getId().equals(model.getId())) {
@@ -58,19 +76,17 @@ public class ResourceAction extends StrutsAction<Resource> {
 			}
 
 			// 设置上级节点
-			if (parentId != null) {
-				Resource parentResource = resourceManager.loadById(parentId);
+			if (model.get_parentId() != null) {
+				Resource parentResource = resourceManager.loadById(model.get_parentId());
 				if(parentResource == null){
-					logger.error("父级资源[{}]已被删除.",parentId);
+					logger.error("父级资源[{}]已被删除.",model.get_parentId());
 					throw new ActionException("父级资源已被删除.");
 				}
 				model.setParentResource(parentResource);
-			}else{
-				model.setParentResource(null);
 			}
 			
 			if (model.getId() != null) {
-				if (model.getId().equals(parentId)) {
+				if (model.getId().equals(model.get_parentId())) {
 					result = new Result(Result.ERROR, "[上级资源]不能与[资源名称]相同.",
 							null);
 					logger.debug(result.toString());
@@ -78,7 +94,7 @@ public class ResourceAction extends StrutsAction<Resource> {
 					return null;
 				}
 			}
-			resourceManager.saveEntity(model);
+			resourceManager.saveResource(model);
 			result = Result.successResult();
 			logger.debug(result.toString());
 			Struts2Utils.renderText(result);
@@ -94,8 +110,19 @@ public class ResourceAction extends StrutsAction<Resource> {
 	public void tree() throws Exception {
 		List<TreeNode> treeNodes = Lists.newArrayList();
 		try {
-			treeNodes = resourceManager.getResourceTree();
-			Struts2Utils.renderJson(treeNodes);
+            List<TreeNode> titleList = Lists.newArrayList();
+            // 添加 "---全部---"、"---请选择---"
+            if (!StringUtils.isBlank(selectType)) {
+                SelectType s = SelectType.getSelectTypeValue(selectType);
+                if (s != null) {
+                    TreeNode selectTreeNode = new TreeNode("",
+                            s.getDescription());
+                    titleList.add(selectTreeNode);
+                }
+            }
+			treeNodes = resourceManager.getResourceTree(null,true);
+            List<TreeNode> unionList = ListUtils.union(titleList, treeNodes);
+            Struts2Utils.renderJson(unionList);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -135,21 +162,25 @@ public class ResourceAction extends StrutsAction<Resource> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void parentResource() throws Exception {
-		List<TreeNode> treeNodes = Lists.newArrayList();
-		TreeNode node;
-		try {
-			List<TreeNode> titleList = Lists.newArrayList();
-			List<Resource> list = resourceManager.getByParentId(null,
-					StatusState.normal.getValue());
-			for (Resource m : list) {
-				node = new TreeNode(m.getId() + "", m.getName(), m.getIco());
-				treeNodes.add(node);
-			}
-			List<TreeNode> unionList = ListUtils.union(titleList, treeNodes);
-			Struts2Utils.renderJson(unionList);
-		} catch (Exception e) {
-			throw e;
-		}
+        prepareModel();
+        List<TreeNode> treeNodes = Lists.newArrayList();
+        try {
+            List<TreeNode> titleList = Lists.newArrayList();
+            // 添加 "---全部---"、"---请选择---"
+            if (!StringUtils.isBlank(selectType)) {
+                SelectType s = SelectType.getSelectTypeValue(selectType);
+                if (s != null) {
+                    TreeNode selectTreeNode = new TreeNode("",
+                            s.getDescription());
+                    titleList.add(selectTreeNode);
+                }
+            }
+            treeNodes = resourceManager.getResourceTree(model.getId(),true);
+            List<TreeNode> unionList = ListUtils.union(titleList, treeNodes);
+            Struts2Utils.renderJson(unionList);
+        } catch (Exception e) {
+            throw e;
+        }
 	}
 
 	/**
@@ -168,9 +199,5 @@ public class ResourceAction extends StrutsAction<Resource> {
 		}
 	}
 
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
-	
 	
 }

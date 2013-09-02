@@ -129,6 +129,11 @@ public class AccountManagerTest {
 		thread1.start();
 		thread2.start();
     }
+
+    @Test
+    public void getAppResourcesByUserId(){
+
+    }
 	
 
 }

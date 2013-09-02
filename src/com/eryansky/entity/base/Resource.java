@@ -2,6 +2,7 @@ package com.eryansky.entity.base;
 
 import com.eryansky.entity.base.state.ResourceState;
 import com.eryansky.entity.base.state.StatusState;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -64,7 +65,11 @@ public class Resource
     /**
      * 图标
      */
-    private String ico;
+    private String iconCls;
+    /**
+     * 应用程序图标地址
+     */
+    private String icon;
     /**
      * 父级Resource
      */
@@ -72,7 +77,7 @@ public class Resource
     /**
      * 父级ResourceId @Transient
      */
-    private Long parentId;
+    private Long _parentId;
     /**
      * 标记url
      */
@@ -140,13 +145,22 @@ public class Resource
         this.orderNo = orderNo;
     }
 
-    @Column(length = 255)
-    public String getIco() {
-        return ico;
+    @Column(name="ICON_CLS",length = 255)
+    public String getIconCls() {
+        return iconCls;
     }
 
-    public void setIco(String ico) {
-        this.ico = ico;
+    public void setIconCls(String iconCls) {
+        this.iconCls = iconCls;
+    }
+
+    @Column(name="ICON",length = 255)
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
     
     public Integer getType() {
@@ -188,7 +202,7 @@ public class Resource
                 ", ");
     }
 
-    @OneToMany(mappedBy = "parentResource")
+    @OneToMany(mappedBy = "parentResource",cascade = {CascadeType.REMOVE})
     public List<Resource> getSubResources() {
         return subResources;
     }
@@ -210,16 +224,17 @@ public class Resource
     }
 
     @Transient
-    public Long getParentId() {
+    public Long get_parentId() {
         if (parentResource != null) {
-            parentId = parentResource.getId();
+            _parentId = parentResource.getId();
         }
-        return parentId;
+        return _parentId;
     }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
+    public void set_parentId(Long _parentId) {
+        this._parentId = _parentId;
     }
+
 
     /**
      * 资源类型描述

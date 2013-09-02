@@ -91,6 +91,10 @@ function logout() {
 		}
 	});
 }
+    //切换到桌面版
+    function toApp(){
+        window.location.href = '${ctx}/login!index.action?theme=app';
+    }
 </script>
 <div style="background-image: url('${ctx}/img/top_bg.png'); background-repeat: repeat-x;">
     <div style="float: left: ;">
@@ -111,6 +115,8 @@ function logout() {
 		<div id="layout_north_kzmbMenu" style="width: 100px; display: none;">
 			<div onclick="editLoginUserPassword();" iconCls="icon-edit">修改密码</div>
 			<div class="menu-sep"></div>
+            <div onclick="toApp();">切换到桌面版</div>
+            <div class="menu-sep"></div>
 			<div onclick="" data-options="iconCls:'icon-help'">帮助</div>
 			<div onclick="showAbout();">关于</div>
 		</div>

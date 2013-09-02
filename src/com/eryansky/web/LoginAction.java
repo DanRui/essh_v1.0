@@ -1,6 +1,12 @@
 package com.eryansky.web;
 
+import com.eryansky.common.exception.DaoException;
+import com.eryansky.common.exception.ServiceException;
+import com.eryansky.common.exception.SystemException;
+import com.eryansky.common.model.Menu;
 import com.eryansky.common.model.TreeNode;
+import com.eryansky.entity.base.Resource;
+import com.eryansky.entity.base.state.ResourceState;
 import com.eryansky.service.base.ResourceManager;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
@@ -16,7 +22,9 @@ import com.eryansky.entity.base.User;
 import com.eryansky.entity.base.state.StatusState;
 import com.eryansky.service.base.UserManager;
 import com.eryansky.utils.AppUtils;
+import org.springframework.util.Assert;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -149,6 +157,131 @@ public class LoginAction
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    /**
+     * 桌面版 开始菜单
+     */
+    public void startMenu() throws Exception {
+        List<Menu> menus = Lists.newArrayList();
+        try {
+//            User user = (User) Struts2Utils
+//                    .getSessionAttribute(SysConstants.SESSION_USER);
+//            if (user != null) {
+//                List<Resource> rootResources = Lists.newArrayList();
+//                User superUser = userManager.getSuperUser();
+//                if (user != null && superUser != null
+//                        && user.getId() == superUser.getId()) {// 超级用户
+//                    rootResources = resourceManager.getByParentId(null, StatusState.normal.getValue());
+//                } else if (user != null) {
+//                    rootResources = resourceManager.getResourcesByUserId(user.getId(), null);
+//                    //去除非菜单资源
+//                    Iterator<Resource> iterator = rootResources.iterator();
+//                    while (iterator.hasNext()){
+//                        if(!ResourceState.menu.getValue().equals(iterator.next().getType())) {
+//                            iterator.remove();
+//                        }
+//                    }
+//                }
+//                for(Resource parentResource:rootResources){
+//                    Menu menu = this.resourceToMenu(parentResource, true);
+//                    if(menu!=null){
+//                        menus.add(menu);
+//                    }
+//                }
+//            }
+            Struts2Utils.renderJson(menus);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+
+    /**
+     * 桌面版 桌面应用程序列表
+     */
+    public void apps() throws Exception {
+        List<Menu> menus = Lists.newArrayList();
+        try {
+            String head = this.getHeadFromUrl(Struts2Utils.getRequest().getRequestURL().toString());
+            User user = (User) Struts2Utils
+                    .getSessionAttribute(SysConstants.SESSION_USER);
+            if (user != null) {
+                List<Resource> resources = Lists.newArrayList();
+                User superUser = userManager.getSuperUser();
+                if (user != null && superUser != null
+                        && user.getId() == superUser.getId()) {// 超级用户
+                    resources = resourceManager.getAll();
+                } else if (user != null) {
+                    resources = resourceManager.getResourcesByUserId(user.getId());
+                }
+                for(Resource resource:resources){
+                    if(StringUtils.isNotBlank(resource.getUrl())){
+                        if(ResourceState.menu.getValue().equals(resource.getType())) {
+                            Menu menu = new Menu();
+                            menu.setId(resource.getId().toString());
+                            menu.setText(resource.getName());
+                            menu.setHref(head+Struts2Utils.getRequest().getContextPath() + resource.getUrl());
+                            menu.setIconCls(resource.getIconCls());
+                            menus.add(menu);
+                        }
+                    }
+
+                }
+            }
+            Struts2Utils.renderJson(menus);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * 资源转M
+     * @param resource 资源
+     * @param isCascade 是否级联
+     * @return
+     */
+    private Menu resourceToMenu(Resource resource,boolean isCascade) {
+        Assert.notNull(resource, "参数resource不能为空");
+        String head = this.getHeadFromUrl(Struts2Utils.getRequest().getRequestURL().toString());
+        if(ResourceState.menu.getValue().equals(resource.getType())){
+            Menu menu = new Menu();
+            menu.setId(resource.getId().toString());
+            menu.setText(resource.getName());
+            menu.setHref(head+Struts2Utils.getRequest().getContextPath() + resource.getUrl());
+            if(isCascade){
+                List<Menu> childrenMenus = Lists.newArrayList();
+                for(Resource subResource:resource.getSubResources()){
+                    if(ResourceState.menu.getValue().equals(subResource.getType())){
+                        childrenMenus.add(resourceToMenu(subResource,true));
+                    }
+                }
+                menu.setChildren(childrenMenus);
+            }
+            return menu;
+        }
+        return null;
+    }
+
+    /**
+     * 根据URL地址获取请求地址前面部分信息
+     * @param url
+     * @return
+     */
+    private String getHeadFromUrl(String url){
+        int firSplit=url.indexOf("//");
+        String proto=url.substring(0, firSplit+2);
+        int webSplit=url.indexOf("/", firSplit+2);
+        int portIndex=url.indexOf(":",firSplit);
+        String webUrl=url.substring(firSplit+2, webSplit);
+        String port= "";
+        if(portIndex >= 0){
+            webUrl=webUrl.substring(0, webUrl.indexOf(":"));
+            port=url.substring(portIndex+1, webSplit);
+        }else{
+            port = "80";
+        }
+        return proto + webUrl+":"+ port;
     }
     
     /**

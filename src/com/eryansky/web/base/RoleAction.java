@@ -2,6 +2,8 @@ package com.eryansky.web.base;
 
 import java.util.List;
 
+import com.eryansky.common.model.TreeNode;
+import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,6 @@ public class RoleAction extends StrutsAction<Role> {
 	private RoleManager roleManager;
 	@Autowired
 	private ResourceManager resourceManager;
-	//角色管理菜单id集合
-	private List<Long> resourceIds = Lists.newArrayList();
 
 	@Override
 	public EntityManager<Role, Long> getEntityManager() {
@@ -62,6 +62,7 @@ public class RoleAction extends StrutsAction<Role> {
 	public String save() throws Exception {
 		Result result;
 		try {
+            model.setResources(null);
 			// 名称重复校验
 			Role role = roleManager.findUniqueBy("name", model.getName());
             if (role != null && !role.getId().equals(model.getId())) {
@@ -73,7 +74,7 @@ public class RoleAction extends StrutsAction<Role> {
             
             //设置用户角色信息
 			List<Resource> resourceList = Lists.newArrayList();
-			for (Long resourceId : resourceIds) {
+			for (Long resourceId : model.getResourceIds()) {
 				Resource resource = resourceManager.loadById(resourceId);
 				resourceList.add(resource);
 			}
@@ -88,6 +89,19 @@ public class RoleAction extends StrutsAction<Role> {
 		}
 		return null;
 	}
+
+
+    @Override
+    public String input() throws Exception {
+        List<TreeNode> treeNodes = Lists.newArrayList();
+        try {
+            treeNodes = resourceManager.getResourceTree(null,true);
+            Struts2Utils.getRequest().setAttribute("resourceTreeData", JsonMapper.nonDefaultMapper().toJson(treeNodes));
+        } catch (Exception e) {
+            throw e;
+        }
+        return super.input();
+    }
 	/**
 	 * 角色下拉框列表.
 	 */
@@ -113,10 +127,6 @@ public class RoleAction extends StrutsAction<Role> {
 			e.printStackTrace();
 			throw e;
 		}
-	}
-
-	public void setResourceIds(List<Long> resourceIds) {
-		this.resourceIds = resourceIds;
 	}
 
 

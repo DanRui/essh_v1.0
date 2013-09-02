@@ -8,18 +8,12 @@
 <script type="text/javascript" charset="utf-8">
     var ctx = "${ctx}";
 </script>
-<%-- 引入bootstrap --%>
-<%--
-<link href="${ctx}/js/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<script type="text/javascript" src="${ctx}/js/bootstrap-2.3.1/js/bootstrap.min.js" charset="utf-8"></script>
---%>
 
 <link rel="stylesheet" type="text/css" href="${ctx}/css/default.css" />
-
 <link rel="stylesheet" type="text/css" href="${ctx}/css/form_style.css" />
 
 <%-- 引入jQuery --%>
-<script type="text/javascript" src="${ctx}/js/jquery/jquery-1.9.1.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/jquery-1.10.2.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery-migrate-1.2.1.min.js" charset="utf-8"></script>
 <%-- jQuery Cookie插件 --%>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery.cookie.js" charset="utf-8"></script>
@@ -31,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.4/portal/portal.css">
 <script type="text/javascript" src="${ctx}/js/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/jquery.easyui.mine.js" charset="utf-8"></script>
-<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/jquery.my97.js" charset="utf-8"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/jquery.easyui.my97.js" charset="utf-8"></script>
 
 <script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/portal/jquery.portal.js" charset="utf-8"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/easyui-lang-zh_CN.js" charset="utf-8"></script>

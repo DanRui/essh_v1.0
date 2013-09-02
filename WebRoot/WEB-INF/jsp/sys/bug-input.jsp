@@ -13,18 +13,18 @@ $(function() {
 			allowFileManager : true,
 			uploadJson : '${ctx}/servlet/FileUploadServlet',
 			fileManagerJson : '${ctx}/servlet/FileManagerServlet',
-			afterCreate:function(){ //加载完成后改变皮肤  
-		        var color = $('.panel-header').css('background-color');  
-		        $('.ke-toolbar').css('background-color',color);  
-		    }  
+			afterCreate:function(){ //加载完成后改变皮肤
+		        var color = $('.panel-header').css('background-color');
+		        $('.ke-toolbar').css('background-color',color);
+		    }
 		});
 	}, 1);
-	
+
 });
 
 //加载bug类型
 function loadBugType(){
-	$('#type').combobox({  
+	$('#type').combobox({
         url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug&selectType=select',
 	    multiple:false,//是否可多选
 	    editable:false,//是否可编辑

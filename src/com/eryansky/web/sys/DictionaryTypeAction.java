@@ -33,7 +33,6 @@ import com.eryansky.utils.SelectType;
 public class DictionaryTypeAction
         extends StrutsAction<DictionaryType> {
 	
-	public final static String SSSION_SEARCH = "DICTIONARYTYPE_SEARCH";
 
     @Autowired
     private DictionaryTypeManager dictionaryTypeManager;
@@ -181,7 +180,7 @@ public class DictionaryTypeAction
 //            List<PropertyFilter> filters = HibernateWebUtils
 //                    .buildPropertyFilters(Struts2Utils.getRequest());
             List<PropertyFilter> filters = Lists.newArrayList();
-            List<DictionaryType> p = getEntityManager().find(filters);
+            List<DictionaryType> p = getEntityManager().find(filters,sort,order);
             Datagrid<DictionaryType> dg = new Datagrid<DictionaryType>(p.size(), p);
             Struts2Utils.renderJson(dg);
         } catch (Exception e) {

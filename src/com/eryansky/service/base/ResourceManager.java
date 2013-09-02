@@ -5,9 +5,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.eryansky.common.model.Menu;
 import com.eryansky.common.utils.StringUtils;
+import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.Resource;
 import com.eryansky.entity.base.state.ResourceState;
+import org.apache.commons.collections.ListUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -39,11 +42,11 @@ import com.eryansky.utils.CacheConstants;
 public class ResourceManager extends EntityManager<Resource, Long> {
 
 
-	@Autowired
+    @Autowired
 	private UserManager userManager;
 	
 	private HibernateDao<Resource, Long> resourceDao;// 默认的泛型DAO成员变量.
-	
+
 	/**
 	 * 通过注入的sessionFactory初始化默认的泛型DAO成员变量.
 	 */
@@ -101,6 +104,33 @@ public class ResourceManager extends EntityManager<Resource, Long> {
     }
 
     /**
+     * 自定义保存资源.
+     * <br/>说明：如果保存的资源类型为“功能” 则将所有子资源都设置为“功能”类型
+     * @param entity 资源对象
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public void saveResource(Resource entity) throws DaoException, SystemException, ServiceException {
+        Assert.notNull(entity,"参数[entity]为空!");
+        this.saveEntity(entity);
+        if(entity.getType() !=null && ResourceState.function.getValue().equals(entity.getType())){
+            List<Resource> subResources = entity.getSubResources();
+            while (!Collections3.isEmpty(subResources)){
+                Iterator<Resource> iterator = subResources.iterator();
+                while(iterator.hasNext()){
+                     Resource subResource = iterator.next();
+                     subResource.setType(ResourceState.function.getValue());
+                     iterator.remove();
+                     subResources = ListUtils.union(subResources,subResource.getSubResources());
+                     super.update(subResource);
+                 }
+            }
+        }
+    }
+
+
+    /**
 	 * 自定义删除方法.
 	 */
 	//清除缓存
@@ -112,26 +142,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
         logger.debug("清空缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE
                 +","+CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
                 +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE);
-		if(!Collections3.isEmpty(ids)){
-			for (Long id:ids) {
-				List<Resource> subResources = getByParentId(id,
-						StatusState.normal.getValue());
-				if (subResources.isEmpty() == false) {// 如果存在子资源 则将所有子资源一起删除
-					for (Resource m : subResources) {
-						resourceDao.delete(m);
-					}
-				}
-				// deleteResourceById(id);
-				// 不直接通过id删除对象 (因为有可能在删除子资源的时候就被删除了)
-				Resource resource = loadById(id);
-				if (resource != null) {
-					resourceDao.delete(resource);
-				}
-			}
-		}else{
-			logger.warn("参数[ids]为空.");
-		}
-		
+		 super.deleteByIds(ids);
 	}
 
     /**
@@ -142,29 +153,59 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @throws SystemException
      * @throws ServiceException
      */
-    @Cacheable(value = { CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},key = "#userId +'getNavMenuTreeByUserId'")
+   // @Cacheable(value = { CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},key = "#userId +'getNavMenuTreeByUserId'")
     public List<TreeNode> getNavMenuTreeByUserId(Long userId) throws DaoException,
             SystemException, ServiceException {
-        List<TreeNode> menuNodes = this.getResourceTreeByUserId(userId);
-        Iterator<TreeNode> iterator = menuNodes.iterator();
-        while (iterator.hasNext()){
-            TreeNode parentNode = iterator.next();
-            if(parentNode.getAttributes().get("type") == ResourceState.menu.getValue()) {
-                List<TreeNode> childrenNodes = parentNode.getChildren();
-                Iterator<TreeNode> childrenIterator = childrenNodes.iterator();
-                while(childrenIterator.hasNext()){
-                    TreeNode childrenNode = childrenIterator.next();
-                    if(childrenNode.getAttributes().get("type") != ResourceState.menu.getValue()) {
-                        childrenIterator.remove();
-                    }
-                }
-            }else{
-                iterator.remove();
+        List<TreeNode> nodes = Lists.newArrayList();
+        List<Resource> userResources = Lists.newArrayList();
+        User user = userManager.loadById(userId);
+        User superUser = userManager.getSuperUser();
+        if (user != null && superUser != null
+                && user.getId() == superUser.getId()) {// 超级用户
+            userResources = this.getByParentId(null,StatusState.normal.getValue());
+        } else if (user != null) {
+           userResources = this.getResourcesByUserId(userId,null);
+        }
+        for(Resource resource:userResources){
+            TreeNode node =  this.resourceToTreeNode(resource,ResourceState.menu.getValue(),true);
+            if(node !=null){
+                nodes.add(node);
             }
         }
+
         logger.debug("缓存:{}", CacheConstants.RESOURCE_USER_MENU_TREE_CACHE +" 参数：userId="+userId);
-        return menuNodes;
+        return nodes;
     }
+
+    public List<Resource> getResourcesByUserId(Long userId) throws DaoException,
+            SystemException, ServiceException {
+        Assert.notNull(userId, "userId不能为空");
+        List<Resource> list = resourceDao.distinct(resourceDao.createQuery("select ms from User u left join u.roles rs left join rs.resources ms where u.id= ? order by ms.orderNo ", userId)).list();
+        return list;
+    }
+
+    public List<Resource> getResourcesByUserId(Long userId, Resource parentResource) throws DaoException,
+            SystemException, ServiceException {
+        List<Resource> list = new ArrayList<Resource>();
+        List<Resource> resources =   this.getResourcesByUserId(userId);
+        if (null == parentResource){
+               for(Resource resource:resources){
+                   if(resource != null && resource.getParentResource() == null
+                           && StatusState.normal.getValue().equals(resource.getStatus())){
+                       list.add(resource);
+                   }
+               }
+        }else{
+            for(Resource resource:resources){
+                if(resource != null && resource.getParentResource() != null && resource.getParentResource().getId().equals(parentResource.getId())
+                        && StatusState.normal.getValue().equals(resource.getStatus())){
+                    list.add(resource);
+                }
+            }
+        }
+        return list;
+    }
+
     /**
      * 根据用户ID得到导航栏资源（权限控制）.
      * @param userId 用户ID
@@ -174,128 +215,223 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @throws ServiceException
      */
     //使用缓存
-    @Cacheable(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},key = "#userId +'getResourceTreeByUserId'")
+   // @Cacheable(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},key = "#userId +'getResourceTreeByUserId'")
     public List<TreeNode> getResourceTreeByUserId(Long userId) throws DaoException,
             SystemException, ServiceException {
         // Assert.notNull(userId, "参数[userId]为空!");
-        List<TreeNode> treeNodes = Lists.newArrayList();
-        List<Resource> parentList = new ArrayList<Resource>();// 顶级资源
-        List<Resource> subList = new ArrayList<Resource>();// 子级资源集合
+        List<TreeNode> nodes = Lists.newArrayList();
+        List<Resource> userResources = Lists.newArrayList();
         User user = userManager.loadById(userId);
         User superUser = userManager.getSuperUser();
         if (user != null && superUser != null
                 && user.getId() == superUser.getId()) {// 超级用户
-            logger.debug("缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE +" 参数：userId="+userId);
-            return this.getResourceTree();
+            userResources = this.getByParentId(null,StatusState.normal.getValue());
         } else if (user != null) {
-            List<Role> roles = user.getRoles();
-            for (Role r : roles) {
-                List<Resource> resources = r.getResources();
-                for (Resource m : resources) {
-                    if (m.getParentResource() == null) {
-                        // 去除顶级重复资源
-                        if (!parentList.contains(m)) {
-                            //过滤禁用的资源
-                            if(m.getStatus() == StatusState.normal.getValue()){
-                                parentList.add(m);
-                            }
-                        }
-                    } else {
-                        //过滤禁用的资源
-                        if(m.getStatus() == StatusState.normal.getValue()){
-                            subList.add(m);
-                        }
-                    }
-                }
-            }
-
-            for (int i = 0; i < parentList.size(); i++) {
-                Resource parenResource = parentList.get(i);
-                TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
-                        parenResource.getName(), parenResource.getIco());
-                // 自定义属性 url
-                Map<String, Object> attributes1 = Maps.newHashMap();
-                attributes1.put("url", parenResource.getUrl());
-                attributes1.put("markUrl", parenResource.getMarkUrl());
-                attributes1.put("code", parenResource.getCode());
-                attributes1.put("type",parenResource.getType());
-                treeNode1.setAttributes(attributes1);
-                treeNodes.add(treeNode1);
-                List<Resource> subList2 = new ArrayList<Resource>();
-                for (Resource mm : subList) {
-                    if (mm.getParentResource().getId() == parenResource.getId()) {
-                        // 去除二级重复资源
-                        if (!subList2.contains(mm)) {
-                            subList2.add(mm);
-                        }
-                    }
-                }
-                for (int j = 0; j < subList2.size(); j++) {
-                    Resource subResource = subList2.get(j);
-                    TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
-                            subResource.getName(), subResource.getIco());
-                    // 自定义属性 url
-                    Map<String, Object> attributes = Maps.newHashMap();
-                    attributes.put("url", subResource.getUrl());
-                    attributes.put("markUrl", subResource.getMarkUrl());
-                    attributes.put("code", subResource.getCode());
-                    attributes.put("type",subResource.getType());
-                    treeNode2.setAttributes(attributes);
-                    // 将节点赋值到顶级节点 作为父级的子节点
-                    treeNode1.addChild(treeNode2);
-                }
-            }
-        } else {
-            throw new SystemException("非法用户.");
+            userResources = this.getResourcesByUserId(userId,null);
         }
-        logger.debug("缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE +" 参数：userId="+userId);
-        return treeNodes;
+        for(Resource resource:userResources){
+            TreeNode node =  this.resourceToTreeNode(resource,null,true);
+            if(node !=null){
+                nodes.add(node);
+            }
+        }
+
+        logger.debug("缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE + " 参数：userId=" + userId);
+        return nodes;
     }
 
-
     /**
-     * 获取所有导航资源（无权限限制）.
+     * Resource转TreeNode
+     * @param resource 资源
+     * @param resourceType 资源类型
+     * @param isCascade       是否级联
      * @return
      * @throws DaoException
      * @throws SystemException
      * @throws ServiceException
      */
-    public List<TreeNode> getResourceTree() throws DaoException, SystemException,
+    private TreeNode resourceToTreeNode(Resource resource,Integer resourceType,boolean isCascade) throws DaoException, SystemException,
+            ServiceException {
+        if(resourceType!=null){
+            if(!resourceType.equals(resource.getType())){
+                return null;
+            }
+        }
+        TreeNode treeNode = new TreeNode(resource.getId().toString(),
+                resource.getName(), resource.getIconCls());
+        // 自定义属性 url
+        Map<String, Object> attributes = Maps.newHashMap();
+        attributes.put("url", resource.getUrl());
+        attributes.put("markUrl", resource.getMarkUrl());
+        attributes.put("code", resource.getCode());
+        attributes.put("type", resource.getType());
+        treeNode.setAttributes(attributes);
+        if(isCascade){
+            List<TreeNode> childrenTreeNodes = Lists.newArrayList();
+            for(Resource subResource:resource.getSubResources()){
+                TreeNode node = resourceToTreeNode(subResource,resourceType,isCascade);
+                if(node !=null){
+                    childrenTreeNodes.add(node);
+                }
+            }
+            treeNode.setChildren(childrenTreeNodes);
+        }
+
+        return treeNode;
+    }
+
+
+    /**
+     * Resource转Easy UI Menu
+     * @param resource
+     * @param isCascade 是否递归遍历子节点
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public Menu resourceToMenu(Resource resource,boolean isCascade) throws DaoException, SystemException,
+            ServiceException {
+        Assert.notNull(resource,"参数resource不能为空");
+        if(ResourceState.menu.getValue().equals(resource.getType())){
+            Menu menu = new Menu();
+            menu.setId(resource.getId().toString());
+            menu.setText(resource.getName());
+            menu.setHref(resource.getUrl());
+            if(isCascade){
+                List<Menu> childrenMenus = Lists.newArrayList();
+                for(Resource subResource:resource.getSubResources()){
+                    if(ResourceState.menu.getValue().equals(subResource.getType())){
+                        childrenMenus.add(resourceToMenu(subResource,true));
+                    }
+                }
+                menu.setChildren(childrenMenus);
+            }
+            return menu;
+        }
+        return null;
+    }
+
+
+    public List<Menu> getAppMenusByUserId(Long userId){
+        List<Menu> menus = Lists.newArrayList();
+        List<Resource> resources = Lists.newArrayList();
+        User user = userManager.loadById(userId);
+        User superUser = userManager.getSuperUser();
+        if (user != null && superUser != null
+                && user.getId() == superUser.getId()) {// 超级用户
+            resources = super.getAll();
+        } else if (user != null) {
+            resources = getResourcesByUserId(userId);
+        }
+        for(Resource resource:resources){
+            if(StringUtils.isNotBlank(resource.getUrl())){
+                if(ResourceState.menu.getValue().equals(resource.getType())) {
+                    Menu menu = new Menu();
+                    menu.setId(resource.getId().toString());
+                    menu.setText(resource.getName());
+                    menu.setHref(resource.getUrl());
+                    menus.add(menu);
+                }
+            }
+
+        }
+        return menus;
+    }
+    /**
+     * 得到开始菜单.
+     * @param userId 用户ID
+     */
+    public List<Menu> getMenusByUserId(Long userId){
+        List<Menu> menus = Lists.newArrayList();
+        List<Resource> rootResources = Lists.newArrayList();
+        User user = userManager.loadById(userId);
+        User superUser = userManager.getSuperUser();
+        if (user != null && superUser != null
+                && user.getId() == superUser.getId()) {// 超级用户
+           rootResources = getByParentId(null,StatusState.normal.getValue());
+        } else if (user != null) {
+            rootResources = getResourcesByUserId(userId,null);
+            //去除非菜单资源
+            Iterator<Resource> iterator = rootResources.iterator();
+            while (iterator.hasNext()){
+                if(!ResourceState.menu.getValue().equals(iterator.next().getType())) {
+                    iterator.remove();
+                }
+            }
+        }
+        for(Resource parentResource:rootResources){
+            Menu menu = resourceToMenu(parentResource,true);
+            if(menu!=null){
+                menus.add(menu);
+            }
+        }
+        return menus;
+    }
+
+    /**
+     *
+     * @param entity
+     * @param id
+     * @param isCascade 是否级联
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public TreeNode getTreeNode(Resource entity, Long id, boolean isCascade)
+            throws DaoException, SystemException, ServiceException {
+        TreeNode node = this.resourceToTreeNode(entity,null,true);
+        List<Resource> subResources = this.getByParentId(entity.getId(),StatusState.normal.getValue());
+        if (subResources.size() > 0) {
+            if (isCascade) {// 递归查询子节点
+                List<TreeNode> children = Lists.newArrayList();
+                for (Resource d : subResources) {
+                    boolean isInclude = true;// 是否包含到节点树
+                    TreeNode treeNode = null;
+                    treeNode = getTreeNode(d, id, true);
+                    // 排除自身
+                    if (id != null) {
+                        if (!d.getId().equals(id)) {
+                            treeNode = getTreeNode(d, id, true);
+                        } else {
+                            isInclude = false;
+                        }
+                    } else {
+                        treeNode = getTreeNode(d, id, true);
+                    }
+                    if (isInclude) {
+                        children.add(treeNode);
+                        node.setState(TreeNode.STATE_CLOASED);
+                    } else {
+                        node.setState(TreeNode.STATE_OPEN);
+                    }
+                }
+
+                node.setChildren(children);
+            }
+        }
+        return node;
+    }
+
+    /**
+     * 获取所有导航资源（无权限限制）.
+     * @param excludeResourceId 需要排除的资源ID 子级也会被排除
+     * @param isCascade 是否级联
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public List<TreeNode> getResourceTree(Long excludeResourceId,boolean isCascade) throws DaoException, SystemException,
             ServiceException {
         List<TreeNode> treeNodes = Lists.newArrayList();
         // 顶级资源
-        List<Resource> parentList = getByParentId(null,
+        List<Resource> resources = getByParentId(null,
                 StatusState.normal.getValue());
-        for (int i = 0; i < parentList.size(); i++) {
-            Resource parenResource = parentList.get(i);
-            TreeNode treeNode1 = new TreeNode(parenResource.getId() + "",
-                    parenResource.getName(), parenResource.getIco());
-            // 自定义属性 url
-            Map<String, Object> attributes1 = Maps.newHashMap();
-//            attributes1.put("url", parenResource.getUrl());
-            attributes1.put("markUrl", parenResource.getMarkUrl());
-            attributes1.put("code", parenResource.getCode());
-            attributes1.put("type",parenResource.getType());
-            treeNode1.setAttributes(attributes1);
-            treeNodes.add(treeNode1);
-
-            // 第二级
-            List<Resource> subList = getByParentId(parenResource.getId(),
-                    StatusState.normal.getValue());
-            for (int j = 0; j < subList.size(); j++) {
-                Resource subResource = subList.get(j);
-                TreeNode treeNode2 = new TreeNode(subResource.getId() + "",
-                        subResource.getName(), subResource.getIco());
-                // 自定义属性 url
-                Map<String, Object> attributes2 = Maps.newHashMap();
-                attributes2.put("url", subResource.getUrl());
-                attributes2.put("markUrl", subResource.getMarkUrl());
-                attributes2.put("code", subResource.getCode());
-                attributes2.put("type",subResource.getType());
-                treeNode2.setAttributes(attributes2);
-                // 将节点赋值到顶级节点 作为父级的子节点
-                treeNode1.addChild(treeNode2);
-            }
+        for (Resource rs:resources) {
+            TreeNode rootNode = getTreeNode(rs, excludeResourceId, isCascade);
+            treeNodes.add(rootNode);
         }
         return treeNodes;
 
