@@ -268,7 +268,7 @@ public class ReflectionUtils {
 	/**
 	 * 获取Class如果被cglib AOP过的对象或对象为CGLIB的Class，将获取真正的Class类型
 	 * 
-	 * @param target  对象
+	 * @param targetClass  对象
 	 * 
 	 * @return Class
 	 */
