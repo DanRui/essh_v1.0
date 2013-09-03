@@ -153,7 +153,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @throws SystemException
      * @throws ServiceException
      */
-   // @Cacheable(value = { CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},key = "#userId +'getNavMenuTreeByUserId'")
+    @Cacheable(value = { CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},key = "#userId +'getNavMenuTreeByUserId'")
     public List<TreeNode> getNavMenuTreeByUserId(Long userId) throws DaoException,
             SystemException, ServiceException {
         List<TreeNode> nodes = Lists.newArrayList();
@@ -215,7 +215,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @throws ServiceException
      */
     //使用缓存
-   // @Cacheable(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},key = "#userId +'getResourceTreeByUserId'")
+   @Cacheable(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},key = "#userId +'getResourceTreeByUserId'")
     public List<TreeNode> getResourceTreeByUserId(Long userId) throws DaoException,
             SystemException, ServiceException {
         // Assert.notNull(userId, "参数[userId]为空!");
