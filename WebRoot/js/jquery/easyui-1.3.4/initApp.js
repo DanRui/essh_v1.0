@@ -37,7 +37,7 @@ $(function () {
 	
 	function onStartMenuClick(item){
         var data = $(item.target).data("data");
-        if(data.type == "refresh"){
+        if(data.type == "refresh"){ //刷新桌面
             app.app("refresh",app.app("options").loadUrl.app);
         } else{
             $('body').app("createwindow",data);
