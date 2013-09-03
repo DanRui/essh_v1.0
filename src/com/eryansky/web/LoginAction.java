@@ -5,6 +5,7 @@ import com.eryansky.common.exception.ServiceException;
 import com.eryansky.common.exception.SystemException;
 import com.eryansky.common.model.Menu;
 import com.eryansky.common.model.TreeNode;
+import com.eryansky.common.orm.Page;
 import com.eryansky.entity.base.Resource;
 import com.eryansky.entity.base.state.ResourceState;
 import com.eryansky.service.base.ResourceManager;
@@ -211,7 +212,7 @@ public class LoginAction
                 User superUser = userManager.getSuperUser();
                 if (user != null && superUser != null
                         && user.getId() == superUser.getId()) {// 超级用户
-                    resources = resourceManager.getAll();
+                    resources = resourceManager.getAll("orderNo", Page.ASC);
                 } else if (user != null) {
                     resources = resourceManager.getResourcesByUserId(user.getId());
                 }
