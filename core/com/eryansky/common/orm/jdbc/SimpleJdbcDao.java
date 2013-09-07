@@ -24,7 +24,13 @@ public class SimpleJdbcDao {
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * Spring  JdbcTemplate
+     */
     protected JdbcTemplate jdbcTemplate;
+    /**
+     *  Spring  SimpleJdbcInsert
+     */
     protected SimpleJdbcInsert simpleJdbcInsert;
 
     public SimpleJdbcDao(){
