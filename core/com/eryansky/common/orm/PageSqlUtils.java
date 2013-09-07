@@ -11,42 +11,20 @@ import com.eryansky.common.utils.SysConstants;
  * @version 1.0
  */
 public class PageSqlUtils {
-	
-	// 数据库类型
-	/**
-	 * MySQL数据库
-	 */
-	public static final String DATABSE_TYPE_MYSQL = "mysql";
-	/**
-	 * postgresql数据库
-	 */
-	public static final String DATABSE_TYPE_POSTGRE = "postgresql";
-	/**
-	 * oracle数据库
-	 */
-	public static final String DATABSE_TYPE_ORACLE = "oracle";
-    /**
-     * SQL Server数据库
-     */
-    public static final String DATABSE_TYPE_SQLSERVER ="sqlserver";
-	
-	// 分页SQL
-	/**
-	 * MySQL分页SQL
-	 */
-	public static final String MYSQL_SQL = "select * from ( {0}) sel_tab00 limit {1},{2}";
-	/**
-	 * Postgresql分页SQL
-	 */
-	public static final String POSTGRE_SQL = "select * from ( {0}) sel_tab00 limit {1} offset {2}";
-	/**
-	 * Oracle分页SQL
-	 */
-	public static final String ORACLE_SQL = "select * from (select row_.*,rownum rownum_ from ({0}) row_ where rownum <= {1}) where rownum_>{2}";
 
     /**
-     * SQL Server分页SQL
+     * 数据库类型
      */
+    public static final String DATABSE_TYPE_MYSQL ="mysql";
+    public static final String DATABSE_TYPE_POSTGRE ="postgresql";
+    public static final String DATABSE_TYPE_ORACLE ="oracle";
+    public static final String DATABSE_TYPE_SQLSERVER ="sqlserver";
+    /**
+     * 分页SQL
+     */
+    public static final String MYSQL_SQL = "select * from ( {0}) sel_tab00 limit {1},{2}";         //mysql
+    public static final String POSTGRE_SQL = "select * from ( {0}) sel_tab00 limit {2} offset {1}";//postgresql
+    public static final String ORACLE_SQL = "select * from (select row_.*,rownum rownum_ from ({0}) row_ where rownum <= {1}) where rownum_>{2}"; //oracle
     public static final String SQLSERVER_SQL = "select * from ( select row_number() over(order by tempColumn) tempRowNumber, * from (select top {1} tempColumn = 0, {0}) t ) tt where tempRowNumber > {2}"; //sqlserver
 
     /**
@@ -63,24 +41,23 @@ public class PageSqlUtils {
 		sqlParam[0] = sql;
 		sqlParam[1] = beginNum + "";
 		sqlParam[2] = rows + "";
-		if (SysConstants.getJdbcUrl().indexOf(PageSqlUtils.DATABSE_TYPE_MYSQL) != -1) {
-			sql = MessageFormat.format(PageSqlUtils.MYSQL_SQL, sqlParam[0],sqlParam[1],sqlParam[2]);
-		} else if (SysConstants.getJdbcUrl().indexOf(
+        String jdbcUrl = SysConstants.getJdbcUrl();
+		if (jdbcUrl.indexOf(PageSqlUtils.DATABSE_TYPE_MYSQL) != -1) {
+			sql = MessageFormat.format(PageSqlUtils.MYSQL_SQL, sqlParam);
+		} else if (jdbcUrl.indexOf(
 				PageSqlUtils.DATABSE_TYPE_POSTGRE) != -1) {
-			sql = MessageFormat.format(PageSqlUtils.POSTGRE_SQL, sqlParam[0],sqlParam[1],sqlParam[2]);
-		} else if (SysConstants.getJdbcUrl().indexOf(
-				PageSqlUtils.DATABSE_TYPE_ORACLE) != -1) {
-			int beginIndex = (page - 1) * rows;
-			int endIndex = beginIndex + rows;
-			sqlParam[2] = beginIndex + "";
-			sqlParam[1] = endIndex + "";
-            if(SysConstants.getJdbcUrl().indexOf(DATABSE_TYPE_ORACLE)!=-1) {
+			sql = MessageFormat.format(PageSqlUtils.POSTGRE_SQL, sqlParam);
+		} else {
+            int beginIndex = (page-1)*rows;
+            int endIndex = beginIndex+rows;
+            sqlParam[2] = Integer.toString(beginIndex);
+            sqlParam[1] = Integer.toString(endIndex);
+            if(jdbcUrl.indexOf(DATABSE_TYPE_ORACLE)!=-1) {
                 sql = MessageFormat.format(ORACLE_SQL, sqlParam);
-            } else if(SysConstants.getJdbcUrl().indexOf(DATABSE_TYPE_SQLSERVER)!=-1) {
+            } else if(jdbcUrl.indexOf(DATABSE_TYPE_SQLSERVER)!=-1) {
                 sqlParam[0] = sql.substring(getAfterSelectInsertPoint(sql));
                 sql = MessageFormat.format(SQLSERVER_SQL, sqlParam);
             }
-			sql = MessageFormat.format(PageSqlUtils.ORACLE_SQL, sqlParam[0],sqlParam[1],sqlParam[2]);
 		}
 		return sql;
 	}
@@ -89,5 +66,9 @@ public class PageSqlUtils {
         int selectIndex = sql.toLowerCase().indexOf("select");
         int selectDistinctIndex = sql.toLowerCase().indexOf("select distinct");
         return selectIndex + (selectDistinctIndex == selectIndex ? 15 : 6);
+    }
+
+    public static void main(String[] args) {
+
     }
 }

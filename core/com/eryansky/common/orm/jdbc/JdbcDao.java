@@ -6,6 +6,9 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.eryansky.common.utils.reflection.MyBeanUtils;
+import com.eryansky.common.utils.reflection.ReflectionUtils;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -35,7 +38,9 @@ public class JdbcDao extends SimpleJdbcDao{
 
 
     /**
-     * 使用指定的检索标准检索数据并分页返回数据-采用预处理方式
+     * 使用指定的检索标准检索数据并分页返回数据-采用预处理方式.<br/>
+     * 支持MySQL、Oracle、postgresql、SQL Server分页查询. <br/>
+     * 例如：
      * @param sql SQL语句
      * @param page 第几页
      * @param rows 页大小
@@ -52,23 +57,5 @@ public class JdbcDao extends SimpleJdbcDao{
         return jdbcTemplate.queryForList(sql,param);
     }
 
-    /**
-     * 使用指定的检索标准检索数据并分页返回数据-采用预处理方式
-     * @param sql SQL语句
-     * @param page 第几页
-     * @param rows 页大小
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public <T> List<T>  queryForList(String  sql,  int page, int rows,Class<T> clazz,Object... param){
-        Assert.hasText(sql,"sql语句不正确!");
-        Assert.notNull(clazz,"对象类型不能为空!");
-        //封装分页SQL
-        sql = PageSqlUtils.createPageSql(sql,page,rows);
-        if(param != null){
-            return  jdbcTemplate.queryForList(sql,clazz);
-        }
-        return jdbcTemplate.queryForList(sql,param,clazz);
-    }
 
 }

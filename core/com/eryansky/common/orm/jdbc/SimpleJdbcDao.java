@@ -140,7 +140,7 @@ public class SimpleJdbcDao {
      * @return bean对象集合
      */
     @Transactional(readOnly = true)
-    public <T> List<T> query(final String sql,Class<T> clazz,Map parameters){
+    public List query(final String sql,Class clazz,Map parameters){
         Assert.hasText(sql,"sql语句不正确!");
         Assert.notNull(clazz,"集合中对象类型不能为空!");
         if(parameters!=null){
@@ -182,16 +182,6 @@ public class SimpleJdbcDao {
         }
     }
 
-    @Transactional(readOnly = true)
-    public <T> List<T> queryForList(String sql,Class<T> clazz, Object... param) {
-        Assert.hasText(sql,"sql语句不正确!");
-        Assert.notNull(clazz,"对象类型不能为空!");
-        if(param!=null){
-            return jdbcTemplate.queryForList(sql,clazz, param);
-        }else{
-            return jdbcTemplate.queryForList(sql,clazz);
-        }
-    }
 
     /**
      * 根据sql语句，返回Map对象,对于某些项目来说，没有准备Bean对象，则可以使用Map代替Key为字段名,value为值

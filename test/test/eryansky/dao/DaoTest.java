@@ -1,6 +1,13 @@
 package test.eryansky.dao;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+
+import com.eryansky.common.utils.reflection.MyBeanUtils;
+import com.eryansky.common.utils.reflection.ReflectionUtils;
+import com.eryansky.entity.base.Resource;
+import com.google.common.collect.Lists;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -49,5 +56,20 @@ public class DaoTest {
 			e.printStackTrace();
 		}
 	}
+
+
+    @Test
+    public void page(){
+        try {
+            String sql = "select * from T_BASE_RESOURCE";
+            List<Map<String,Object>> list1 = jdbcDao.queryForList(sql, 1, 5);
+            for(Map<String,Object> map:list1){
+                System.out.println(map);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
