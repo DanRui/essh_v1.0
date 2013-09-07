@@ -26,6 +26,11 @@ public class SimpleJdbcDao {
 
     protected JdbcTemplate jdbcTemplate;
     protected SimpleJdbcInsert simpleJdbcInsert;
+
+    public SimpleJdbcDao(){
+
+    }
+
     public SimpleJdbcDao(DataSource dataSource){
         jdbcTemplate=new JdbcTemplate(dataSource);
         simpleJdbcInsert=new SimpleJdbcInsert(dataSource);

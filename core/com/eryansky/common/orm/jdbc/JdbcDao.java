@@ -27,6 +27,10 @@ import com.eryansky.common.utils.reflection.MyBeanUtils;
 @Transactional
 public class JdbcDao extends SimpleJdbcDao{
 
+    public JdbcDao(){
+
+    }
+
     @Autowired
     public JdbcDao(DataSource dataSource) {
         super(dataSource);
