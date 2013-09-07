@@ -49,7 +49,7 @@ public class CommonManager extends DefaultEntityManager<Object,Long>{
 	    map.put(fieldName, fieldValue);
 	    StringBuilder sb = new StringBuilder();
 	    sb.append("select id from ").append(tableName).append(" where ").append(fieldName).append(" = ?");
-	    Map<String, Object> result = jdbcDao.findOneForJdbc(sb.toString(), fieldValue);
+	    Map<String, Object> result = jdbcDao.queryForMap(sb.toString(), fieldValue);
 	    Long id = null;
 	    if(result!=null){
 	    	id =  (Long) result.get("id");

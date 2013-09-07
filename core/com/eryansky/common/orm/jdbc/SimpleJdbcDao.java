@@ -31,115 +31,16 @@ public class SimpleJdbcDao {
 
     }
 
+    /**
+     * 构造方法
+     * @param dataSource 数据源
+     */
     public SimpleJdbcDao(DataSource dataSource){
         jdbcTemplate=new JdbcTemplate(dataSource);
         simpleJdbcInsert=new SimpleJdbcInsert(dataSource);
     }
 
-    /**
-     * 根据sql语句，返回对象集合
-     * @param sql 语句(参数用冒号加参数名，例如select * from tb where id=:id)
-     * @param clazz 类型
-     * @param parameters 参数集合(key为参数名，value为参数值)
-     * @return bean对象集合
-     */
-    @Transactional(readOnly = true)
-    public List find(final String sql,Class clazz,Map parameters){
-        try{
-            Assert.hasText(sql,"sql语句不正确!");
-            Assert.notNull(clazz,"集合中对象类型不能为空!");
-            if(parameters!=null){
-                return jdbcTemplate.query(sql, resultBeanMapper(clazz),parameters);
-            }else{
-                return jdbcTemplate.query(sql, resultBeanMapper(clazz));
-            }
-        }catch (Exception e) {
-            return null;
-        }
-    }
 
-    /**
-     * 根据sql语句，返回对象
-     * @param sql 语句(参数用冒号加参数名，例如select * from tb where id=:id)
-     * @param clazz 类型
-     * @param parameters 参数集合(key为参数名，value为参数值)
-     * @return bean对象
-     */
-    @Transactional(readOnly = true)
-    public Object findForObject(final String sql,Class clazz,Map parameters){
-        try{
-            Assert.hasText(sql,"sql语句不正确!");
-            Assert.notNull(clazz,"集合中对象类型不能为空!");
-            if(parameters!=null){
-                return jdbcTemplate.queryForObject(sql, resultBeanMapper(clazz), parameters);
-            }else{
-                return jdbcTemplate.queryForLong(sql, resultBeanMapper(clazz));
-            }
-        }catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * 根据sql语句，返回数值型返回结果
-     * @param sql 语句(参数用冒号加参数名，例如select count(*) from tb where id=:id)
-     * @param parameters 参数集合(key为参数名，value为参数值)
-     * @return bean对象
-     */
-    @Transactional(readOnly = true)
-    public long findForLong(final String sql,Map parameters){
-        try{
-            Assert.hasText(sql,"sql语句不正确!");
-            if(parameters!=null){
-                return jdbcTemplate.queryForLong(sql, parameters);
-            }else{
-                return jdbcTemplate.queryForLong(sql);
-            }
-        }catch (Exception e) {
-            return 0;
-        }
-    }
-
-    /**
-     * 根据sql语句，返回Map对象,对于某些项目来说，没有准备Bean对象，则可以使用Map代替Key为字段名,value为值
-     * @param sql 语句(参数用冒号加参数名，例如select count(*) from tb where id=:id)
-     * @param parameters 参数集合(key为参数名，value为参数值)
-     * @return bean对象
-     */
-    @Transactional(readOnly = true)
-    public Map findForMap(final String sql,Map parameters){
-        try{
-            Assert.hasText(sql,"sql语句不正确!");
-            if(parameters!=null){
-                return jdbcTemplate.queryForMap(sql, parameters);
-            }else{
-                return jdbcTemplate.queryForMap(sql);
-            }
-        }catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * 根据sql语句，返回Map对象集合
-     * @see #findForMap(String, java.util.Map)
-     * @param sql 语句(参数用冒号加参数名，例如select count(*) from tb where id=:id)
-     * @param parameters 参数集合(key为参数名，value为参数值)
-     * @return bean对象
-     */
-    @Transactional(readOnly = true)
-    public List<Map<String,Object>> findForListMap(final String sql,Map parameters){
-        try{
-            Assert.hasText(sql,"sql语句不正确!");
-            if(parameters!=null){
-                return jdbcTemplate.queryForList(sql, parameters);
-            }else{
-                return jdbcTemplate.queryForList(sql);
-            }
-        }catch (Exception e) {
-            return null;
-        }
-    }
 
     /**
      * 执行insert，update，delete等操作<br>
@@ -164,7 +65,7 @@ public class SimpleJdbcDao {
      * @param sql
      * @param parameters
      */
-    public int executeForMap(final String sql,Map parameters){
+    public int update(final String sql,Map parameters){
         Assert.hasText(sql,"sql语句不正确!");
         if(parameters!=null){
             return jdbcTemplate.update(sql, parameters);
@@ -172,15 +73,36 @@ public class SimpleJdbcDao {
             return jdbcTemplate.update(sql);
         }
     }
-	
-	/*public long executeForObjectReturnPk(final String sql,Object bean){
-		Assert.hasText(sql,"sql语句不正确!");
-		if(bean!=null){
-			return jdbcTemplate.update(sql, paramBeanMapper(bean));
-		}else{
-			return jdbcTemplate.update(sql);
-		}
-	}*/
+
+    /**
+     * update更新
+     * @param sql  sql语句
+     * @param param 参数
+     * @return
+     */
+    public int update(String sql,List<Object> param) {
+        Assert.hasText(sql,"sql语句不正确!");
+        if(param!=null){
+            return jdbcTemplate.update(sql, param);
+        }else{
+            return jdbcTemplate.update(sql);
+        }
+    }
+
+    /**
+     * update更新
+     * @param sql  sql语句
+     * @param param 参数
+     * @return
+     */
+    public int update(String sql, Object... param) {
+        Assert.hasText(sql,"sql语句不正确!");
+        if(param!=null){
+            return jdbcTemplate.update(sql, param);
+        }else{
+            return jdbcTemplate.update(sql);
+        }
+    }
 
     /*
      * 批量处理操作
@@ -188,9 +110,181 @@ public class SimpleJdbcDao {
      * 参数用冒号
      */
     public int[] batchUpdate(final String sql,List<Object[]> batch ){
+        Assert.hasText(sql,"sql语句不正确!");
         int[] updateCounts = jdbcTemplate.batchUpdate(sql,batch);
         return updateCounts;
     }
+
+    public long executeForObjectReturnPk(final String sql,Object bean){
+        Assert.hasText(sql,"sql语句不正确!");
+        if(bean!=null){
+            return jdbcTemplate.update(sql, paramBeanMapper(bean));
+        }else{
+            return jdbcTemplate.update(sql);
+        }
+    }
+
+
+
+    /**
+     * 根据sql语句，返回对象集合
+     * @param sql 语句(参数用冒号加参数名，例如select * from tb where id=:id)
+     * @param clazz 类型
+     * @param parameters 参数集合(key为参数名，value为参数值)
+     * @return bean对象集合
+     */
+    @Transactional(readOnly = true)
+    public <T> List<T> query(final String sql,Class<T> clazz,Map parameters){
+        Assert.hasText(sql,"sql语句不正确!");
+        Assert.notNull(clazz,"集合中对象类型不能为空!");
+        if(parameters!=null){
+            return jdbcTemplate.query(sql, resultBeanMapper(clazz),parameters);
+        }else{
+            return jdbcTemplate.query(sql, resultBeanMapper(clazz));
+        }
+    }
+
+
+    /**
+     * 使用指定的检索标准检索数据并返回数据
+     * @param sql SQL语句
+     * @param param 参数
+     */
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> queryForList(String sql, Object... param) {
+        Assert.hasText(sql,"sql语句不正确!");
+        if(param!=null){
+            return jdbcTemplate.queryForList(sql, param);
+        }else{
+            return jdbcTemplate.queryForList(sql);
+        }
+    }
+
+    /**
+     * 根据sql语句，返回Map对象集合
+     * @param sql 语句(参数用冒号加参数名，例如select count(*) from tb where id=:id)
+     * @param parameters 参数集合(key为参数名，value为参数值)
+     * @return bean对象
+     */
+    @Transactional(readOnly = true)
+    public List<Map<String,Object>> queryForList(final String sql,Map parameters){
+        Assert.hasText(sql,"sql语句不正确!");
+        if(parameters!=null){
+            return jdbcTemplate.queryForList(sql, parameters);
+        }else{
+            return jdbcTemplate.queryForList(sql);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public <T> List<T> queryForList(String sql,Class<T> clazz, Object... param) {
+        Assert.hasText(sql,"sql语句不正确!");
+        Assert.notNull(clazz,"对象类型不能为空!");
+        if(param!=null){
+            return jdbcTemplate.queryForList(sql,clazz, param);
+        }else{
+            return jdbcTemplate.queryForList(sql,clazz);
+        }
+    }
+
+    /**
+     * 根据sql语句，返回Map对象,对于某些项目来说，没有准备Bean对象，则可以使用Map代替Key为字段名,value为值
+     * @param sql 语句(参数用冒号加参数名，例如select count(*) from tb where id=:id)
+     * @param parameters 参数集合(key为参数名，value为参数值)
+     * @return bean对象
+     */
+    @Transactional(readOnly = true)
+    public Map<String,Object> queryForMap(final String sql,Map parameters){
+        Assert.hasText(sql,"sql语句不正确!");
+        if(parameters!=null){
+            return jdbcTemplate.queryForMap(sql, parameters);
+        }else{
+            return jdbcTemplate.queryForMap(sql);
+        }
+    }
+    /**
+     * 根据sql语句，返回Map对象,对于某些项目来说，没有准备Bean对象，则可以使用Map代替Key为字段名,value为值
+     * @param sql 语句(参数用冒号加参数名，例如select count(*) from tb where id=:id)
+     * @param param 参数集合(key为参数名，value为参数值)
+     * @return bean对象
+     */
+    @Transactional(readOnly = true)
+    public Map<String,Object> queryForMap(final String sql,Object... param){
+        Assert.hasText(sql,"sql语句不正确!");
+        if(param!=null){
+            return jdbcTemplate.queryForMap(sql, param);
+        }else{
+            return jdbcTemplate.queryForMap(sql);
+        }
+    }
+
+    /**
+     * 根据sql语句，返回对象
+     * @param sql 语句(参数用冒号加参数名，例如select * from tb where id=:id)
+     * @param clazz 类型
+     * @param parameters 参数集合(key为参数名，value为参数值)
+     * @return bean对象
+     */
+    @Transactional(readOnly = true)
+    public Object queryForObject(final String sql,Class clazz,Map parameters){
+        try{
+            Assert.hasText(sql,"sql语句不正确!");
+            Assert.notNull(clazz,"对象类型不能为空!");
+            if(parameters!=null){
+                return jdbcTemplate.queryForObject(sql, resultBeanMapper(clazz), parameters);
+            }else{
+                return jdbcTemplate.queryForLong(sql, resultBeanMapper(clazz));
+            }
+        }catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 根据sql语句，返回数值型返回结果
+     * @param sql 语句(参数用冒号加参数名，例如select count(*) from tb where id=:id)
+     * @param parameters 参数集合(key为参数名，value为参数值)
+     * @return bean对象
+     */
+    @Transactional(readOnly = true)
+    public long queryForLong(final String sql,Map parameters){
+        Assert.hasText(sql,"sql语句不正确!");
+        if(parameters != null){
+            return  jdbcTemplate.queryForLong(sql, parameters);
+        }
+        return  jdbcTemplate.queryForLong(sql);
+    }
+
+
+    /**
+     * 使用指定的检索标准检索数据并分页返回数据For JDBC-采用预处理方式
+     * @param sql SQL语句
+     * @param param 参数
+     */
+    @Transactional(readOnly = true)
+    public long queryForLong(String  sql,Object... param) {
+        Assert.hasText(sql,"sql语句不正确!");
+        if(param != null){
+            return  jdbcTemplate.queryForLong(sql, param);
+        }
+        return  jdbcTemplate.queryForLong(sql);
+    }
+
+    /**
+     * 使用指定的检索标准检索数据并分页返回数据For JDBC-采用预处理方式
+     * @param sql SQL语句
+     * @param param 参数
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public int queryForInt(String sql, Object... param) {
+        Assert.hasText(sql,"sql语句不正确!");
+        if(param != null){
+            return  jdbcTemplate.queryForInt(sql, param);
+        }
+        return  jdbcTemplate.queryForInt(sql);
+    }
+
 
 
     protected ParameterizedBeanPropertyRowMapper resultBeanMapper(Class clazz) {

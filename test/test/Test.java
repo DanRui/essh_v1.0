@@ -12,7 +12,10 @@ import com.eryansky.common.utils.collections.Collections3;
 public class Test {
 
 	public static void main(String[] args) {
-		List<Long> ids = null;
+
+        System.out.println(new NullPointerException("空指针一次").getClass().getSimpleName());
+        System.out.println(new NullPointerException("空指针一次").getClass().getName());
+        List<Long> ids = null;
 		if (!Collections3.isEmpty(ids)) {
 			for (Long id : ids) {
 				System.out.println(id);

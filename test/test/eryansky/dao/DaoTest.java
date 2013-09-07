@@ -41,7 +41,7 @@ public class DaoTest {
 			String sql = "update T_BASE_ROLE set name = ? where id = ?";
 			Object[] obj = new Object[]{"11",1};
 			int count = 0;
-			count = jdbcDao.executeSql(sql, obj);
+			count = jdbcDao.update(sql, obj);
 			System.out.println(count);
 
 //		    roleManager.update();

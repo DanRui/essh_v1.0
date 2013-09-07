@@ -53,14 +53,14 @@ public class AccountManagerTest {
     public void test2(){
 	    Map<String, String> map = Maps.newHashMap();
 	    map.put("name", "%");
-	    System.out.println(jdbcDao.findForListMap("select * from t_base_resource where name like :name ",  map));
+	    System.out.println(jdbcDao.queryForList("select * from t_base_resource where name like :name ",  map));
     }
 	
 	
 	@Test
     public void page(){
 		String sql = "select * from T_BASE_USER";
-		List list1 = jdbcDao.findForJdbc(sql, 1, 20);
+		List list1 = jdbcDao.queryForList(sql, 1, 20);
 		System.out.println(JsonMapper.nonEmptyMapper().toJson(list1));
     }
 	
