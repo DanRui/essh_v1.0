@@ -25,6 +25,10 @@ public class PageSqlUtils {
 	 * oracle数据库
 	 */
 	public static final String DATABSE_TYPE_ORACLE = "oracle";
+    /**
+     * SQL Server数据库
+     */
+    public static final String DATABSE_TYPE_SQLSERVER ="sqlserver";
 	
 	// 分页SQL
 	/**
@@ -40,7 +44,12 @@ public class PageSqlUtils {
 	 */
 	public static final String ORACLE_SQL = "select * from (select row_.*,rownum rownum_ from ({0}) row_ where rownum <= {1}) where rownum_>{2}";
 
-	/**
+    /**
+     * SQL Server分页SQL
+     */
+    public static final String SQLSERVER_SQL = "select * from ( select row_number() over(order by tempColumn) tempRowNumber, * from (select top {1} tempColumn = 0, {0}) t ) tt where tempRowNumber > {2}"; //sqlserver
+
+    /**
 	 * 按照数据库类型，封装SQL（根据配置文件自动识别）.
 	 * <br>支持MySQL、Oracle、Postgresql分页查询.
 	 * @param sql 查询语句 例如:"select * from user "
@@ -65,8 +74,20 @@ public class PageSqlUtils {
 			int endIndex = beginIndex + rows;
 			sqlParam[2] = beginIndex + "";
 			sqlParam[1] = endIndex + "";
+            if(SysConstants.getJdbcUrl().indexOf(DATABSE_TYPE_ORACLE)!=-1) {
+                sql = MessageFormat.format(ORACLE_SQL, sqlParam);
+            } else if(SysConstants.getJdbcUrl().indexOf(DATABSE_TYPE_SQLSERVER)!=-1) {
+                sqlParam[0] = sql.substring(getAfterSelectInsertPoint(sql));
+                sql = MessageFormat.format(SQLSERVER_SQL, sqlParam);
+            }
 			sql = MessageFormat.format(PageSqlUtils.ORACLE_SQL, sqlParam[0],sqlParam[1],sqlParam[2]);
 		}
 		return sql;
 	}
+
+    private static int getAfterSelectInsertPoint(String sql) {
+        int selectIndex = sql.toLowerCase().indexOf("select");
+        int selectDistinctIndex = sql.toLowerCase().indexOf("select distinct");
+        return selectIndex + (selectDistinctIndex == selectIndex ? 15 : 6);
+    }
 }
