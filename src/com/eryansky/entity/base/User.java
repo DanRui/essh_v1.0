@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -13,18 +12,16 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.eryansky.entity.base.state.SexType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import com.eryansky.common.orm.PropertyType;
 import com.eryansky.common.orm.annotation.Delete;
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.common.utils.collections.Collections3;
-import com.eryansky.entity.base.state.SexState;
 import com.eryansky.utils.AppConstants;
 import com.eryansky.utils.CacheConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -63,7 +60,7 @@ public class User
     /**
      * 性别 女(0) 男(1) 保密(2) 默认：保密
      */
-    private Integer sex = SexState.secrecy.getValue();
+    private Integer sex = SexType.secrecy.getValue();
 
     /**
      * 邮件 以 ","分割
@@ -166,7 +163,7 @@ public class User
      */
     @Transient
     public String getSexDesc() {
-    	SexState ss = SexState.getSexState(sex);
+    	SexType ss = SexType.getSexType(sex);
     	String str = "";
     	if(ss != null){
     		str = ss.getDescription();

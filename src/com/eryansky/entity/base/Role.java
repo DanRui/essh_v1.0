@@ -45,17 +45,22 @@ public class Role
      * 关联的资源
      */
     private List<Resource> resources = Lists.newArrayList();
+    /**
+     * 关联资源ID集合    @Transient
+     */
+    private List<Long> resourceIds = Lists.newArrayList();
     
     /**
      * 关联的用户
      */
     private List<User> users = Lists.newArrayList();
     
-    private List<Long> resourceIds = Lists.newArrayList();
+
 
     public Role() {
 
     }
+
 
     public Role(String name, String description, List<Resource> resources) {
 
@@ -95,6 +100,25 @@ public class Role
         this.resources = resources;
     }
 
+
+    /**
+     * 角色拥有的资源id字符串集合
+     *
+     * @return
+     */
+    @Transient
+    @SuppressWarnings("unchecked")
+    public List<Long> getResourceIds() {
+        if (!Collections3.isEmpty(resources)) {
+            resourceIds = ConvertUtils.convertElementPropertyToList(resources, "id");
+        }
+        return resourceIds;
+    }
+
+    public void setResourceIds(List<Long> resourceIds) {
+        this.resourceIds = resourceIds;
+    }
+
     /**
      * 角色拥有的资源字符串,多个之间以","分割
      * 
@@ -123,23 +147,6 @@ public class Role
                 "loginName", ", ");
     }
 
-    /**
-     * 角色拥有的资源id字符串集合
-     * 
-     * @return
-     */
-    @Transient
-    @SuppressWarnings("unchecked")
-    public List<Long> getResourceIds() {
-        if (!Collections3.isEmpty(resources)) {
-            resourceIds = ConvertUtils.convertElementPropertyToList(resources, "id");
-        }
-        return resourceIds;
-    }
-
-    public void setResourceIds(List<Long> resourceIds) {
-        this.resourceIds = resourceIds;
-    }
 
     @ManyToMany(mappedBy = "roles")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)

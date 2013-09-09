@@ -138,7 +138,7 @@ public class UserManager extends EntityManager<User, Long> {
 	}
 	/**
 	 * 根据登录名、密码查找用户.
-	 * 
+	 * <br/>排除已删除的用户
 	 * @param loginName
 	 *            登录名
 	 * @param password

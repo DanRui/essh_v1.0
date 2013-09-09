@@ -7,9 +7,8 @@ import java.util.Map;
 
 import com.eryansky.common.model.Menu;
 import com.eryansky.common.utils.StringUtils;
-import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.Resource;
-import com.eryansky.entity.base.state.ResourceState;
+import com.eryansky.entity.base.state.ResourceType;
 import org.apache.commons.collections.ListUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.orm.hibernate.HibernateDao;
 import com.eryansky.common.utils.collections.Collections3;
-import com.eryansky.entity.base.Role;
 import com.eryansky.entity.base.User;
 import com.eryansky.entity.base.state.StatusState;
 import com.eryansky.utils.CacheConstants;
@@ -111,16 +109,22 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @throws SystemException
      * @throws ServiceException
      */
+    @CacheEvict(value = { CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE,
+            CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE,
+            CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},allEntries = true)
     public void saveResource(Resource entity) throws DaoException, SystemException, ServiceException {
+        logger.debug("清空缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE
+                +","+CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE);
         Assert.notNull(entity,"参数[entity]为空!");
         this.saveEntity(entity);
-        if(entity.getType() !=null && ResourceState.function.getValue().equals(entity.getType())){
+        if(entity.getType() !=null && ResourceType.function.getValue().equals(entity.getType())){
             List<Resource> subResources = entity.getSubResources();
             while (!Collections3.isEmpty(subResources)){
                 Iterator<Resource> iterator = subResources.iterator();
                 while(iterator.hasNext()){
                      Resource subResource = iterator.next();
-                     subResource.setType(ResourceState.function.getValue());
+                     subResource.setType(ResourceType.function.getValue());
                      iterator.remove();
                      subResources = ListUtils.union(subResources,subResource.getSubResources());
                      super.update(subResource);
@@ -167,7 +171,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
            userResources = this.getResourcesByUserId(userId,null);
         }
         for(Resource resource:userResources){
-            TreeNode node =  this.resourceToTreeNode(resource,ResourceState.menu.getValue(),true);
+            TreeNode node =  this.resourceToTreeNode(resource, ResourceType.menu.getValue(),true);
             if(node !=null){
                 nodes.add(node);
             }
@@ -293,7 +297,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
     public Menu resourceToMenu(Resource resource,boolean isCascade) throws DaoException, SystemException,
             ServiceException {
         Assert.notNull(resource,"参数resource不能为空");
-        if(ResourceState.menu.getValue().equals(resource.getType())){
+        if(ResourceType.menu.getValue().equals(resource.getType())){
             Menu menu = new Menu();
             menu.setId(resource.getId().toString());
             menu.setText(resource.getName());
@@ -301,7 +305,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
             if(isCascade){
                 List<Menu> childrenMenus = Lists.newArrayList();
                 for(Resource subResource:resource.getSubResources()){
-                    if(ResourceState.menu.getValue().equals(subResource.getType())){
+                    if(ResourceType.menu.getValue().equals(subResource.getType())){
                         childrenMenus.add(resourceToMenu(subResource,true));
                     }
                 }
@@ -326,7 +330,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
         }
         for(Resource resource:resources){
             if(StringUtils.isNotBlank(resource.getUrl())){
-                if(ResourceState.menu.getValue().equals(resource.getType())) {
+                if(ResourceType.menu.getValue().equals(resource.getType())) {
                     Menu menu = new Menu();
                     menu.setId(resource.getId().toString());
                     menu.setText(resource.getName());
@@ -355,7 +359,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
             //去除非菜单资源
             Iterator<Resource> iterator = rootResources.iterator();
             while (iterator.hasNext()){
-                if(!ResourceState.menu.getValue().equals(iterator.next().getType())) {
+                if(!ResourceType.menu.getValue().equals(iterator.next().getType())) {
                     iterator.remove();
                 }
             }

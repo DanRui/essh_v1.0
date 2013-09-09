@@ -4,12 +4,9 @@ import java.util.List;
 
 import com.eryansky.common.model.Combobox;
 import com.eryansky.common.model.Datagrid;
-import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
-import com.eryansky.common.orm.hibernate.HibernateWebUtils;
-import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Resource;
-import com.eryansky.entity.base.state.ResourceState;
+import com.eryansky.entity.base.state.ResourceType;
 import org.apache.commons.collections.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +18,6 @@ import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
-import com.eryansky.entity.base.state.StatusState;
 import com.eryansky.service.base.ResourceManager;
 import com.eryansky.utils.SelectType;
 
@@ -144,7 +140,7 @@ public class ResourceAction extends StrutsAction<Resource> {
                 }
             }
 
-            ResourceState[] rss = ResourceState.values();
+            ResourceType[] rss = ResourceType.values();
             for(int i=0;i<rss.length;i++){
                 Combobox combobox = new Combobox();
                 combobox.setValue(rss[i].getValue().toString());

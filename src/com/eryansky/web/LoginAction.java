@@ -1,13 +1,10 @@
 package com.eryansky.web;
 
-import com.eryansky.common.exception.DaoException;
-import com.eryansky.common.exception.ServiceException;
-import com.eryansky.common.exception.SystemException;
 import com.eryansky.common.model.Menu;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.Page;
 import com.eryansky.entity.base.Resource;
-import com.eryansky.entity.base.state.ResourceState;
+import com.eryansky.entity.base.state.ResourceType;
 import com.eryansky.service.base.ResourceManager;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
@@ -25,7 +22,6 @@ import com.eryansky.service.base.UserManager;
 import com.eryansky.utils.AppUtils;
 import org.springframework.util.Assert;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -179,7 +175,7 @@ public class LoginAction
 //                    //去除非菜单资源
 //                    Iterator<Resource> iterator = rootResources.iterator();
 //                    while (iterator.hasNext()){
-//                        if(!ResourceState.menu.getValue().equals(iterator.next().getType())) {
+//                        if(!ResourceType.menu.getValue().equals(iterator.next().getType())) {
 //                            iterator.remove();
 //                        }
 //                    }
@@ -218,7 +214,7 @@ public class LoginAction
                 }
                 for(Resource resource:resources){
                     if(StringUtils.isNotBlank(resource.getUrl())){
-                        if(ResourceState.menu.getValue().equals(resource.getType())) {
+                        if(ResourceType.menu.getValue().equals(resource.getType())) {
                             Menu menu = new Menu();
                             menu.setId(resource.getId().toString());
                             menu.setText(resource.getName());
@@ -245,7 +241,7 @@ public class LoginAction
     private Menu resourceToMenu(Resource resource,boolean isCascade) {
         Assert.notNull(resource, "参数resource不能为空");
         String head = this.getHeadFromUrl(Struts2Utils.getRequest().getRequestURL().toString());
-        if(ResourceState.menu.getValue().equals(resource.getType())){
+        if(ResourceType.menu.getValue().equals(resource.getType())){
             Menu menu = new Menu();
             menu.setId(resource.getId().toString());
             menu.setText(resource.getName());
@@ -253,7 +249,7 @@ public class LoginAction
             if(isCascade){
                 List<Menu> childrenMenus = Lists.newArrayList();
                 for(Resource subResource:resource.getSubResources()){
-                    if(ResourceState.menu.getValue().equals(subResource.getType())){
+                    if(ResourceType.menu.getValue().equals(subResource.getType())){
                         childrenMenus.add(resourceToMenu(subResource,true));
                     }
                 }

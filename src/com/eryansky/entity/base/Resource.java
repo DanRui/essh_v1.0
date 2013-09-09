@@ -1,8 +1,6 @@
 package com.eryansky.entity.base;
 
-import com.eryansky.entity.base.state.ResourceState;
-import com.eryansky.entity.base.state.StatusState;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.eryansky.entity.base.state.ResourceType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -85,7 +83,7 @@ public class Resource
     /**
      * 资源类型 资源(0) 功能(1)
      */
-    private Integer type = ResourceState.menu.getValue();
+    private Integer type = ResourceType.menu.getValue();
     /**
      * 有序的关联对象集合
      */
@@ -241,7 +239,7 @@ public class Resource
      */
     @Transient
     public String getTypeDesc() {
-        ResourceState r = ResourceState.getResourceState(type);
+        ResourceType r = ResourceType.getResourceType(type);
         String str = "";
         if(r != null){
             str = r.getDescription();

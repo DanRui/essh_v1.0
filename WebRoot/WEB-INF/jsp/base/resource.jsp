@@ -24,14 +24,9 @@ $(function() {
         idField : 'id',
         treeField:"name",
         fitColumns:false,//自适应宽度
+        frozenColumns:[[{field:'name',title:'机构名称',width:200}]],
         columns:[[
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
-            <%--{field:'ico',title:'图标',width:60,align:'center',formatter:function(value,rowData,rowIndex){--%>
-                <%--return $.formatString('<span class="tree-icon tree-file {0}"></span>', value);--%>
-                <%--// return "<div style='text-align:center;'><img src='${ctx}/img/resource/"+value +"' border='0' width='20px' height='20px'></div>";--%>
-            <%--}--%>
-            <%--},--%>
-            {field:'name',title:'资源名称',width:200},
             {field:'code',title:'资源编码',width:120},
             {field:'url',title:'链接地址',width:260},
             {field:'markUrl',title:'标识地址',width:200},
@@ -146,6 +141,7 @@ function showDialog(row){
                 resource_form.form('load', row);
             } else{
                 setSortValue();
+                $("input[name=status]:eq(0)").attr("checked",'checked');//状态 初始化值
                 var selectedNode = resource_treegrid.treegrid('getSelected');
                 if(selectedNode){
                     var initFormData = {'_parentId':[selectedNode.id],'type':selectedNode.type};

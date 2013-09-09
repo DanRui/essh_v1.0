@@ -2,17 +2,19 @@ package com.eryansky.entity.base.state;
 
 /**
  * 
- * 资源类型标识 枚举类型.
- * <br>菜单(0) 功能(1)
+ * 性别标识 枚举类型.
+ * 
  * @author 尔演&Eryan eryanwcp@gmail.com
- * @date 2013-01-28 上午10:48:23
+ * @date 2012-8-11 下午10:48:23
  * 
  */
-public enum ResourceState {
-	/** 菜单(0) */
-	menu(0, "菜单"),
-	/** 按钮(1) */
-	function(1, "功能");
+public enum SexType {
+	/** 女(0) */
+	girl(0, "女"),
+	/** 男(1) */
+	boy(1, "男"),
+	/** 保密(2) */
+	secrecy(2, "保密");
 
 	/**
 	 * 值 Integer型
@@ -23,7 +25,7 @@ public enum ResourceState {
 	 */
 	private final String description;
 
-	ResourceState(Integer value, String description) {
+	SexType(Integer value, String description) {
 		this.value = value;
 		this.description = description;
 	}
@@ -44,20 +46,20 @@ public enum ResourceState {
 		return description;
 	}
 
-	public static ResourceState getResourceState(Integer value) {
+	public static SexType getSexType(Integer value) {
 		if (null == value)
 			return null;
-		for (ResourceState _enum : ResourceState.values()) {
+		for (SexType _enum : SexType.values()) {
 			if (value.equals(_enum.getValue()))
 				return _enum;
 		}
 		return null;
 	}
 	
-	public static ResourceState getResourceState(String description) {
+	public static SexType getSexType(String description) {
 		if (null == description)
 			return null;
-		for (ResourceState _enum : ResourceState.values()) {
+		for (SexType _enum : SexType.values()) {
 			if (description.equals(_enum.getDescription()))
 				return _enum;
 		}
