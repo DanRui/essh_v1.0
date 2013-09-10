@@ -23,17 +23,38 @@ $.serializeObject = function(form) {
 	});
 	return o;
 };
-//扩展日期格式化 例：new Date().format("yyyy-MM-dd hh:mm:ss")
+
+/**
+ * 扩展日期格式化 例：new Date().format("yyyy-MM-dd hh:mm:ss")
+ *
+ * "M+" :月份
+ * "d+" : 天
+ * "h+" : 小时
+ * "m+" : 分钟
+ * "s+" : 秒钟
+ * "q+" : 季度
+ * "S" : 毫秒数
+ * "X": 星期 如星期一
+ * "Z": 返回周 如周二
+ * "F":英文星期全称，返回如 Saturday
+ * "L": 三位英文星期，返回如 Sat
+ * @param format 格式化字符串
+ * @returns {*}
+ */
 Date.prototype.format = function(format) {
+    var week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', '日', '一', '二', '三', '四', '五', '六'];
 	var o = {
-		"M+" : this.getMonth() + 1, //month 
-		"d+" : this.getDate(), //day 
-		"h+" : this.getHours(), //hour 
-		"m+" : this.getMinutes(), //minute 
-		"s+" : this.getSeconds(), //second 
-		"q+" : Math.floor((this.getMonth() + 3) / 3), //quarter 
-		"S" : this.getMilliseconds()
-	//millisecond 
+		"M+" : this.getMonth() + 1, //月份
+		"d+" : this.getDate(), //天
+		"h+" : this.getHours(), //小时
+		"m+" : this.getMinutes(), //分钟
+		"s+" : this.getSeconds(), //秒钟
+		"q+" : Math.floor((this.getMonth() + 3) / 3), //季度
+		"S" : this.getMilliseconds(),//毫秒数
+        "X": "星期" + week[this.getDay() + 7], //星期
+        "Z": "周" + week[this.getDay() + 7],  //返回如 周二
+        "F": week[this.getDay()],  //英文星期全称，返回如 Saturday
+        "L": week[this.getDay()].slice(0, 3)//三位英文星期，返回如 Sat
 	}
 	if (/(y+)/.test(format))
 		format = format.replace(RegExp.$1, (this.getFullYear() + "")
@@ -47,8 +68,8 @@ Date.prototype.format = function(format) {
 
 /**
  * 日期格式化.
- * @param value 值
- * @param format 格式化 例如："yyyy-MM-dd"、"yyyy-MM-dd HH:mm:ss"
+ * @param value 日期
+ * @param format 格式化字符串 例如："yyyy-MM-dd"、"yyyy-MM-dd HH:mm:ss"
  * @returns
  */
  $.formatDate = function(value,format) {
