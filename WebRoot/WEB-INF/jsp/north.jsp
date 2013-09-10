@@ -8,7 +8,7 @@ function showAbout(){
     //弹出对话窗口
 	login_about_dialog = $('<div/>').dialog({
 		title:'关于我们',
-		width : 400,
+		width : 420,
 		height : 220,
 		modal : true,
 		href : '${ctx}/fileRedirect.action?toPage=about.jsp',
@@ -58,10 +58,10 @@ function showAbout(){
     //弹出对话窗口
 	login_about_dialog = $('<div/>').dialog({
 		title:'修改用户密码',
-		width : 410,
+		width : 460,
 		height : 240,
 		modal : true,
-		href : '${ctx}/${ctx}/fileRedirect.action?toPage=password.jsp',
+		href : '${ctx}/${ctx}/fileRedirect.action?toPage=north-password.jsp',
 		buttons : [{
 			text : '保存',
 			iconCls : 'icon-save',
