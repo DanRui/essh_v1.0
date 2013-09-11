@@ -70,7 +70,7 @@ Date.prototype.format = function(format) {
  * 日期格式化.
  * @param value 日期
  * @param format 格式化字符串 例如："yyyy-MM-dd"、"yyyy-MM-dd HH:mm:ss"
- * @returns
+ * @returns 格式化后的字符串
  */
  $.formatDate = function(value,format) {
 	if (value == null || value == '' || value == 'null' ) {
@@ -169,15 +169,15 @@ $.objToStr = function(o) {
 /**
  * json字符串转换为Object对象.
  * @param json json字符串
- * @returns
+ * @returns Object
  */
 $.jsonToObj = function(json){ 
     return eval("("+json+")"); 
 }
 /**
  * json对象转换为String字符串对象.
- * @param o Object对象
- * @returns
+ * @param o Json Object
+ * @returns   Object对象
  */
 $.jsonToString = function(o) {
 	var r = [];
