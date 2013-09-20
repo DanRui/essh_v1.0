@@ -1,5 +1,8 @@
 package com.eryansky.common.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +31,7 @@ public class ThreadUtils {
 	 * 先使用shutdown尝试执行所有任务.
 	 * 超时后调用shutdownNow取消在workQueue中Pending的任务,并中断所有阻塞函数.
 	 * 另对在shutdown时线程本身被调用中断做了处理.
-	 * @param shutdownNowTimeout 
+	 * @param shutdownNowTimeout
 	 */
 	public static void gracefulShutdown(ExecutorService pool, int shutdownTimeout, int shutdownNowTimeout,
 			TimeUnit timeUnit) {
@@ -80,4 +83,28 @@ public class ThreadUtils {
 			return new Thread(runable, namePrefix + threadNumber.getAndIncrement());
 		}
 	}
+
+    /**
+     * 保证不会有Exception抛出到线程池的Runnable，防止用户没有捕捉异常导致中断了线程池中的线程。
+     */
+    public static class WrapExceptionRunnable implements Runnable {
+
+        private static Logger logger = LoggerFactory.getLogger(WrapExceptionRunnable.class);
+
+        private Runnable runnable;
+
+        public WrapExceptionRunnable(Runnable runnable) {
+            this.runnable = runnable;
+        }
+
+        @Override
+        public void run() {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                // catch any exception, because the scheduled thread will break if the exception thrown outside.
+                logger.error("Unexpected error occurred in task", e);
+            }
+        }
+    }
 }

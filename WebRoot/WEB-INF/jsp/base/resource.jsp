@@ -47,12 +47,10 @@ $(function() {
             edit(row);
         },
         onLoadSuccess:function(){
-            //鼠标移动提示列表信息tooltip
-            $(this).datagrid('showTooltip');
             //表头居中
             //eu.datagridHeaderCenter();
         }
-    });
+    }).datagrid('showTooltip');
 
 });
 
