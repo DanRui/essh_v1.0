@@ -25,7 +25,7 @@ $(function() {
 //加载bug类型
 function loadBugType(){
 	$('#type').combobox({
-        url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug&selectType=select',
+        url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug001&selectType=select',
 	    multiple:false,//是否可多选
 	    editable:false,//是否可编辑
 	    width:120,

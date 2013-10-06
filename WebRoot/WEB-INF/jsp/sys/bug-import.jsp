@@ -7,7 +7,6 @@
         <div>
 			<label>上传文件:</label>
 		    <input id="filedata" name="filedata" type="file" >
-		    <span style="color: red">*</span>
 		</div>
 	</form>
 </div>

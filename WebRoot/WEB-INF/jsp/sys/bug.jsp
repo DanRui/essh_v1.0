@@ -29,25 +29,23 @@ $(function() {
 	    sortName:'id',//默认排序字段
 		sortOrder:'asc',//默认排序方式 'desc' 'asc'
 		idField : 'id',
-		frozenColumns:[[ 
-              {field:'ck',checkbox:true},
+        frozenColumns:[[{field:'ck',checkbox:true},{field:'title',title:'bug标题',width:260 }]],
+        columns:[[
               {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
               {field:'typeName',title:'bug类型',width:120 },
-              {field:'title',title:'bug标题',width:360 },
-              {field:'operater',title:'操作',align:'center',width:80,formatter:function(value,rowData,rowIndex){ 
+              {field:'operater',title:'操作',align:'center',width:200,formatter:function(value,rowData,rowIndex){
             	  var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
-         	      var title = $.formatString("<a href='javascript:eu.addTab(window.parent.layout_center_tabs, \"{0}\",\"{1}\", true)' >{2}</a>",rowData.title,url,'查看');
-         	      return title;
+         	      var operaterHtml = "<a class='easyui-linkbutton' iconCls='icon-add' plain='true' onclick='view(\""+rowData.title+"\",\""+url+"\")' >查看</a>"
+                  +"<a class='easyui-linkbutton' iconCls='icon-edit' plain='true' href='#' onclick='edit("+rowIndex+");' >编辑</a>";
+         	      return operaterHtml;
               }}
 		    ]],
-	    columns:[[  
-              //{field:'content',title:'bug描述',width:800}           
-	    ]],
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
 	    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
 	    	//鼠标移动提示列表信息tooltip
 			$(this).datagrid('showTooltip');
+            $.parser.parse();
 		},
 	    onRowContextMenu : function(e, rowIndex, rowData) {
 			e.preventDefault();
@@ -66,10 +64,16 @@ $(function() {
 });
 </script>
 <script type="text/javascript">
+    //查看
+    function view(title,url){
+        if(window.parent.layout_center_tabs){
+             eu.addTab(window.parent.layout_center_tabs,title,url,true);
+        }
+    }
 	//加载bug类型
 	function loadBugType(){
 		$('#filter_EQS_type').combobox({
-	        url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug&selectType=all',
+	        url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug001&selectType=all',
 		    multiple:false,//是否可多选
 		    //editable:false,//是否可编辑
 		    width:120,
@@ -156,6 +160,9 @@ $(function() {
     function edit(rowIndex, rowData){
         //响应双击事件
         if(rowIndex != undefined) {
+            bug_datagrid.datagrid('selectRow',rowIndex);
+            var rowData = bug_datagrid.datagrid('getSelected');
+            bug_datagrid.datagrid('unselectRow',rowIndex);
             showDialog(rowData);
             return;
         }
@@ -289,15 +296,10 @@ $(function() {
 		</form>
 	</div>
 	<div align="right">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
-		<span class="toolbar-btn-separator"></span>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
-		<span class="toolbar-btn-separator"></span>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a> 
-		<span class="toolbar-btn-separator"></span>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="exportExcel()">Excel导出</a> 
-		<span class="toolbar-btn-separator"></span>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="importExcel()">Excel导入</a> 
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="showDialog()">新增</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()">批量删除</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit"  onclick="exportExcel()">Excel导出</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="importExcel()">Excel导入</a>
 	</div>
 </div>
 <table id="bug_datagrid" toolbar="#bug_datagrid-toolbar" fit="true"></table>
