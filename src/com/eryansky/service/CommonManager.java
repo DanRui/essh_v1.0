@@ -77,7 +77,7 @@ public class CommonManager extends DefaultEntityManager<Object,Long>{
 		Assert.notNull(entityName, "参数[entityName]为空!");
 		Assert.notNull(propertyName, "参数[propertyName]为空!");
 		StringBuilder sb = new StringBuilder();
-		sb.append("select e.id from ").append(entityName).append(" e where ")
+		sb.append("select e.id from e.").append(entityName).append(" e where ")
 				.append(propertyName).append(" = ?");
 		logger.debug(sb.toString());
 		Iterator<?> iterator = entityDao.createQuery(sb.toString(),
