@@ -85,20 +85,20 @@ public class LoginAction
             if (StringUtils.isEmpty(loginName) || StringUtils.isEmpty(password)) {
                 msg = "用户名或密码不能为空!";
                 result = new Result(Result.ERROR, msg, null);
-                Struts2Utils.renderJson(result);
+                Struts2Utils.renderText(result);
                 return null;
             }
             /*
             if (StringUtils.isEmpty(validateCode)) {
                 msg = "验证码不能为空!";
                 result = new Result(Result.RESULT_ERROR, msg, null);
-                Struts2Utils.renderJson(result);
+                Struts2Utils.renderText(result);
                 return null;
             }else{
             	if(!ValidateCodeServlet.validate(Struts2Utils.getRequest(), validateCode)){
             		 msg = "验证码不正确或验证码已过期!";
                      result = new Result(Result.RESULT_ERROR, msg, null);
-                     Struts2Utils.renderJson(result);
+                     Struts2Utils.renderText(result);
                      return null;
             	}
             }
@@ -112,15 +112,26 @@ public class LoginAction
             }
             if(msg != null){
             	result = new Result(Result.ERROR, msg, null);
-                Struts2Utils.renderJson(result);
+                Struts2Utils.renderText(result);
                 return null;
             }
-        	result = new Result(Result.SUCCESS, "用户验证通过!", Struts2Utils.getRequest().getContextPath()+"/login!index.action");
-            Struts2Utils.renderJson(result);
+
+            //将用户信息放入session中
             Struts2Utils.getSession().setAttribute(SysConstants.SESSION_USER, user);
-            
             AppUtils.putUserToSession(user);
             logger.info("用户{}登录系统,IP:{}.", user.getLoginName(),Struts2Utils.getIp());
+
+            //设置调整URL 如果session中包含未被授权的URL 则跳转到该页面
+            String resultUrl = Struts2Utils.getRequest().getContextPath()+"/login!index.action";
+            Object unAuthorityUrl = Struts2Utils.getSession().getAttribute(SysConstants.SESSION_UNAUTHORITY_URL);
+            if(unAuthorityUrl != null){
+                resultUrl = unAuthorityUrl.toString();
+                //清空未被授权的URL
+                Struts2Utils.getSession().setAttribute(SysConstants.SESSION_UNAUTHORITY_URL,null);
+            }
+            //返回
+        	result = new Result(Result.SUCCESS, "用户验证通过!",resultUrl);
+            Struts2Utils.renderText(result);
         } catch (Exception e) {
             throw e;
         }

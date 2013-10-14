@@ -31,6 +31,12 @@ public class AuthorityInterceptor extends MethodFilterInterceptor{
         String requestUrl = Struts2Utils.getRequest().getRequestURI();
 
 		if(sessionUser != null){
+            //清空session中清空未被授权的访问地址
+            Object unAuthorityUrl = Struts2Utils.getSession().getAttribute(SysConstants.SESSION_UNAUTHORITY_URL);
+            if(unAuthorityUrl != null){
+                Struts2Utils.getSession().setAttribute(SysConstants.SESSION_UNAUTHORITY_URL,null);
+            }
+
             String url = StringUtils.replaceOnce(requestUrl,  Struts2Utils.getRequest().getContextPath(), "");
             //检查用户是否授权该URL
             boolean isAuthority = resourceManager.isAuthority(url,sessionUser.getId());
@@ -41,6 +47,7 @@ public class AuthorityInterceptor extends MethodFilterInterceptor{
 
 			return actioninvocation.invoke(); //递归调用拦截器
 		}else{
+            Struts2Utils.getSession().setAttribute(SysConstants.SESSION_UNAUTHORITY_URL,requestUrl);
 			return Action.LOGIN; //返回到登录页面
 		}
 		
