@@ -10,7 +10,7 @@ package com.eryansky.codegen.util;
  */
 public enum FileType {
 	ENTITY("entity", Resources.ENTITY_PACKAGE,Resources.ENTITY_TEMPLATE,".java"), 
-	SERVICE("service", Resources.SERVICE_PACKAGE,Resources.SERVICE_TEMPLATE,"Service.java"), 
+	SERVICE("service", Resources.SERVICE_PACKAGE,Resources.SERVICE_TEMPLATE,"Manager.java"),
 	CONTROLLER("controller", Resources.CONTROLLER_PACKAGE,Resources.CONTROLLER_TEMPLATE,"Action.java"), 
 	JSP_LIST("jsp_list", null,Resources.JSP_LIST_TEMPLATE,".jsp"),
 	JSP_INPUT("jsp_input", null,Resources.JSP_INPUT_TEMPLATE,"-input.jsp");

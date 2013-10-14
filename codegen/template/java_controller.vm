@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.web.struts2.StrutsAction;
-import ${entityPackage}.${entityName} ;
+import ${entityPackage}.${entityName};
+import ${servicePackage}.${entityName}Manager;
 
 /**
  * action

@@ -16,7 +16,7 @@ import com.eryansky.common.orm.hibernate.EntityManager;
 public class ${entityName}Manager extends EntityManager<${entityName}, Long>  {
 	private static final Logger logger = LoggerFactory.getLogger(${entityName}Manager.class);
 	
-	private ${entityName}Dao ${entityInstance}Dao;
+	private HibernateDao ${entityInstance}Dao;
 
     @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {

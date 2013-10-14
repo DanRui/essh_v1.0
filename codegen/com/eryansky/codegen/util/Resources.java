@@ -6,20 +6,25 @@ package com.eryansky.codegen.util;
 public class Resources {
 
 	/************ 数据库配置 ************/
-//	public static final String DRIVER = "org.gjt.mm.mysql.Driver";
-//	public static final String URL = "jdbc:mysql://localhost/essh?useUnicode=true&characterEncoding=UTF-8"; // 数据库访问串
-//	public static final String USERNAME = "root";
-//	public static final String PASSWORD = "root";
+	public static final String DRIVER = "org.gjt.mm.mysql.Driver";
+	public static final String URL = "jdbc:mysql://localhost/essh?useUnicode=true&characterEncoding=UTF-8"; // 数据库访问串
+	public static final String USERNAME = "root";
+	public static final String PASSWORD = "root";
 
-    public static final String DRIVER = "oracle.jdbc.driver.OracleDriver";
-    public static final String URL = "jdbc:oracle:thin:@192.168.2.234:1521:orcl"; // 数据库访问串
-    public static final String USERNAME = "essh";
-    public static final String PASSWORD = "password";
+//    public static final String DRIVER = "oracle.jdbc.driver.OracleDriver";
+//    public static final String URL = "jdbc:oracle:thin:@192.168.2.234:1521:orcl"; // 数据库访问串
+//    public static final String USERNAME = "essh";
+//    public static final String PASSWORD = "password";
 	
 
 	
 	public static final String CATALOG = "";
 	public static final String SCHEMA = "ESSH";
+
+    /**
+     * 模块名称
+     */
+    public static final String MODULE = "test";
 	
 
 	/************ 模板配置 ************/
@@ -42,7 +47,7 @@ public class Resources {
 	 * -controller
 	 **************/
 
-    public static final String MODULE = "base";
+
 
 	public static final String BASE_PACKAGE = "com.eryansky";
 	public static final String ENTITY_PACKAGE = "com.eryansky.entity"+"."+MODULE;
