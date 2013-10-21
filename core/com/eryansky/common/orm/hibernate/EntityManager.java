@@ -438,32 +438,20 @@ public abstract class EntityManager<T, PK extends Serializable> {
 	public Page<T> find(int page, int rows, String sort, String order,
 			List<PropertyFilter> filters) throws DaoException, SystemException,
 			ServiceException {
-		Assert.notNull(page, "参数[page]为空!");
-		Assert.notNull(rows, "参数[rows]为空!");
-		Assert.notNull(filters, "参数[filters]为空!");
-		Page<T> p = new Page<T>(rows);
-		p.setPageNo(page);
-		if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
-			p.setOrder(order);
-			p.setOrderBy(sort);
-		} else {
-			p.setOrder(Page.ASC);
-			p.setOrderBy("id");
-		}
 		return find(page, rows, sort, order, filters, true);
 	}
 
 	/**
 	 * 过滤器分页查询.
-	 * 
+	 * <br/>默认根据ID升序排列
 	 * @param page
 	 *            第几页
 	 * @param rows
 	 *            页大小
 	 * @param sort
-	 *            排序字段
+	 *            排序字段 可为null或""
 	 * @param order
-	 *            排序方式 增序:'asc',降序:'desc'
+	 *            排序方式 增序:'asc',降序:'desc' 可为null或""
 	 * @param filters
 	 *            属性过滤器
 	 * @param isFilterDelete
