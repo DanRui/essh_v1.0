@@ -67,7 +67,8 @@ $(function() {
     //查看
     function view(title,url){
         if(window.parent.layout_center_tabs){
-             eu.addTab(window.parent.layout_center_tabs,title,url,true);
+            bug_datagrid.datagrid('unselectAll');
+            eu.addTab(window.parent.layout_center_tabs,title,url,true);
         }
     }
 	//加载bug类型
@@ -160,6 +161,7 @@ $(function() {
     function edit(rowIndex, rowData){
         //响应双击事件
         if(rowIndex != undefined) {
+            bug_datagrid.datagrid('unselectAll');
             bug_datagrid.datagrid('selectRow',rowIndex);
             var rowData = bug_datagrid.datagrid('getSelected');
             bug_datagrid.datagrid('unselectRow',rowIndex);
