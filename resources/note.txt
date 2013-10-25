@@ -11,7 +11,7 @@
 	Hibernate3.6.10
 	Jackson
 	EhCache(ehcache-spring-annotations)
-	Hibernate validator4.3.0(后台校验框架,基于BO注解)
+	Hibernate validator4.3.1(后台校验框架,基于BO注解)
     前台:
     jQuery1.10.2
     jQuery EasyUI1.3.2(前台ui组件)
