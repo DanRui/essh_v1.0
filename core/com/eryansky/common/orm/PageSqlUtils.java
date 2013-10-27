@@ -43,20 +43,20 @@ public class PageSqlUtils {
 		sqlParam[2] = rows + "";
         String jdbcUrl = SysConstants.getJdbcUrl();
 		if (jdbcUrl.indexOf(PageSqlUtils.DATABSE_TYPE_MYSQL) != -1) {
-			sql = MessageFormat.format(PageSqlUtils.MYSQL_SQL, sqlParam);
+			sql = MessageFormat.format(PageSqlUtils.MYSQL_SQL, new Object[]{sqlParam});
 		} else if (jdbcUrl.indexOf(
 				PageSqlUtils.DATABSE_TYPE_POSTGRE) != -1) {
-			sql = MessageFormat.format(PageSqlUtils.POSTGRE_SQL, sqlParam);
+			sql = MessageFormat.format(PageSqlUtils.POSTGRE_SQL, new Object[]{sqlParam});
 		} else {
             int beginIndex = (page-1)*rows;
             int endIndex = beginIndex+rows;
             sqlParam[2] = Integer.toString(beginIndex);
             sqlParam[1] = Integer.toString(endIndex);
             if(jdbcUrl.indexOf(DATABSE_TYPE_ORACLE)!=-1) {
-                sql = MessageFormat.format(ORACLE_SQL, sqlParam);
+                sql = MessageFormat.format(ORACLE_SQL, new Object[]{sqlParam});
             } else if(jdbcUrl.indexOf(DATABSE_TYPE_SQLSERVER)!=-1) {
                 sqlParam[0] = sql.substring(getAfterSelectInsertPoint(sql));
-                sql = MessageFormat.format(SQLSERVER_SQL, sqlParam);
+                sql = MessageFormat.format(SQLSERVER_SQL, new Object[]{sqlParam});
             }
 		}
 		return sql;
