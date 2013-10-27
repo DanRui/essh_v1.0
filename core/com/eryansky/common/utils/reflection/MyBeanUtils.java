@@ -99,8 +99,8 @@ public class MyBeanUtils
 	 * 对象拷贝
 	 * 数据对象空值不拷贝到目标对象
 	 * 
-	 * @param dataObject
-	 * @param toObject
+	 * @param databean
+	 * @param tobean
 	 * @throws NoSuchMethodException
 	 * copy
 	 */

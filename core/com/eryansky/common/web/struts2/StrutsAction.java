@@ -2,6 +2,7 @@ package com.eryansky.common.web.struts2;
 
 import java.util.List;
 
+import com.eryansky.common.exception.ActionException;
 import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.Result;
 import com.eryansky.common.orm.Page;
@@ -183,7 +184,11 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 			//修正因使用以上代码(根据ID查找对象)导致乐观锁失效bug
 			T entity = getEntityManager().getById(id);
 			//对象拷贝
-            model = (T) MyBeanUtils.cloneBean(entity);
+            if(entity != null){
+                model = (T) MyBeanUtils.cloneBean(entity);
+            }else{
+                throw new ActionException("ID为["+id+"]对应的数据不存在或已被删除.");
+            }
 		} else {
 			model = (T) ReflectionUtils.getClassGenricType(getClass())
 					.newInstance();
