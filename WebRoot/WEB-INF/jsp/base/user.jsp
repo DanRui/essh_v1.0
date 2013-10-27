@@ -140,6 +140,11 @@ $(function() {
 		}
 		//显示弹出窗口 新增：row为空 编辑:row有值 
 		function showDialog(row){
+            var inputUrl = "${ctx}/base/user!input.action";
+            if(row != undefined && row.id){
+                inputUrl = inputUrl+"?id="+row.id;
+            }
+
 			//弹出对话窗口
 			user_dialog = $('<div/>').dialog({
 				title:'用户详细信息',
@@ -147,7 +152,7 @@ $(function() {
 				height : 360,
 				modal : true,
 				maximizable:true,
-				href : '${ctx}/base/user!input.action',
+				href : inputUrl,
 				buttons : [ {
 					text : '保存',
 					iconCls : 'icon-save',

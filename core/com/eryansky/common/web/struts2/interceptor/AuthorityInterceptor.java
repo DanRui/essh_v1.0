@@ -41,7 +41,7 @@ public class AuthorityInterceptor extends MethodFilterInterceptor{
             //检查用户是否授权该URL
             boolean isAuthority = resourceManager.isAuthority(url,sessionUser.getId());
             if(!isAuthority){
-                logger.warn("用户{}未被授权URL:{}", sessionUser.getLoginName(), requestUrl);
+                logger.warn("用户{}未被授权URL:{}！", sessionUser.getLoginName(), requestUrl);
                 return "noauthority"; //返回403页面 返回"noauthority"由struts.xml配置
             }
 

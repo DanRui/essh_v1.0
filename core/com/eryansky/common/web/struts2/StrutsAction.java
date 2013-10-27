@@ -187,7 +187,7 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
             if(entity != null){
                 model = (T) MyBeanUtils.cloneBean(entity);
             }else{
-                throw new ActionException("ID为["+id+"]对应的数据不存在或已被删除.");
+                throw new ActionException("ID为["+id+"]的记录不存在或已被其它用户删除！");
             }
 		} else {
 			model = (T) ReflectionUtils.getClassGenricType(getClass())

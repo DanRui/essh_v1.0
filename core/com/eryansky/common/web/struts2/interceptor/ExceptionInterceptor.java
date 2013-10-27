@@ -101,13 +101,13 @@ public class ExceptionInterceptor extends AbstractInterceptor {
     		//Hibernate乐观锁 并发异常处理
     		else if(Exceptions.isCausedBy(e, StaleObjectStateException.class)){
     			isWarn = true;
-                sb.append("当前记录已被其他用户修改或删除,请刷新页面后再操作!");
+                sb.append("当前记录已被其它用户修改或删除！");
                 if(SysConstants.isdevMode()){
     				sb.append(MSG_DETAIL).append(SysUtils.jsonStrConvert(emsg));//将":"替换为","
     			}
             }
     		else if(Exceptions.isCausedBy(e, ObjectNotFoundException.class)){
-    			sb.append("当前记录不存在或已被其他用户删除,请刷新页面后再操作!");
+    			sb.append("当前记录不存在或已被其它用户删除！");
                 if(SysConstants.isdevMode()){
     				sb.append(MSG_DETAIL).append(SysUtils.jsonStrConvert(emsg));//将":"替换为","
     			}
@@ -119,7 +119,7 @@ public class ExceptionInterceptor extends AbstractInterceptor {
             }
     		//空指针异常
     		else if(Exceptions.isCausedBy(e, NullPointerException.class)){
-                sb.append("程序没写好,发生空指针异常!");
+                sb.append("程序没写好,发生空指针异常！");
                 if(SysConstants.isdevMode()){
     				sb.append(MSG_DETAIL).append(SysUtils.jsonStrConvert(emsg));//将":"替换为","
     			}
@@ -143,7 +143,7 @@ public class ExceptionInterceptor extends AbstractInterceptor {
     			if(SysConstants.isdevMode()){
     				sb.append(MSG_DETAIL).append(SysUtils.jsonStrConvert(emsg));//将":"替换为","
     			}else{
-    				sb.append("未知异常.");
+    				sb.append("未知异常！");
     			}
     		}
     		if(isWarn){

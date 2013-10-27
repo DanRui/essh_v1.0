@@ -120,6 +120,11 @@ $(function() {
 	}
 	//显示弹出窗口 新增：row为空 编辑:row有值 
 	function showDialog(row){
+        var inputUrl = "${ctx}/sys/bug!input.action";
+        if(row != undefined && row.id){
+            inputUrl = inputUrl+"?id="+row.id;
+        }
+
 		//弹出对话窗口
 		bug_dialog = $('<div/>').dialog({
 			title:'bug详细信息',
@@ -127,7 +132,7 @@ $(function() {
 			height : document.body.clientHeight,
 			modal : true,
 			maximizable:true,
-			href : '${ctx}/sys/bug!input.action',
+			href : inputUrl,
 			buttons : [ {
 				text : '保存',
 				iconCls : 'icon-save',
