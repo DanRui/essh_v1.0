@@ -21,6 +21,11 @@ public class AuthorityInterceptor extends MethodFilterInterceptor{
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * 返回无权限页面 对应403页面 由struts.xml配置
+     */
+    private static final String RESULT_NOAUTHORITY = "noauthority";
+
     @Autowired
     private ResourceManager resourceManager;
 
@@ -42,7 +47,7 @@ public class AuthorityInterceptor extends MethodFilterInterceptor{
             boolean isAuthority = resourceManager.isAuthority(url,sessionUser.getId());
             if(!isAuthority){
                 logger.warn("用户{}未被授权URL:{}！", sessionUser.getLoginName(), requestUrl);
-                return "noauthority"; //返回403页面 返回"noauthority"由struts.xml配置
+                return RESULT_NOAUTHORITY;
             }
 
 			return actioninvocation.invoke(); //递归调用拦截器
