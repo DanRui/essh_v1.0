@@ -119,14 +119,16 @@ public class UserAction extends StrutsAction<User> {
 		return "password";
 
 	}
-	//调用updateUserRole()方法之前执行
+	//调用updateUserPassword()方法之前执行
 	public void prepareUpdateUserPassword() throws Exception {
-		super.prepareModel();
+		model = new User();
+        model.setId(super.id);
 	}
 		
 	/**
 	 * 修改用户密码.
 	 * <br>参数upateOperate 需要密码"1" 不需要密码"0".
+     * @see UserAction.prepareUpdateUserPassword()
 	 */
 	public String updateUserPassword() throws Exception {
 		Result result;
@@ -135,10 +137,11 @@ public class UserAction extends StrutsAction<User> {
 				User user = userManager.loadById(model.getId());
 				if (user != null) {
 					boolean isCheck = true;
-					//需要输入原始密码
+                    //需要输入原始密码
 					if (AppConstants.USER_UPDATE_PASSWORD_YES.equals(upateOperate)) {
-						if (!user.getPassword().equals(
-								Encrypt.e(model.getPassword()))) {
+                        String originalPassword = user.getPassword(); //数据库存储的原始密码
+                        String pagePassword = model.getPassword(); //页面输入的原始密码（未加密）
+						if (!originalPassword.equals(Encrypt.e(pagePassword))) {
 							isCheck = false;
 						}
 					}
@@ -158,7 +161,7 @@ public class UserAction extends StrutsAction<User> {
 				}
 			}else{
 				result = Result.errorResult();
-				logger.warn("请求参数从错误.");
+                logger.warn("请求参数错误,未设置参数[upateOperate].");
 			}
 			logger.debug(result.toString());
 			Struts2Utils.renderText(result);
