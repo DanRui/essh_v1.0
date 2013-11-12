@@ -1,4 +1,4 @@
-package com.eryansky.entity.base.state;
+package com.eryansky.common.orm.entity;
 
 /**
  * 

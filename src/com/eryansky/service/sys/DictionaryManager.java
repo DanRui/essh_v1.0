@@ -22,7 +22,7 @@ import com.eryansky.common.model.Combobox;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.orm.hibernate.HibernateDao;
-import com.eryansky.entity.base.state.StatusState;
+import com.eryansky.common.orm.entity.StatusState;
 import com.eryansky.entity.sys.Dictionary;
 import com.eryansky.utils.CacheConstants;
 

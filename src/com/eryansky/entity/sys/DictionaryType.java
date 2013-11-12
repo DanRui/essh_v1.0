@@ -168,8 +168,4 @@ public class DictionaryType extends BaseEntity {
 		this.orderNo = orderNo;
 	}
 
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
 }

@@ -3,14 +3,7 @@ package com.eryansky.entity.base;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.eryansky.entity.base.state.SexType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -38,7 +31,8 @@ import com.google.common.collect.Lists;
 @Table(name = "T_BASE_USER")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
-@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler","roles"})
+@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler",
+        "roles","organs"})
 //逻辑删除注解标记 propertyName:字段名 value:删除标记的值（使用默认值"1"） type:属性类型
 @Delete(propertyName = "status",type = PropertyType.I)
 public class User
@@ -86,6 +80,21 @@ public class User
      * 有序的关联Role对象id集合
      */
     private List<Long> roleIds = Lists.newArrayList();
+
+    /**
+     * 组织机构
+     */
+    private List<Organ> organs = Lists.newArrayList();
+
+    /**
+     * 组织机构ID集合 @Transient
+     */
+    private List<Long> organIds  = Lists.newArrayList();
+
+    /**
+     * 组织机构名称  @Transient
+     */
+    private String organNames;
 
     public User() {
 
@@ -230,11 +239,34 @@ public class User
     public void setRoleIds(List<Long> roleIds) {
         this.roleIds = roleIds;
     }
-    
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(name = "T_BASE_ORGAN_USER", joinColumns = {@JoinColumn(name = "USER_ID")}, inverseJoinColumns = {@JoinColumn(name = "ORGAN_ID")})
+    public List<Organ> getOrgans() {
+        return organs;
     }
+
+    public void setOrgans(List<Organ> organs) {
+        this.organs = organs;
+    }
+
+
+    @Transient
+    public List<Long> getOrganIds() {
+        if(!Collections3.isEmpty(organs)){
+            organIds =  ConvertUtils.convertElementPropertyToList(organs, "id");
+        }
+        return organIds;
+    }
+
+    public void setOrganIds(List<Long> organIds) {
+        this.organIds = organIds;
+    }
+
+    @Transient
+    public String getOrganNames() {
+        return ConvertUtils.convertElementPropertyToString(organs, "name", ", ");
+    }
+
 
 }

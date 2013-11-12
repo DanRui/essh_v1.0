@@ -10,7 +10,7 @@ import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.entity.base.Organ;
 import com.eryansky.entity.base.state.OrganType;
-import com.eryansky.entity.base.state.StatusState;
+import com.eryansky.common.orm.entity.StatusState;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.ListUtils;
@@ -280,7 +280,7 @@ public class OrganManager extends EntityManager<Organ, Long> {
      * @param parentId
      *            父节点ID(当该参数为null的时候查询顶级机构列表)
      * @param status
-     *            数据状态 @see com.eryansky.entity.base.state.StatusState
+     *            数据状态 @see com.eryansky.common.orm.entity.StatusState
      *            <br>status传null则使用默认值 默认值:StatusState.normal.getValue()
      * @return
      * @throws DaoException

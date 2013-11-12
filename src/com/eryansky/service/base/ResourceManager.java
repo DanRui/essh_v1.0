@@ -27,7 +27,7 @@ import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.orm.hibernate.HibernateDao;
 import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.entity.base.User;
-import com.eryansky.entity.base.state.StatusState;
+import com.eryansky.common.orm.entity.StatusState;
 import com.eryansky.utils.CacheConstants;
 
 /**
@@ -491,7 +491,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 	 * @param parentId
 	 *            父节点ID(当该参数为null的时候查询顶级资源列表)
 	 * @param status 
-	 *            数据状态 @see com.eryansky.entity.base.state.StatusState
+	 *            数据状态 @see com.eryansky.common.orm.entity.StatusState
 	 *            <br>status传null则使用默认值 默认值:StatusState.normal.getValue()
 	 * @return
 	 * @throws DaoException

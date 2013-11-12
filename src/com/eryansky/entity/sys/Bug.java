@@ -123,9 +123,4 @@ public class Bug extends BaseEntity implements Serializable{
 		this.tContent = tContent;
 	}
 
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
-
 }

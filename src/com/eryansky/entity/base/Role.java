@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.common.utils.collections.Collections3;
-import com.eryansky.entity.base.state.StatusState;
+import com.eryansky.common.orm.entity.StatusState;
 import com.eryansky.utils.CacheConstants;
 
 /**
@@ -37,6 +37,10 @@ public class Role
      * 角色名称
      */
     private String name;
+    /**
+     * 角色编码
+     */
+    private String code;
     /**
      * 描述
      */
@@ -77,6 +81,15 @@ public class Role
     public void setName(String name) {
         this.name = name;
     }
+
+//    @Column(length = 36)
+//    public String getCode() {
+//        return code;
+//    }
+//
+//    public void setCode(String code) {
+//        this.code = code;
+//    }
 
     @Column(length = 255)
     public String getDescription() {
@@ -158,9 +171,5 @@ public class Role
         this.users = users;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
 
 }

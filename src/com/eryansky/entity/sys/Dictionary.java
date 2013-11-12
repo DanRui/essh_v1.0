@@ -244,9 +244,4 @@ public class Dictionary extends BaseEntity{
 	public void setDictionaryTypeName(String dictionaryTypeName) {
 		this.dictionaryTypeName = dictionaryTypeName;
 	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
 }

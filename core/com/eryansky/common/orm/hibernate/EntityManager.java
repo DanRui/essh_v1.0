@@ -18,7 +18,7 @@ import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.PropertyFilter.MatchType;
 import com.eryansky.common.utils.collections.Collections3;
-import com.eryansky.entity.base.state.StatusState;
+import com.eryansky.common.orm.entity.StatusState;
 
 /**
  * Service层领域对象业务管理类基类.

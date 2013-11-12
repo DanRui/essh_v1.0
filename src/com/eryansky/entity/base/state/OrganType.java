@@ -8,7 +8,7 @@ package com.eryansky.entity.base.state;
  */
 public enum OrganType {
     /** 机构(1) */
-    organ(1, "机构"),
+    organ(1, "机构(法人单位)"),
     /** 部门(0) */
     department(0, "部门");
 

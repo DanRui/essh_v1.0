@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.transaction.SystemException;
 
+import com.eryansky.common.model.Datagrid;
+import com.eryansky.common.orm.Page;
+import com.eryansky.entity.base.Organ;
+import com.eryansky.service.base.OrganManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.eryansky.common.model.Result;
@@ -30,10 +34,20 @@ public class UserAction extends StrutsAction<User> {
 
 	private String upateOperate;// 修改密码操作码 1:顶部 0:列表
 	private String newPassword;// 新密码
+    /**
+     * 查询条件 组织机构ID
+     */
+    private String organId;
+    /**
+     * 查询条件 登录名或姓名
+     */
+    private String loginNameOrName;
 
 	@Autowired
 	private UserManager userManager;
-	@Autowired
+    @Autowired
+    private OrganManager organManager;
+    @Autowired
 	private RoleManager roleManager;
 	//用户关连角色ID集合
 	private List<Long> roleIds = Lists.newArrayList();
@@ -42,6 +56,19 @@ public class UserAction extends StrutsAction<User> {
 	public EntityManager<User, Long> getEntityManager() {
 		return userManager;
 	}
+
+    @Override
+    public String datagrid() throws Exception {
+        try {
+            Page<User> p = userManager.getUsersByQuery(organId, loginNameOrName, page, rows, sort, order);
+            Datagrid<User> dg = new Datagrid<User>(p.getTotalCount(), p.getResult());
+            Struts2Utils.renderJson(dg);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
+
 	/**
 	 * 保存.
 	 */
@@ -57,6 +84,15 @@ public class UserAction extends StrutsAction<User> {
                 Struts2Utils.renderText(result);
                 return null;
             }
+
+            //绑定组织机构
+            model.setOrgans(null);
+            List<Organ> organs = Lists.newArrayList();
+            for(Long organId:model.getOrganIds()){
+                Organ organ = organManager.loadById(organId);
+                organs.add(organ);
+            }
+            model.setOrgans(organs);
             
             if (model.getId() == null) {// 新增
             	model.setPassword(Encrypt.e(model.getPassword()));
@@ -184,4 +220,11 @@ public class UserAction extends StrutsAction<User> {
 		this.roleIds = roleIds;
 	}
 
+    public void setOrganId(String organId) {
+        this.organId = organId;
+    }
+
+    public void setLoginNameOrName(String loginNameOrName) {
+        this.loginNameOrName = loginNameOrName;
+    }
 }

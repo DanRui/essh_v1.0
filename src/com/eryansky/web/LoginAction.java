@@ -17,7 +17,7 @@ import com.eryansky.common.utils.encode.Encrypt;
 import com.eryansky.common.web.struts2.SimpleActionSupport;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.User;
-import com.eryansky.entity.base.state.StatusState;
+import com.eryansky.common.orm.entity.StatusState;
 import com.eryansky.service.base.UserManager;
 import com.eryansky.utils.AppUtils;
 import org.springframework.util.Assert;

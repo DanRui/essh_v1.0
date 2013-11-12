@@ -45,7 +45,7 @@ public @interface Delete {
 
 	/**
 	 * 要改变的值
-	 * <br> 默认值:"1" {@link com.eryansky.entity.base.state.StatusState}
+	 * <br> 默认值:"1" {@link com.eryansky.common.orm.entity.StatusState}
 	 * 
 	 * @return String
 	 */

@@ -39,7 +39,7 @@
 			<!-- 表单输入特殊字符Html转译、敏感词汇转译拦截器 -->
 			<interceptor name="inputReplaceInterceptor" class="com.eryansky.common.web.struts2.interceptor.InputReplaceInterceptor" />
 			<!-- 登录验证拦截器 -->
-			<interceptor name="authority" class="com.eryansky.common.web.struts2.interceptor.AuthorityInterceptor" />
+			<interceptor name="authority" class="com.eryansky.core.AuthorityInterceptor" />
 			<!-- 异常处理拦截器 -->
 			<interceptor name="exceptionAuthority" class="com.eryansky.common.web.struts2.interceptor.ExceptionInterceptor" />
 			<interceptor-stack name="crudStack">

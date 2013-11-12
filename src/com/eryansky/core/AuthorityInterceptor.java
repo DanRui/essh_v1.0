@@ -1,4 +1,4 @@
-package com.eryansky.common.web.struts2.interceptor;
+package com.eryansky.core;
 
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;

@@ -295,9 +295,4 @@ public class Organ extends BaseEntity implements Serializable {
         this.subOrgans = subOrgans;
     }
 
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
 }

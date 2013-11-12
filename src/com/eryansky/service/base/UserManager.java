@@ -3,6 +3,8 @@ package com.eryansky.service.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eryansky.common.orm.Page;
+import com.eryansky.common.utils.StringUtils;
 import com.eryansky.utils.CacheConstants;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import com.eryansky.common.utils.SysConstants;
 import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.User;
-import com.eryansky.entity.base.state.StatusState;
+import com.eryansky.common.orm.entity.StatusState;
 
 /**
  * 用户管理User Service层实现类.
@@ -204,5 +206,42 @@ public class UserManager extends EntityManager<User, Long> {
 					new Object[] { loginName, StatusState.delete.getValue() }).list();
 		return list.isEmpty() ? null:list.get(0);
 	}
+
+    /**
+     * 根据组织机构Id以及登录名或姓名分页查询
+     * @param organId 组织机构ID
+     * @param loginNameOrName 姓名或手机号码
+     * @param page 第几页
+     * @param rows 页大小
+     * @param sort 排序字段
+     * @param order 排序方式 增序:'asc',降序:'desc'
+     * @return
+     */
+    public Page<User> getUsersByQuery(String organId, String loginNameOrName, int page, int rows, String sort, String order) {
+        Object[] params = null;
+        StringBuilder hql = new StringBuilder();
+        hql.append("select distinct u from User u,u.organs.elements o where 1=1 ");
+        if(organId != null){
+            hql.append("and o.id =? ");
+            params = new Object[]{organId};
+        }
+        if(StringUtils.isNotBlank(loginNameOrName)){
+            hql.append("and (u.loginName like ? or u.name like ?) ");
+            params = new Object[]{organId,"%"+loginNameOrName+"%","%"+loginNameOrName+"%"};
+        }
+        //设置分页
+        Page<User> p = new Page<User>(rows);
+        p.setPageNo(page);
+        if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
+            p.setOrder(order);
+            p.setOrderBy(sort);
+        } else {
+            p.setOrder(Page.ASC);
+            p.setOrderBy("id");
+        }
+        logger.info(hql.toString());
+        Page<User> userPage = userDao.findPage(p,hql.toString(),params);
+        return userPage;
+    }
 
 }

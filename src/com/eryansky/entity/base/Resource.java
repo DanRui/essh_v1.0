@@ -247,9 +247,4 @@ public class Resource
         return str;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
 }
