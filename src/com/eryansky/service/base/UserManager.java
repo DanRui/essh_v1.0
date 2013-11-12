@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eryansky.common.orm.Page;
+import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.utils.CacheConstants;
 import org.hibernate.SessionFactory;
@@ -218,6 +219,11 @@ public class UserManager extends EntityManager<User, Long> {
      * @return
      */
     public Page<User> getUsersByQuery(String organId, String loginNameOrName, int page, int rows, String sort, String order) {
+
+        if(organId==null && StringUtils.isBlank(loginNameOrName)){
+            return super.find(page,rows,null,null,new ArrayList<PropertyFilter>());
+        }
+
         Object[] params = null;
         StringBuilder hql = new StringBuilder();
         hql.append("select distinct u from User u,u.organs.elements o where 1=1 ");

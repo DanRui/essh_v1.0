@@ -8,5 +8,5 @@
 	   [ ${createUser} 发布于<fmt:formatDate value="${createTime}" type="both" /> ]
 	</div>
 	<hr>
-	<div>${tContent}</div>
+	<div>${contentView}</div>
 </div>

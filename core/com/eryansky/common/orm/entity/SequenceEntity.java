@@ -1,9 +1,6 @@
 package com.eryansky.common.orm.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 /**
  * 抽象实体基类，提供统一的ID，和相关的基本功能方法
@@ -20,6 +17,7 @@ public abstract class SequenceEntity extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
+    @Column(name = "ID")
     private Long id;
 
     @Override

@@ -1,10 +1,7 @@
 package com.eryansky.common.orm.entity;
 
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 import com.eryansky.common.excel.annotation.Excel;
 
@@ -34,6 +31,7 @@ public abstract class AutoEntity  extends AbstractEntity<Long>{
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
 	public Long getId() {
 		return id;
 	}

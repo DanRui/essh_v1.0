@@ -119,7 +119,7 @@ public class Dictionary extends BaseEntity{
 		this.dictionaryType = dictionaryType;
 	}
 
-	@Column(length = 100, unique = true)
+	@Column(name = "NAME",length = 100, unique = true)
 	public String getName() {
 		return name;
 	}
@@ -128,7 +128,7 @@ public class Dictionary extends BaseEntity{
 		this.name = name;
 	}
 
-	@Column(length = 36, unique = true)
+	@Column(name = "CODE",length = 36, unique = true)
 	public String getCode() {
 		return code;
 	}
@@ -137,7 +137,7 @@ public class Dictionary extends BaseEntity{
 		this.code = code;
 	}
 
-    @Column(length = 100)
+    @Column(name = "VALUE",length = 100)
     public String getValue() {
         return value;
     }
@@ -145,7 +145,7 @@ public class Dictionary extends BaseEntity{
     public void setValue(String value) {
         this.value = value;
     }
-
+    @Column(name = "REMAK",length = 100)
     public String getRemark() {
 		return remark;
 	}

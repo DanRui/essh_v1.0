@@ -41,10 +41,12 @@
     var user_form;
     var user_password_form;
     var user_role_form;
+    var user_resource_form;
     var user_search_form;
     var user_dialog;
     var user_password_dialog;
     var user_role_dialog;
+    var user_resource_dialog;
     $(function() {
         user_search_form = $('#user_search_form').form();
 
@@ -419,6 +421,90 @@ function editUserRole(){
     }
 }
 
+
+//初始化用户角色表单
+function initUserResourceForm(){
+    user_resource_form = $('#user_resource_form').form({
+        url: '${ctx}/base/user!updateUserResource.action',
+        onSubmit: function(param){
+            $.messager.progress({
+                title : '提示信息！',
+                text : '数据处理中，请稍后....'
+            });
+            var isValid = $(this).form('validate');
+            if (!isValid) {
+                $.messager.progress('close');
+            }
+            return isValid;
+        },
+        success: function(data){
+            $.messager.progress('close');
+            var json = $.parseJSON(data);
+            if (json.code == 1){
+                user_resource_dialog.dialog('destroy');//销毁对话框
+                user_datagrid.datagrid('reload');	// reload the user data
+                eu.showMsg(json.msg);//操作结果提示
+            }else {
+                eu.showAlertMsg(json.msg,'error');
+            }
+        }
+    });
+}
+//修改用户角色
+function editUserResource(){
+    //选中的所有行
+    var rows = user_datagrid.datagrid('getSelections');
+    //选中的行（第一条）
+    var row = user_datagrid.datagrid('getSelected');
+    if (row){
+        if(rows.length>1){
+            eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+        }
+        //判断是否允许操作
+        if(isOpeated(row.id) == false){
+            eu.showMsg("超级管理员用户信息不允许被其他人修改！");
+            return;
+        }
+        //判断是否允许操作
+        if(row.id == 1){
+            eu.showMsg("超级管理员无需设置资源！");
+            return;
+        }
+        //弹出对话窗口
+        user_resource_dialog = $('<div/>').dialog({
+            title:'用户资源信息',
+            width : 500,
+            height : 240,
+            modal : true,
+            maximizable:true,
+            href : '${ctx}/base/user!resource.action',
+            buttons : [ {
+                text : '保存',
+                iconCls : 'icon-save',
+                handler : function() {
+                    user_resource_form.submit();
+                }
+            },{
+                text : '关闭',
+                iconCls : 'icon-cancel',
+                handler : function() {
+                    user_resource_dialog.dialog('destroy');
+                }
+            }],
+            onClose : function() {
+                $(this).dialog('destroy');
+            },
+            onLoad:function(){
+                initUserResourceForm();
+                user_resource_form.form('load', row);
+            }
+        }).dialog('open');
+
+    }else{
+        eu.showMsg("请选择要操作的对象！");
+    }
+}
+
 //删除用户
 function del(){
     var rows = user_datagrid.datagrid('getSelections');
@@ -459,11 +545,13 @@ function search(){
 </script>
 <%-- 列表右键 --%>
 <div id="user_datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
-    <div onclick="editUserRole();" data-options="iconCls:'icon-group'">设置角色</div>
     <div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
     <div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
-    <div onclick="editPassword();" data-options="iconCls:'icon-lock'">修改密码</div>
     <div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
+    <div onclick="editPassword();" data-options="iconCls:'icon-lock'">修改密码</div>
+    <div onclick="editUserResource();" data-options="iconCls:'icon-group'">设置资源</div>
+    <div onclick="editUserRole();" data-options="iconCls:'icon-group'">设置角色</div>
+
 </div>
 <%-- easyui-layout布局 --%>
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
@@ -487,15 +575,18 @@ function search(){
                 </form>
             </div>
             <div align="right">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserRole()">设置角色</a>
-                <span class="toolbar-btn-separator"></span>
+
                 <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
                 <span class="toolbar-btn-separator"></span>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
                 <span class="toolbar-btn-separator"></span>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
+                <span class="toolbar-btn-separator"></span>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-lock" plain="true" onclick="editPassword()">修改密码</a>
                 <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserRole()">设置角色</a>
+                <span class="toolbar-btn-separator"></span>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserResource()">设置资源</a>
             </div>
         </div>
 

@@ -1,9 +1,6 @@
 package com.eryansky.common.orm.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 /**
  * 统一定义entity基类. <br>
@@ -30,6 +27,7 @@ public abstract class IdEntity extends AbstractEntity<Long> {
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
 	public Long getId() {
 		return id;
 	}

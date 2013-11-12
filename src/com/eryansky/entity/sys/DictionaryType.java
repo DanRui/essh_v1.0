@@ -89,7 +89,7 @@ public class DictionaryType extends BaseEntity {
 		this.orderNo = orderNo;
 	}
 
-	@Column(length = 100, unique = true)
+	@Column(name = "NAME",length = 100, unique = true)
 	public String getName() {
 		return name;
 	}
@@ -98,7 +98,7 @@ public class DictionaryType extends BaseEntity {
 		this.name = name;
 	}
 
-	@Column(length = 20, unique = true)
+	@Column(name = "CODE",length = 20, unique = true)
 	public String getCode() {
 		return code;
 	}

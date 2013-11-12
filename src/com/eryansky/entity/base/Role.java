@@ -44,7 +44,7 @@ public class Role
     /**
      * 描述
      */
-    private String description;
+    private String remark;
     /**
      * 关联的资源
      */
@@ -65,15 +65,7 @@ public class Role
 
     }
 
-
-    public Role(String name, String description, List<Resource> resources) {
-
-        this.name = name;
-        this.description = description;
-        this.resources = resources;
-    }
-    
-	@Column(length = 100,nullable = false,unique = true)
+	@Column(name = "NAME",length = 100,nullable = false,unique = true)
     public String getName() {
         return name;
     }
@@ -91,13 +83,13 @@ public class Role
 //        this.code = code;
 //    }
 
-    @Column(length = 255)
-    public String getDescription() {
-        return description;
+    @Column(name = "REMARK",length = 255)
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     @ManyToMany

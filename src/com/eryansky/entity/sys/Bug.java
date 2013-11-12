@@ -48,7 +48,7 @@ public class Bug extends BaseEntity implements Serializable{
 	 * bug描述. @Transient
 	 */
 	@Excel(exportName="bug描述", exportFieldWidth = 100)
-	private String tContent;
+	private String contentView;
 
 	public Bug() {
 		super();
@@ -60,7 +60,8 @@ public class Bug extends BaseEntity implements Serializable{
 		this.content = content;
 	}
 
-	public String getTitle() {
+    @Column(name = "TITLE",length = 255)
+    public String getTitle() {
 		return title;
 	}
 
@@ -68,7 +69,7 @@ public class Bug extends BaseEntity implements Serializable{
 		this.title = title;
 	}
 
-	@Column(length = 36)
+	@Column(name = "TYPE",length = 36)
 	public String getType() {
 		return type;
 	}
@@ -92,6 +93,7 @@ public class Bug extends BaseEntity implements Serializable{
 	@Lob
 	//自定义Clob
 	@JsonSerialize(using = ClobSerializer.class)
+    @Column(name = "CONTENT")
 	public Clob getContent() {
 		return content;
 	}
@@ -105,22 +107,18 @@ public class Bug extends BaseEntity implements Serializable{
 	 * @return
 	 */
 	@Transient
-	public String getTContent() {
+	public String getContentView() {
 		String str = "";
 		if(content != null){
 			str = ClobUtil.getString(content);
 		}else{
-			str = tContent;
+			str = contentView;
 		}
 		return str;
 	}
 
-
-
-
-
-	public void setTContent(String tContent) {
-		this.tContent = tContent;
+	public void setContentView(String contentView) {
+		this.contentView = contentView;
 	}
 
 }

@@ -101,7 +101,7 @@ public class Organ extends BaseEntity implements Serializable {
     public Organ() {
     }
 
-    @Column(nullable = false, length = 255, unique = true)
+    @Column(name = "NAME",nullable = false, length = 255, unique = true)
     public String getName() {
         return name;
     }
@@ -110,7 +110,7 @@ public class Organ extends BaseEntity implements Serializable {
         this.name = name;
     }
 
-    @Column(length = 36)
+    @Column(name = "SYS_CODE",length = 36)
     public String getSysCode() {
         return sysCode;
     }
@@ -119,7 +119,7 @@ public class Organ extends BaseEntity implements Serializable {
         this.sysCode = sysCode;
     }
 
-    @Column(length = 36)
+    @Column(name = "CODE",length = 36)
     public String getCode() {
         return code;
     }
@@ -128,6 +128,7 @@ public class Organ extends BaseEntity implements Serializable {
         this.code = code;
     }
 
+    @Column(name = "TYPE")
     public Integer getType() {
         return type;
     }
@@ -149,7 +150,7 @@ public class Organ extends BaseEntity implements Serializable {
         return str;
     }
 
-
+    @Column(name = "ADDRESS",length = 255)
     public String getAddress() {
         return address;
     }
@@ -158,7 +159,7 @@ public class Organ extends BaseEntity implements Serializable {
         this.address = address;
     }
 
-    @Column(length = 64)
+    @Column(name = "PHONE",length = 64)
     public String getPhone() {
         return phone;
     }
@@ -167,7 +168,7 @@ public class Organ extends BaseEntity implements Serializable {
         this.phone = phone;
     }
 
-    @Column(length = 64)
+    @Column(name = "FAX",length = 64)
     public String getFax() {
         return fax;
     }
@@ -212,7 +213,7 @@ public class Organ extends BaseEntity implements Serializable {
     }
 
     @ManyToMany
-    @JoinTable(name = "T_BASE_ORGAN_USER", joinColumns = {@JoinColumn(name = "ORGAN_ID")}, inverseJoinColumns = {@JoinColumn(name = "USER_ID")})
+    @JoinTable(name = "T_BASE_USER_ORGAN", joinColumns = {@JoinColumn(name = "ORGAN_ID")}, inverseJoinColumns = {@JoinColumn(name = "USER_ID")})
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)

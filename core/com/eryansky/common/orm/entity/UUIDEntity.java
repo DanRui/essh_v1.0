@@ -31,7 +31,7 @@ public abstract class UUIDEntity extends AbstractEntity<String> {
 	 * .id.UUIDGenerator)
 	 */
 	@Id
-	@Column(updatable = false, length = 36)
+	@Column(name = "ID",updatable = false, length = 36)
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "org.hibernate.id.UUIDGenerator")
 	public String getId() {

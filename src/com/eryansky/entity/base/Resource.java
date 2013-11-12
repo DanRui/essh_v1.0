@@ -107,7 +107,7 @@ public class Resource
 
     @NotBlank(message = "{resource_name.notblank}")
     @Length(max = 20, message = "{resource_name.length}")
-    @Column(length = 255,unique = true)
+    @Column(name = "NAME",length = 255,unique = true)
     public String getName() {
         return name;
     }
@@ -116,7 +116,7 @@ public class Resource
         this.name = name;
     }
 
-    @Column(length = 36)
+    @Column(name = "CODE",length = 36)
     public String getCode() {
         return code;
     }
@@ -125,7 +125,7 @@ public class Resource
         this.code = code;
     }
 
-    @Column(length = 255)
+    @Column(name = "URL",length = 255)
     public String getUrl() {
         return url;
     }
@@ -160,7 +160,8 @@ public class Resource
     public void setIcon(String icon) {
         this.icon = icon;
     }
-    
+
+    @Column(name="TYPE")
     public Integer getType() {
         return type;
     }

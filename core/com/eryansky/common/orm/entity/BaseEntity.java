@@ -71,8 +71,6 @@ public  class BaseEntity extends AutoEntity implements Serializable,
 		return (T) DateUtil.parse(dateString, dateFormat, targetResultType);
 	}
 
-	
-	
 	/**
 	 * 记录状态标志位 正常(0) 已删除(1) 待审核(2) 锁定(3)
 	 */
@@ -110,6 +108,7 @@ public  class BaseEntity extends AutoEntity implements Serializable,
 	/**
 	 * 状态标志位
 	 */
+    @Column(name = "STATUS")
 	public Integer getStatus() {
 		return status;
 	}
@@ -142,6 +141,7 @@ public  class BaseEntity extends AutoEntity implements Serializable,
 	 * 版本号(乐观锁)
 	 */
 	@Version
+    @Column(name = "VERSION")
 	public Integer getVersion() {
 		return version;
 	}

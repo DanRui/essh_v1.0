@@ -138,7 +138,7 @@ public class BugAction extends StrutsAction<Bug> {
 						Bug checkBug = bugManager.findUniqueBy("title",bug.getTitle());
 						if(checkBug == null){
 							bug.setVersion(0);
-							bug.setContent(ClobUtil.getClob(bug.getTContent()));
+							bug.setContent(ClobUtil.getClob(bug.getContentView()));
 							Dictionary dictionary = dictionaryManager.findUniqueBy("name", bug.getTypeName());
 							if(dictionary !=null){
 								bug.setType(dictionary.getCode());

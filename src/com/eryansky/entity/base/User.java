@@ -32,7 +32,7 @@ import com.google.common.collect.Lists;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
 @JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler",
-        "roles","organs"})
+        "resources","roles","organs"})
 //逻辑删除注解标记 propertyName:字段名 value:删除标记的值（使用默认值"1"） type:属性类型
 @Delete(propertyName = "status",type = PropertyType.I)
 public class User
@@ -82,6 +82,16 @@ public class User
     private List<Long> roleIds = Lists.newArrayList();
 
     /**
+     * 资源 有序的关联对象集合
+     */
+    private List<Resource> resources = Lists.newArrayList();
+    /**
+     * 资源 id集合  @Transient
+     */
+    private List<Long> resourceIds = Lists.newArrayList();
+
+
+    /**
      * 组织机构
      */
     private List<Organ> organs = Lists.newArrayList();
@@ -100,22 +110,7 @@ public class User
 
     }
 
-    public User(String loginName, String password, String name, Integer sex,
-            String email, String address, String tel, String mobilephone,
-            List<Role> roles) {
-        super();
-        this.loginName = loginName;
-        this.password = password;
-        this.name = name;
-        this.sex = sex;
-        this.email = email;
-        this.address = address;
-        this.tel = tel;
-        this.mobilephone = mobilephone;
-        this.roles = roles;
-    }
-
-    @Column(length = 32, nullable = false,unique = true)
+    @Column(name = "LOGIN_NAME",length = 36, nullable = false,unique = true)
     public String getLoginName() {
         return loginName;
     }
@@ -124,7 +119,7 @@ public class User
         this.loginName = loginName;
     }
 
-    @Column(length = 32)
+    @Column(name = "NAME",length = 36)
     public String getName() {
         return name;
     }
@@ -150,7 +145,7 @@ public class User
         this.roles = roles;
     }
 
-    @Column(length = 64, nullable = false)
+    @Column(name = "PASSWORD",length = 64, nullable = false)
     public String getPassword() {
         return password;
     }
@@ -158,7 +153,7 @@ public class User
     public void setPassword(String password) {
         this.password = password;
     }
-
+    @Column(name = "SEX")
     public Integer getSex() {
         return sex;
     }
@@ -179,7 +174,7 @@ public class User
     	}
         return str;
     }
-    
+    @Column(name = "EMAIL",length = 64)
     public String getEmail() {
         return email;
     }
@@ -187,7 +182,7 @@ public class User
     public void setEmail(String email) {
         this.email = email;
     }
-
+    @Column(name = "ADDRESS",length = 255)
     public String getAddress() {
         return address;
     }
@@ -195,7 +190,7 @@ public class User
     public void setAddress(String address) {
         this.address = address;
     }
-
+    @Column(name = "TEL",length = 36)
     public String getTel() {
         return tel;
     }
@@ -203,7 +198,7 @@ public class User
     public void setTel(String tel) {
         this.tel = tel;
     }
-
+    @Column(name = "MOBILEPHONE",length = 36)
     public String getMobilephone() {
         return mobilephone;
     }
@@ -240,8 +235,32 @@ public class User
         this.roleIds = roleIds;
     }
 
-    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(name = "T_BASE_ORGAN_USER", joinColumns = {@JoinColumn(name = "USER_ID")}, inverseJoinColumns = {@JoinColumn(name = "ORGAN_ID")})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(name = "T_BASE_USER_RESOURCE", joinColumns = {@JoinColumn(name = "USER_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "RESOURCE_ID")})
+    public List<Resource> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<Resource> resources) {
+        this.resources = resources;
+    }
+
+    @Transient
+    public List<Long> getResourceIds() {
+        if (!Collections3.isEmpty(resources)) {
+            resourceIds = ConvertUtils.convertElementPropertyToList(resources, "id");
+        }
+        return resourceIds;
+    }
+
+    public void setResourceIds(List<Long> resourceIds) {
+        this.resourceIds = resourceIds;
+    }
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(name = "T_BASE_USER_ORGAN", joinColumns = {@JoinColumn(name = "USER_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "ORGAN_ID")})
     public List<Organ> getOrgans() {
         return organs;
     }

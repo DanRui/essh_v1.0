@@ -5,9 +5,13 @@ import java.util.List;
 import javax.transaction.SystemException;
 
 import com.eryansky.common.model.Datagrid;
+import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.Page;
+import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Organ;
+import com.eryansky.entity.base.Resource;
 import com.eryansky.service.base.OrganManager;
+import com.eryansky.service.base.ResourceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.eryansky.common.model.Result;
@@ -49,8 +53,13 @@ public class UserAction extends StrutsAction<User> {
     private OrganManager organManager;
     @Autowired
 	private RoleManager roleManager;
-	//用户关连角色ID集合
+    @Autowired
+    private ResourceManager resourceManager;
+    //用户关连角色ID集合
 	private List<Long> roleIds = Lists.newArrayList();
+
+    //用户关连资源ID集合
+    private List<Long> resourceIds = Lists.newArrayList();
 
 	@Override
 	public EntityManager<User, Long> getEntityManager() {
@@ -114,98 +123,138 @@ public class UserAction extends StrutsAction<User> {
 		return null;
 	}
 
-	/**
-	 * 修改用户角色页面.
-	 */
-	public String role() throws Exception {
-		return "role";
+    /**
+     * 修改用户密码页面.
+     */
+    public String password() throws Exception {
+        return "password";
 
-	}
-	
-	//调用updateUserRole()方法之前执行
-	public void prepareUpdateUserRole() throws Exception {
-		super.prepareModel();
-	}
-	/**
-	 * 修改用户角色.
-	 */
-	public void updateUserRole() throws Exception {
-		Result result = null;
-		try {
-			List<Role> rs = Lists.newArrayList();
-			for (Long id : roleIds) {
-				Role role = roleManager.loadById(id);
-				rs.add(role);
-			}
-			model.setRoles(rs);
-			userManager.saveEntity(model);
-			result = Result.successResult();
-			Struts2Utils.renderText(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-
-	}
-
-	/**
-	 * 修改用户密码页面.
-	 */
-	public String password() throws Exception {
-		return "password";
-
-	}
-	//调用updateUserPassword()方法之前执行
-	public void prepareUpdateUserPassword() throws Exception {
-		model = new User();
+    }
+    //调用updateUserPassword()方法之前执行
+    public void prepareUpdateUserPassword() throws Exception {
+        model = new User();
         model.setId(super.id);
-	}
-		
-	/**
-	 * 修改用户密码.
-	 * <br>参数upateOperate 需要密码"1" 不需要密码"0".
+    }
+
+    /**
+     * 修改用户密码.
+     * <br>参数upateOperate 需要密码"1" 不需要密码"0".
      * @see UserAction.prepareUpdateUserPassword()
-	 */
-	public String updateUserPassword() throws Exception {
-		Result result;
-		try {
-			if (!StringUtils.isEmpty(upateOperate)) {
-				User user = userManager.loadById(model.getId());
-				if (user != null) {
-					boolean isCheck = true;
+     */
+    public String updateUserPassword() throws Exception {
+        Result result;
+        try {
+            if (!StringUtils.isEmpty(upateOperate)) {
+                User user = userManager.loadById(model.getId());
+                if (user != null) {
+                    boolean isCheck = true;
                     //需要输入原始密码
-					if (AppConstants.USER_UPDATE_PASSWORD_YES.equals(upateOperate)) {
+                    if (AppConstants.USER_UPDATE_PASSWORD_YES.equals(upateOperate)) {
                         String originalPassword = user.getPassword(); //数据库存储的原始密码
                         String pagePassword = model.getPassword(); //页面输入的原始密码（未加密）
-						if (!originalPassword.equals(Encrypt.e(pagePassword))) {
-							isCheck = false;
-						}
-					}
-					//不需要输入原始密码
-					if (AppConstants.USER_UPDATE_PASSWORD_NO.equals(upateOperate)) {
-						isCheck = true;
-					}
-					if (isCheck) {
-						user.setPassword(Encrypt.e(newPassword));
-						userManager.saveEntity(user);
-						result = Result.successResult();
-					} else {
-						result = new Result(Result.WARN, "原始密码输入错误.","password");
-					}
-				} else {
-					result = new Result(Result.ERROR,"修改的用户不存在或已被删除.", null);
-				}
-			}else{
-				result = Result.errorResult();
+                        if (!originalPassword.equals(Encrypt.e(pagePassword))) {
+                            isCheck = false;
+                        }
+                    }
+                    //不需要输入原始密码
+                    if (AppConstants.USER_UPDATE_PASSWORD_NO.equals(upateOperate)) {
+                        isCheck = true;
+                    }
+                    if (isCheck) {
+                        user.setPassword(Encrypt.e(newPassword));
+                        userManager.saveEntity(user);
+                        result = Result.successResult();
+                    } else {
+                        result = new Result(Result.WARN, "原始密码输入错误.","password");
+                    }
+                } else {
+                    result = new Result(Result.ERROR,"修改的用户不存在或已被删除.", null);
+                }
+            }else{
+                result = Result.errorResult();
                 logger.warn("请求参数错误,未设置参数[upateOperate].");
-			}
-			logger.debug(result.toString());
-			Struts2Utils.renderText(result);
-		} catch (Exception e) {
-			throw e;
-		}
-		return null;
-	}
+            }
+            logger.debug(result.toString());
+            Struts2Utils.renderText(result);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
+
+
+
+    /**
+     * 修改用户角色页面.
+     */
+    public String role() throws Exception {
+        return "role";
+    }
+    //调用updateUserRole()方法之前执行
+    public void prepareUpdateUserRole() throws Exception {
+        super.prepareModel();
+    }
+    /**
+     * 修改用户角色.
+     */
+    public void updateUserRole() throws Exception {
+        Result result = null;
+        try {
+            List<Role> rs = Lists.newArrayList();
+            for (Long id : roleIds) {
+                Role role = roleManager.loadById(id);
+                rs.add(role);
+            }
+            model.setRoles(rs);
+            userManager.saveEntity(model);
+            result = Result.successResult();
+            Struts2Utils.renderText(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+    }
+
+    /**
+     * 修改用户资源页面.
+     */
+    public String resource() throws Exception {
+        List<TreeNode> treeNodes = null;
+        try {
+            treeNodes = resourceManager.getResourceTree(null,true);
+            System.out.println(JsonMapper.nonEmptyMapper().toJson(treeNodes));
+            Struts2Utils.getRequest().setAttribute("resourceTreeData", JsonMapper.nonDefaultMapper().toJson(treeNodes));
+        } catch (Exception e) {
+            throw e;
+        }
+        return "resource";
+    }
+    //updateUserResource()方法之前执行
+    public void prepareUpdateUserResource() throws Exception {
+        super.prepareModel();
+    }
+    /**
+     * 修改用户资源.
+     */
+    public void updateUserResource() throws Exception {
+        Result result = null;
+        try {
+            List<Resource> rs = Lists.newArrayList();
+            for (Long id : resourceIds) {
+                Resource resource = resourceManager.loadById(id);
+                rs.add(resource);
+            }
+            model.setResources(rs);
+            userManager.saveEntity(model);
+            result = Result.successResult();
+            Struts2Utils.renderText(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+    }
 
 
 	public void setNewPassword(String newPassword) {
@@ -219,6 +268,10 @@ public class UserAction extends StrutsAction<User> {
 	public void setRoleIds(List<Long> roleIds) {
 		this.roleIds = roleIds;
 	}
+
+    public void setResourceIds(List<Long> resourceIds) {
+        this.resourceIds = resourceIds;
+    }
 
     public void setOrganId(String organId) {
         this.organId = organId;

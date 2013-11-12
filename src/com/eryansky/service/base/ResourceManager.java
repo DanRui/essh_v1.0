@@ -184,8 +184,17 @@ public class ResourceManager extends EntityManager<Resource, Long> {
     public List<Resource> getResourcesByUserId(Long userId) throws DaoException,
             SystemException, ServiceException {
         Assert.notNull(userId, "userId不能为空");
-        List<Resource> list = resourceDao.distinct(resourceDao.createQuery("select ms from User u left join u.roles rs left join rs.resources ms where u.id= ? order by ms.orderNo asc", userId)).list();
-        return list;
+        //角色权限
+        List<Resource> roleResources = resourceDao.distinct(resourceDao.createQuery("select ms from User u left join u.roles rs left join rs.resources ms where u.id= ? order by ms.orderNo asc", userId)).list();
+        //用户直接权限
+        List<Resource> userResources =  resourceDao.createQuery("select distinct ur from User u,u.resources.elements ur where u.id = ?",
+                new Object[]{userId}).list();
+
+        //合并 去除重复
+        List<Resource> rs1 = Collections3.comple(roleResources,userResources);
+        List<Resource> rs2 = Collections3.intersection(roleResources,userResources);
+        List<Resource> rs = Collections3.union(rs1,rs2);
+        return rs;
     }
 
     public List<Resource> getResourcesByUserId(Long userId, Resource parentResource) throws DaoException,

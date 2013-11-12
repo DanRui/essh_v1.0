@@ -6,6 +6,7 @@
 		loadIco();
         loadType();
 	});
+
 	//加载父级资源
 	function loadParent(){
 		$('#_parentId').combotree({
@@ -63,6 +64,7 @@
             displayField:'text'
         });
     }
+
 </script>
 <div>
     <form id="resource_form" method="post">

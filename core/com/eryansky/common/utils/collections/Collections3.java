@@ -1,11 +1,6 @@
 package com.eryansky.common.utils.collections;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -160,6 +155,22 @@ public class Collections3 {
 		return list;
 	}
 
+    /**
+     * 获取list2在list1中的无重复补集
+     * 注意：需要重写List集合中对象的hashcode和equals方法
+     * A={2,3} comple B={1,1,2,6} => C={1,6}
+     * @param a
+     * @param b
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T>  comple(Collection<T> a,Collection<T> b){
+        Set<T> set = new LinkedHashSet();
+        set.addAll(a);
+        set.removeAll(intersection(a, b));
+        return new ArrayList(set);
+    }
 	/**
 	 * 返回a与b的交集的新List.
 	 */
