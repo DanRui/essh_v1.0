@@ -242,7 +242,7 @@ public class UserManager extends EntityManager<User, Long> {
             p.setOrder(Page.ASC);
             p.setOrderBy("id");
         }
-        logger.info(hql.toString());
+        logger.debug(hql.toString());
         Page<User> userPage = userDao.findPage(p,hql.toString(),params.toArray());
         return userPage;
     }
