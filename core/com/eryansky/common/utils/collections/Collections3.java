@@ -184,4 +184,29 @@ public class Collections3 {
 		}
 		return list;
 	}
+
+    /**
+     * 返回a与b的无重复并集的新List.
+     */
+    public static <T> List<T>  aggregate(Collection<T> a,Collection<T> b){
+        List<T> list = new ArrayList<T>();
+        if (a != null) {
+            Iterator it = a.iterator();
+            while (it.hasNext()) {
+                T o = (T)it.next();
+                if (!list.contains(o)) {
+                    list.add(o);
+                }
+            }
+        }
+        if (b != null) {
+            Iterator it = b.iterator();
+            while (it.hasNext()) {
+                T o = (T) it.next();
+                if (!list.contains(o))
+                    list.add(o);
+            }
+        }
+        return list;
+    }
 }

@@ -157,7 +157,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @throws SystemException
      * @throws ServiceException
      */
-    @Cacheable(value = { CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},key = "#userId +'getNavMenuTreeByUserId'")
+//    @Cacheable(value = { CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},key = "#userId +'getNavMenuTreeByUserId'")
     public List<TreeNode> getNavMenuTreeByUserId(Long userId) throws DaoException,
             SystemException, ServiceException {
         List<TreeNode> nodes = Lists.newArrayList();
@@ -189,11 +189,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
         //用户直接权限
         List<Resource> userResources =  resourceDao.createQuery("select distinct ur from User u,u.resources.elements ur where u.id = ?",
                 new Object[]{userId}).list();
-
-        //合并 去除重复
-        List<Resource> rs1 = Collections3.comple(roleResources,userResources);
-        List<Resource> rs2 = Collections3.intersection(roleResources,userResources);
-        List<Resource> rs = Collections3.union(rs1,rs2);
+        List<Resource> rs = Collections3.aggregate(roleResources,userResources);
         return rs;
     }
 
