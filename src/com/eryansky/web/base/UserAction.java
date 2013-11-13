@@ -41,7 +41,7 @@ public class UserAction extends StrutsAction<User> {
     /**
      * 查询条件 组织机构ID
      */
-    private String organId;
+    private Long organId;
     /**
      * 查询条件 登录名或姓名
      */
@@ -273,7 +273,7 @@ public class UserAction extends StrutsAction<User> {
         this.resourceIds = resourceIds;
     }
 
-    public void setOrganId(String organId) {
+    public void setOrganId(Long organId) {
         this.organId = organId;
     }
 

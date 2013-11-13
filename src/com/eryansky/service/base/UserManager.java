@@ -7,6 +7,7 @@ import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.utils.CacheConstants;
+import com.google.common.collect.Lists;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -218,22 +219,18 @@ public class UserManager extends EntityManager<User, Long> {
      * @param order 排序方式 增序:'asc',降序:'desc'
      * @return
      */
-    public Page<User> getUsersByQuery(String organId, String loginNameOrName, int page, int rows, String sort, String order) {
-
-        if(organId==null && StringUtils.isBlank(loginNameOrName)){
-            return super.find(page,rows,null,null,new ArrayList<PropertyFilter>());
-        }
-
-        Object[] params = null;
+    public Page<User> getUsersByQuery(Long organId, String loginNameOrName, int page, int rows, String sort, String order) {
+        List<Object> params = Lists.newArrayList();
         StringBuilder hql = new StringBuilder();
         hql.append("select distinct u from User u,u.organs.elements o where 1=1 ");
         if(organId != null){
             hql.append("and o.id =? ");
-            params = new Object[]{organId};
+            params.add(organId);
         }
         if(StringUtils.isNotBlank(loginNameOrName)){
             hql.append("and (u.loginName like ? or u.name like ?) ");
-            params = new Object[]{organId,"%"+loginNameOrName+"%","%"+loginNameOrName+"%"};
+            params.add("%"+loginNameOrName+"%");
+            params.add("%"+loginNameOrName+"%");
         }
         //设置分页
         Page<User> p = new Page<User>(rows);
@@ -246,7 +243,7 @@ public class UserManager extends EntityManager<User, Long> {
             p.setOrderBy("id");
         }
         logger.info(hql.toString());
-        Page<User> userPage = userDao.findPage(p,hql.toString(),params);
+        Page<User> userPage = userDao.findPage(p,hql.toString(),params.toArray());
         return userPage;
     }
 
