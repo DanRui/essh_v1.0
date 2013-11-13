@@ -157,23 +157,34 @@ public class ResourceManager extends EntityManager<Resource, Long> {
      * @throws SystemException
      * @throws ServiceException
      */
-//    @Cacheable(value = { CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},key = "#userId +'getNavMenuTreeByUserId'")
+    @Cacheable(value = { CacheConstants.RESOURCE_USER_MENU_TREE_CACHE},key = "#userId +'getNavMenuTreeByUserId'")
     public List<TreeNode> getNavMenuTreeByUserId(Long userId) throws DaoException,
             SystemException, ServiceException {
         List<TreeNode> nodes = Lists.newArrayList();
         List<Resource> userResources = Lists.newArrayList();
         User user = userManager.loadById(userId);
         User superUser = userManager.getSuperUser();
+        boolean isSuperUser = false; //是否是超级管理员
         if (user != null && superUser != null
                 && user.getId() == superUser.getId()) {// 超级用户
+            isSuperUser = true;
             userResources = this.getByParentId(null,StatusState.normal.getValue());
         } else if (user != null) {
-           userResources = this.getResourcesByUserId(userId,null);
+           userResources = this.getResourcesByUserId(userId);
         }
         for(Resource resource:userResources){
-            TreeNode node =  this.resourceToTreeNode(resource, ResourceType.menu.getValue(),true);
-            if(node !=null){
-                nodes.add(node);
+            if(isSuperUser){
+                TreeNode node =  this.resourceToTreeNode(resource, ResourceType.menu.getValue(),true);
+                if(node !=null){
+                    nodes.add(node);
+                }
+            } else{
+                if(resource != null && resource.getParentResource() == null){
+                    TreeNode node =  this.resourceToTreeNode(userResources,resource, ResourceType.menu.getValue(),true);
+                    if(node !=null){
+                        nodes.add(node);
+                    }
+                }
             }
         }
 
@@ -232,17 +243,26 @@ public class ResourceManager extends EntityManager<Resource, Long> {
         List<Resource> userResources = Lists.newArrayList();
         User user = userManager.loadById(userId);
         User superUser = userManager.getSuperUser();
+       boolean isSuperUser = false; //是否是超级管理员
         if (user != null && superUser != null
                 && user.getId() == superUser.getId()) {// 超级用户
             userResources = this.getByParentId(null,StatusState.normal.getValue());
         } else if (user != null) {
-            userResources = this.getResourcesByUserId(userId,null);
+            userResources = this.getResourcesByUserId(userId);
         }
         for(Resource resource:userResources){
-            TreeNode node =  this.resourceToTreeNode(resource,null,true);
-            if(node !=null){
-                nodes.add(node);
+            if(isSuperUser){
+                TreeNode node =  this.resourceToTreeNode(resource, null,true);
+                if(node !=null){
+                    nodes.add(node);
+                }
+            } else{
+                TreeNode node =  this.resourceToTreeNode(userResources,resource, null,true);
+                if(node !=null){
+                    nodes.add(node);
+                }
             }
+
         }
 
         logger.debug("缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE + " 参数：userId=" + userId);
@@ -279,6 +299,50 @@ public class ResourceManager extends EntityManager<Resource, Long> {
             List<TreeNode> childrenTreeNodes = Lists.newArrayList();
             for(Resource subResource:resource.getSubResources()){
                 TreeNode node = resourceToTreeNode(subResource,resourceType,isCascade);
+                if(node !=null){
+                    childrenTreeNodes.add(node);
+                }
+            }
+            treeNode.setChildren(childrenTreeNodes);
+        }
+
+        return treeNode;
+    }
+
+    /**
+     * Resource转TreeNode
+     * @param repositoryResources 资源库
+     * @param resource 资源
+     * @param resourceType 资源类型
+     * @param isCascade       是否级联
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    private TreeNode resourceToTreeNode(List<Resource> repositoryResources,Resource resource,Integer resourceType,boolean isCascade) throws DaoException, SystemException,
+            ServiceException {
+        if(resource==null || !repositoryResources.contains(resource)){
+            return null;
+        }
+        if(resourceType!=null){
+            if(!resourceType.equals(resource.getType())){
+                return null;
+            }
+        }
+        TreeNode treeNode = new TreeNode(resource.getId().toString(),
+                resource.getName(), resource.getIconCls());
+        // 自定义属性 url
+        Map<String, Object> attributes = Maps.newHashMap();
+        attributes.put("url", resource.getUrl());
+        attributes.put("markUrl", resource.getMarkUrl());
+        attributes.put("code", resource.getCode());
+        attributes.put("type", resource.getType());
+        treeNode.setAttributes(attributes);
+        if(isCascade){
+            List<TreeNode> childrenTreeNodes = Lists.newArrayList();
+            for(Resource subResource:resource.getSubResources()){
+                TreeNode node = resourceToTreeNode(repositoryResources,subResource,resourceType,isCascade);
                 if(node !=null){
                     childrenTreeNodes.add(node);
                 }
