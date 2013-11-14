@@ -220,6 +220,9 @@ public class UserManager extends EntityManager<User, Long> {
      * @return
      */
     public Page<User> getUsersByQuery(Long organId, String loginNameOrName, int page, int rows, String sort, String order) {
+        if(organId==null && StringUtils.isBlank(loginNameOrName)){
+            return super.find(page,rows,null,null,new ArrayList<PropertyFilter>());
+        }
         List<Object> params = Lists.newArrayList();
         StringBuilder hql = new StringBuilder();
         hql.append("select distinct u from User u,u.organs.elements o where 1=1 ");
