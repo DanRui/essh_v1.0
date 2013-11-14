@@ -220,6 +220,7 @@ public class UserManager extends EntityManager<User, Long> {
      * @return
      */
     public Page<User> getUsersByQuery(Long organId, String loginNameOrName, int page, int rows, String sort, String order) {
+        //条件都为空的时候能够查询出所有数据
         if(organId==null && StringUtils.isBlank(loginNameOrName)){
             return super.find(page,rows,null,null,new ArrayList<PropertyFilter>());
         }
