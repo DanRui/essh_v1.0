@@ -43,7 +43,7 @@ public final class ExcelUtil {
 	 */
 	private static String[] HEAD_LIST = { "序号", "名字", "年龄", "备注" };
 
-	private static String[] VALUE_LIST = { "01", "张代浩", "20", "1986-04-03",
+	private static String[] VALUE_LIST = { "01", "张三", "20", "1986-04-03",
 			"........." };
 
 	/**

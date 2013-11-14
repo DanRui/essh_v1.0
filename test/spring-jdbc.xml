@@ -46,7 +46,7 @@
 	</bean>
 	
 	<!-- Hibernate切面拦截器 -->
-	<bean id="hibernateAspectInterceptor" class="com.eryansky.common.aop.HibernateAspectInterceptor" />
+	<bean id="hibernateAspectInterceptor" class="com.eryansky.core.HibernateAspectInterceptor" />
     
 	<!-- Hibernate配置 -->
 	<bean id="sessionFactory"

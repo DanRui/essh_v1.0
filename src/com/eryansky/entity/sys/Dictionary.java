@@ -92,32 +92,6 @@ public class Dictionary extends BaseEntity{
 	public Dictionary() {
 	}
 
-	/**
-	 * 系统数据字典构造函数.
-	 * 
-	 * @param name
-	 *            参数名称
-	 * @param code
-	 *            参数编码/参数值
-	 * @param remark
-	 *            备注
-	 * @param orderNo
-	 *            排序
-	 * @param parentDictionary
-	 *            上级数据字典
-	 * @param dictionaryType
-	 *            系统字典类型
-	 */
-	public Dictionary(String name, String code, String remark, Integer orderNo,
-			Dictionary parentDictionary, DictionaryType dictionaryType) {
-		super();
-		this.name = name;
-		this.code = code;
-		this.remark = remark;
-		this.orderNo = orderNo;
-		this.parentDictionary = parentDictionary;
-		this.dictionaryType = dictionaryType;
-	}
 
 	@Column(name = "NAME",length = 100, unique = true)
 	public String getName() {
