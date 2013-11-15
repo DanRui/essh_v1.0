@@ -96,7 +96,9 @@ public class RoleAction extends StrutsAction<Role> {
         List<TreeNode> treeNodes = Lists.newArrayList();
         try {
             treeNodes = resourceManager.getResourceTree(null,true);
-            Struts2Utils.getRequest().setAttribute("resourceTreeData", JsonMapper.nonDefaultMapper().toJson(treeNodes));
+            String resourceComboboxData = JsonMapper.nonDefaultMapper().toJson(treeNodes);
+            logger.debug(resourceComboboxData);
+            Struts2Utils.getRequest().setAttribute("resourceComboboxData", resourceComboboxData);
         } catch (Exception e) {
             throw e;
         }

@@ -23,6 +23,7 @@
         });
         loadResource();
     });
+
     //加载资源
     function loadResource(){
         resource_combotree = $('#resourceIds').combotree({
@@ -33,23 +34,12 @@
     }
 </script>
 <div>
-    <form id="role_form" method="post" novalidate>
-        <input type="hidden"  name="id" />
-        <!-- 用户版本控制字段 version -->
-        <input type="hidden" id="version" name="version" />
+    <form id="user_resource_form"  method="post" novalidate>
+        <input type="hidden" id="id" name="id" />
         <div>
             <label>关联资源:</label>
             <input id="resourceIds" name="resourceIds"  style="width:200px" />
-            级联模式<input id="changeMode" type="checkbox"/>
-        </div>
-        <div>
-            <label>角色名称:</label>
-            <input name="name" type="text" class="easyui-validatebox"
-                   maxLength="100" data-options="required:true,missingMessage:'请输入角色名称.',validType:['minLength[1]','legalInput']">
-        </div>
-        <div>
-            <label >描述:</label>
-            <textarea maxLength="100" name="description"></textarea>
+            级联模式<input id="changeMode" type="checkbox" />
         </div>
     </form>
 </div>
