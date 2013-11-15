@@ -42,11 +42,13 @@
     var user_password_form;
     var user_role_form;
     var user_resource_form;
+    var user_organ_form;
     var user_search_form;
     var user_dialog;
     var user_password_dialog;
     var user_role_dialog;
     var user_resource_dialog;
+    var user_organ_dialog;
     $(function() {
         user_search_form = $('#user_search_form').form();
 
@@ -92,6 +94,8 @@
             sortName:'id',//默认排序字段
             sortOrder:'asc',//默认排序方式 'desc' 'asc'
             idField : 'id',
+            frozen:true,
+            collapsible: true,
             frozenColumns:[[
                 {field:'ck',checkbox:true},
                 {field:'loginName',title:'登录名',width:120,sortable:true,
@@ -101,10 +105,10 @@
                         }
                         return value;
                     }
-                }]],
+                }
+            ]],
             columns:[[
-
-                {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
+                {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80} ,
                 {field:'roleNames',title:'关联角色',width:160,
                     formatter:function(value,rowData,rowIndex){
                         if(isSuperOwner(rowData.id)){
@@ -113,6 +117,7 @@
                         return value;
                     }
                 },
+                {field:'defaultOrganName',title:'默认机构',width:160},
                 {field:'organNames',title:'所属组织机构',width:160},
                 {field:'name',title:'姓名',width:100,sortable:true},
                 {field:'sexDesc',title:'性别',width:60,align:'center'},
@@ -305,11 +310,11 @@ function editPassword(){
 
         user_password_dialog = $('<div/>').dialog({
             title:'修改用户密码',
-            width : 400,
+            width : 460,
             height : 200,
             modal : true,
             maximizable:true,
-            href : '${ctx}/base/user-password.action',
+            href : '${ctx}/base/user!password.action',
             buttons : [ {
                 text : '保存',
                 iconCls : 'icon-save',
@@ -386,6 +391,11 @@ function editUserRole(){
             eu.showMsg("超级管理员无需设置角色！");
             return;
         }
+
+        var inputUrl = '${ctx}/base/user!role.action';
+        if(row != undefined && row.id){
+            inputUrl = inputUrl+"?id="+row.id;
+        }
         //弹出对话窗口
         user_role_dialog = $('<div/>').dialog({
             title:'用户角色信息',
@@ -393,7 +403,7 @@ function editUserRole(){
             height : 200,
             modal : true,
             maximizable:true,
-            href : '${ctx}/base/user-role.action',
+            href : inputUrl,
             buttons : [ {
                 text : '保存',
                 iconCls : 'icon-save',
@@ -474,7 +484,7 @@ function editUserResource(){
         user_resource_dialog = $('<div/>').dialog({
             title:'用户资源信息',
             width : 500,
-            height : 240,
+            height : 200,
             modal : true,
             maximizable:true,
             href : '${ctx}/base/user!resource.action',
@@ -504,6 +514,91 @@ function editUserResource(){
         eu.showMsg("请选择要操作的对象！");
     }
 }
+
+//初始化用户机构表单
+function initUserOrganForm(){
+    user_organ_form = $('#user_organ_form').form({
+        url: '${ctx}/base/user!updateUserOrgan.action',
+        onSubmit: function(param){
+            $.messager.progress({
+                title : '提示信息！',
+                text : '数据处理中，请稍后....'
+            });
+            var isValid = $(this).form('validate');
+            if (!isValid) {
+                $.messager.progress('close');
+            }
+            return isValid;
+        },
+        success: function(data){
+            $.messager.progress('close');
+            var json = $.parseJSON(data);
+            if (json.code == 1){
+                user_organ_dialog.dialog('destroy');//销毁对话框
+                user_datagrid.datagrid('reload');	// reload the user data
+                eu.showMsg(json.msg);//操作结果提示
+            }else {
+                eu.showAlertMsg(json.msg,'error');
+            }
+        }
+    });
+}
+
+//设置用户机构
+function editUserOrgan(){
+    //选中的所有行
+    var rows = user_datagrid.datagrid('getSelections');
+    //选中的行（第一条）
+    var row = user_datagrid.datagrid('getSelected');
+    if (row){
+        if(rows.length>1){
+            eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+        }
+        //判断是否允许操作
+        if(isOpeated(row.id) == false){
+            eu.showMsg("超级管理员用户信息不允许被其他人修改！");
+            return;
+        }
+
+        var inputUrl = '${ctx}/base/user!organ.action';
+        if(row != undefined && row.id){
+            inputUrl = inputUrl+"?id="+row.id;
+        }
+        //弹出对话窗口
+        user_organ_dialog = $('<div/>').dialog({
+            title:'用户机构信息',
+            width : 400,
+            height : 200,
+            modal : true,
+            maximizable:true,
+            href : inputUrl,
+            buttons : [ {
+                text : '保存',
+                iconCls : 'icon-save',
+                handler : function() {
+                    user_organ_form.submit();
+                }
+            },{
+                text : '关闭',
+                iconCls : 'icon-cancel',
+                handler : function() {
+                    user_organ_dialog.dialog('destroy');
+                }
+            }],
+            onClose : function() {
+                $(this).dialog('destroy');
+            },
+            onLoad:function(){
+                initUserOrganForm();
+                user_organ_form.form('load', row);
+            }
+        }).dialog('open');
+
+    }else{
+        eu.showMsg("请选择要操作的对象！");
+    }
+}
+
 
 //删除用户
 function del(){
@@ -549,6 +644,7 @@ function search(){
     <div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
     <div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
     <div onclick="editPassword();" data-options="iconCls:'icon-lock'">修改密码</div>
+    <div onclick="editUserOrgan();" data-options="iconCls:'icon-group'">设置机构</div>
     <div onclick="editUserResource();" data-options="iconCls:'icon-group'">设置资源</div>
     <div onclick="editUserRole();" data-options="iconCls:'icon-group'">设置角色</div>
 
@@ -558,7 +654,7 @@ function search(){
 
     <%-- 左边部分 菜单树形 --%>
     <div data-options="region:'west',title:'组织机构列表',split:false,collapsed:false,border:false"
-         style="width: 200px; text-align: left;padding:5px;">
+         style="width: 180px; text-align: left;padding:5px;">
         <ul id="organ_tree"></ul>
     </div>
 
@@ -584,12 +680,14 @@ function search(){
                 <span class="toolbar-btn-separator"></span>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-lock" plain="true" onclick="editPassword()">修改密码</a>
                 <span class="toolbar-btn-separator"></span>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserOrgan()">设置机构</a>
+                <span class="toolbar-btn-separator"></span>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserRole()">设置角色</a>
                 <span class="toolbar-btn-separator"></span>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserResource()">设置资源</a>
             </div>
         </div>
 
-        <table id="user_datagrid" toolbar="#user_datagrid-toolbar" fit="true"></table>
+        <table id="user_datagrid" toolbar="#user_datagrid-toolbar" fit="true" ></table>
     </div>
 </div>

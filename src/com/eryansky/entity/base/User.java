@@ -90,6 +90,14 @@ public class User
      */
     private List<Long> resourceIds = Lists.newArrayList();
 
+    /**
+     * 默认组织机构
+     */
+    private Organ defaultOrgan;
+    /**
+     * 默认组织机构 @Transient
+     */
+    private Long defaultOrganId;
 
     /**
      * 组织机构
@@ -256,6 +264,37 @@ public class User
 
     public void setResourceIds(List<Long> resourceIds) {
         this.resourceIds = resourceIds;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DEFAULT_ORGANID")
+    public Organ getDefaultOrgan() {
+        return defaultOrgan;
+    }
+
+    public void setDefaultOrgan(Organ defaultOrgan) {
+        this.defaultOrgan = defaultOrgan;
+    }
+
+    @Transient
+    public Long getDefaultOrganId() {
+        if(defaultOrgan != null){
+            defaultOrganId = defaultOrgan.getId();
+        }
+        return defaultOrganId;
+    }
+
+    public void setDefaultOrganId(Long defaultOrganId) {
+        this.defaultOrganId = defaultOrganId;
+    }
+
+    @Transient
+    public String getDefaultOrganName(){
+        String doName = null;
+        if(defaultOrgan != null){
+            doName = defaultOrgan.getName();
+        }
+        return doName;
     }
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)

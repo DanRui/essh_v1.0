@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.transaction.SystemException;
 
+import com.eryansky.common.model.Combobox;
 import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.Page;
+import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Organ;
 import com.eryansky.entity.base.Resource;
@@ -43,9 +45,17 @@ public class UserAction extends StrutsAction<User> {
      */
     private Long organId;
     /**
+     * 组织机构ID集合
+     */
+    private List<Long> organIds = Lists.newArrayList();
+    /**
      * 查询条件 登录名或姓名
      */
     private String loginNameOrName;
+    /**
+     * 默认组织机构ID
+     */
+    private Long defaultOrganId;
 
 	@Autowired
 	private UserManager userManager;
@@ -78,7 +88,7 @@ public class UserAction extends StrutsAction<User> {
         return null;
     }
 
-	/**
+    /**
 	 * 保存.
 	 */
 	@Override
@@ -94,15 +104,6 @@ public class UserAction extends StrutsAction<User> {
                 return null;
             }
 
-            //绑定组织机构
-            model.setOrgans(null);
-            List<Organ> organs = Lists.newArrayList();
-            for(Long organId:model.getOrganIds()){
-                Organ organ = organManager.loadById(organId);
-                organs.add(organ);
-            }
-            model.setOrgans(organs);
-            
             if (model.getId() == null) {// 新增
             	model.setPassword(Encrypt.e(model.getPassword()));
             } else {// 修改
@@ -217,13 +218,71 @@ public class UserAction extends StrutsAction<User> {
     }
 
     /**
+     * 设置组织机构页面.
+     */
+    public String organ() throws Exception {
+        super.prepareModel();
+        //设置默认组织机构初始值
+        List<Combobox> defaultOrganCombobox = Lists.newArrayList();
+        if(model.getId() != null){
+            List<Organ> organs = model.getOrgans();
+            Combobox combobox;
+            if(!Collections3.isEmpty(organs)){
+                for(Organ organ:organs){
+                    combobox = new Combobox(organ.getId().toString(),organ.getName());
+                    defaultOrganCombobox.add(combobox);
+                }
+            }
+        }
+        String defaultOrganComboboxData = JsonMapper.nonDefaultMapper().toJson(defaultOrganCombobox);
+        logger.debug(defaultOrganComboboxData);
+        Struts2Utils.getRequest().setAttribute("defaultOrganComboboxData",defaultOrganComboboxData);
+        return "organ";
+    }
+    //调用updateUserOrgan()方法之前执行
+    public void prepareUpdateUserOrgan() throws Exception {
+        super.prepareModel();
+    }
+    /**
+     * 设置用户组织机构.
+     */
+    public void updateUserOrgan() throws Exception {
+        Result result = null;
+        try {
+            //绑定组织机构
+            model.setOrgans(null);
+            List<Organ> organs = Lists.newArrayList();
+            for(Long organId:organIds){
+                Organ organ = organManager.loadById(organId);
+                organs.add(organ);
+            }
+            model.setOrgans(organs);
+
+            //绑定默认组织机构
+            model.setDefaultOrgan(null);
+            Organ defaultOrgan = null;
+            if(defaultOrganId !=null){
+                defaultOrgan = organManager.loadById(model.getDefaultOrganId());
+            }
+            model.setDefaultOrgan(defaultOrgan);
+
+            userManager.saveEntity(model);
+            result = Result.successResult();
+            Struts2Utils.renderText(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+    }
+
+    /**
      * 修改用户资源页面.
      */
     public String resource() throws Exception {
         List<TreeNode> treeNodes = null;
         try {
             treeNodes = resourceManager.getResourceTree(null,true);
-            System.out.println(JsonMapper.nonEmptyMapper().toJson(treeNodes));
             Struts2Utils.getRequest().setAttribute("resourceTreeData", JsonMapper.nonDefaultMapper().toJson(treeNodes));
         } catch (Exception e) {
             throw e;
@@ -279,5 +338,13 @@ public class UserAction extends StrutsAction<User> {
 
     public void setLoginNameOrName(String loginNameOrName) {
         this.loginNameOrName = loginNameOrName;
+    }
+
+    public void setDefaultOrganId(Long defaultOrganId) {
+        this.defaultOrganId = defaultOrganId;
+    }
+
+    public void setOrganIds(List<Long> organIds) {
+        this.organIds = organIds;
     }
 }

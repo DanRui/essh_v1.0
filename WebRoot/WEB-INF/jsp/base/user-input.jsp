@@ -3,7 +3,6 @@
 <script type="text/javascript">
     $(function() {
         loadSex();
-        loadOrgan();
     });
     //性别
     function loadSex(){
@@ -16,62 +15,12 @@
             displayField: 'text'
         });
     }
-
-    function loadOrgan(){
-        $('#organIds').combogrid({
-            multiple:true,
-            panelWidth:420,
-            //value:'006', //默认值
-            idField:'id',
-            textField:'name',
-            url:'${ctx}/base/organ!datagrid.action',
-            mode: 'remote',
-            fitColumns: true,
-            striped: true,
-            editable:true,
-            pagination : true,//是否分页
-            rownumbers:true,//序号
-            collapsible:false,//是否可折叠的
-            fit: true,//自动大小
-            pageSize: 10,//每页显示的记录条数，默认为10
-            pageList: [10,20,30,50,100],//可以设置每页记录条数的列表
-            method:'post',
-            columns:[[
-                {field:'ck',checkbox:true},
-                {field:'id',title:'主键ID',width:100,hidden:'true'},
-                {field:'name',title:'机构名称',width:80},
-                {field:'code',title:'机构编码',width:80}
-            ]],
-            keyHandler : {
-                enter: function() {
-                    var name = $('#organIds').combogrid('getText');
-                    var dg = $('#organIds').combogrid("grid");
-                    dg.datagrid("reload", {'pageType':2,'filter_LIKES_name_OR_code':name});
-                },
-                query : function(q) {
-                }
-            },
-            onBeforeLoad:function(param){
-                param.filter_EQI_status = 0;//排除已删除的数据
-            }
-        });
-    }
 </script>
 <div>
     <form id="user_form"  method="post" novalidate>
         <input type="hidden" id="id" name="id" />
         <!-- 用户版本控制字段 version -->
         <input type="hidden" id="version" name="version" />
-        <!--
-        <div class="fitem">
-            <label>角色设置:</label>
-            <select id="roleIds" name="roleIds" class="easyui-combobox"></select>
-        </div>
-        -->
-        <div>
-            <label>所属组织机构:</label>
-            <input type="select" id="organIds" name="organIds" class="easyui-combogrid"/>
-        </div>
         <div>
             <label>登录名:</label>
             <input type="text" id="loginName" name="loginName" maxLength="36"

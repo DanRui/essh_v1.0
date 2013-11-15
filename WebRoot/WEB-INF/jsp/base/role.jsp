@@ -21,12 +21,14 @@ $(function() {
 	    sortName:'id',//默认排序字段
 		sortOrder:'asc',//默认排序方式 'desc' 'asc'
 		idField : 'id',
-	    columns:[[  
+        frozenColumns:[[
             {field:'ck',checkbox:true},
-            {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80}, 
+            {field:'name',title:'角色名称',width:200}
+        ]],
+	    columns:[[  
+            {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
             {field:'resourceNames',title:'关联资源',width:165},
-	        {field:'name',title:'角色名称',width:55}, 
-	        {field:'description',title:'描述',width:50}	               
+	        {field:'description',title:'描述',width:50}
 	    ]],
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
