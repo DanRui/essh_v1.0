@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50153
 File Encoding         : 65001
 
-Date: 2013-11-12 22:30:21
+Date: 2013-11-16 13:57:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -41,7 +41,7 @@ CREATE TABLE `t_base_organ` (
   UNIQUE KEY `NAME` (`NAME`),
   KEY `FKFE2373CE3E535456` (`PARENT_ID`),
   CONSTRAINT `FKFE2373CE3E535456` FOREIGN KEY (`PARENT_ID`) REFERENCES `t_base_organ` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_base_organ
@@ -72,7 +72,7 @@ CREATE TABLE `t_base_resource` (
   UNIQUE KEY `NAME` (`NAME`),
   KEY `FKFCD7B111A886F349` (`PARENT_ID`),
   CONSTRAINT `FKFCD7B111A886F349` FOREIGN KEY (`PARENT_ID`) REFERENCES `t_base_resource` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_base_resource
@@ -101,9 +101,10 @@ CREATE TABLE `t_base_role` (
   `VERSION` int(11) DEFAULT NULL,
   `NAME` varchar(100) NOT NULL,
   `REMARK` varchar(255) DEFAULT NULL,
+  `CODE` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `NAME` (`NAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_base_role
@@ -146,14 +147,17 @@ CREATE TABLE `t_base_user` (
   `PASSWORD` varchar(64) NOT NULL,
   `SEX` int(11) DEFAULT NULL,
   `TEL` varchar(36) DEFAULT NULL,
+  `DEFAULT_ORGANID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `LOGIN_NAME` (`LOGIN_NAME`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `LOGIN_NAME` (`LOGIN_NAME`),
+  KEY `FKBDE2DA4E7AEFAE74` (`DEFAULT_ORGANID`),
+  CONSTRAINT `FKBDE2DA4E7AEFAE74` FOREIGN KEY (`DEFAULT_ORGANID`) REFERENCES `t_base_organ` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_base_user
 -- ----------------------------
-INSERT INTO `t_base_user` VALUES ('1', null, null, '0', null, null, '0', null, null, 'admin', null, null, '5f4dcc3b5aa765d61d8327deb882cf99', null, null);
+INSERT INTO `t_base_user` VALUES ('1', null, null, '0', '2013-11-13 08:02:20', 'admin', '3', '', '', 'admin', null, '', '5f4dcc3b5aa765d61d8327deb882cf99', '2', '', null);
 
 -- ----------------------------
 -- Table structure for t_base_user_organ
@@ -164,8 +168,8 @@ CREATE TABLE `t_base_user_organ` (
   `ORGAN_ID` bigint(20) NOT NULL,
   KEY `FK1F9964C01162FD8F` (`ORGAN_ID`),
   KEY `FK1F9964C0712445C5` (`USER_ID`),
-  CONSTRAINT `FK1F9964C0712445C5` FOREIGN KEY (`USER_ID`) REFERENCES `t_base_user` (`ID`),
-  CONSTRAINT `FK1F9964C01162FD8F` FOREIGN KEY (`ORGAN_ID`) REFERENCES `t_base_organ` (`ID`)
+  CONSTRAINT `FK1F9964C01162FD8F` FOREIGN KEY (`ORGAN_ID`) REFERENCES `t_base_organ` (`ID`),
+  CONSTRAINT `FK1F9964C0712445C5` FOREIGN KEY (`USER_ID`) REFERENCES `t_base_user` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -181,8 +185,8 @@ CREATE TABLE `t_base_user_resource` (
   `RESOURCE_ID` bigint(20) NOT NULL,
   KEY `FKD8C9C2DF712445C5` (`USER_ID`),
   KEY `FKD8C9C2DF76B5CD65` (`RESOURCE_ID`),
-  CONSTRAINT `FKD8C9C2DF76B5CD65` FOREIGN KEY (`RESOURCE_ID`) REFERENCES `t_base_resource` (`ID`),
-  CONSTRAINT `FKD8C9C2DF712445C5` FOREIGN KEY (`USER_ID`) REFERENCES `t_base_user` (`ID`)
+  CONSTRAINT `FKD8C9C2DF712445C5` FOREIGN KEY (`USER_ID`) REFERENCES `t_base_user` (`ID`),
+  CONSTRAINT `FKD8C9C2DF76B5CD65` FOREIGN KEY (`RESOURCE_ID`) REFERENCES `t_base_resource` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -253,8 +257,8 @@ CREATE TABLE `t_sys_dictionary` (
   UNIQUE KEY `CODE_2` (`CODE`),
   KEY `FK79C52CB373CC8B3F` (`DICTIONARYTYPE_CODE`),
   KEY `FK79C52CB3BD49F8CB` (`PARENT_CODE`),
-  CONSTRAINT `FK79C52CB3BD49F8CB` FOREIGN KEY (`PARENT_CODE`) REFERENCES `t_sys_dictionary` (`CODE`),
-  CONSTRAINT `FK79C52CB373CC8B3F` FOREIGN KEY (`DICTIONARYTYPE_CODE`) REFERENCES `t_sys_dictionarytype` (`CODE`)
+  CONSTRAINT `FK79C52CB373CC8B3F` FOREIGN KEY (`DICTIONARYTYPE_CODE`) REFERENCES `t_sys_dictionarytype` (`CODE`),
+  CONSTRAINT `FK79C52CB3BD49F8CB` FOREIGN KEY (`PARENT_CODE`) REFERENCES `t_sys_dictionary` (`CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------

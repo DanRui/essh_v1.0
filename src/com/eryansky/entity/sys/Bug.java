@@ -54,12 +54,6 @@ public class Bug extends BaseEntity implements Serializable{
 		super();
 	}
 
-	public Bug(String title, Clob content) {
-		super();
-		this.title = title;
-		this.content = content;
-	}
-
     @Column(name = "TITLE",length = 255)
     public String getTitle() {
 		return title;
@@ -115,10 +109,6 @@ public class Bug extends BaseEntity implements Serializable{
 			str = contentView;
 		}
 		return str;
-	}
-
-	public void setContentView(String contentView) {
-		this.contentView = contentView;
 	}
 
 }

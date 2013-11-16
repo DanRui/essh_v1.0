@@ -239,7 +239,7 @@ public class Resource
      * 资源类型描述
      */
     @Transient
-    public String getTypeDesc() {
+    public String getTypeView() {
         ResourceType r = ResourceType.getResourceType(type);
         String str = "";
         if(r != null){

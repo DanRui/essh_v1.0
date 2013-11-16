@@ -49,7 +49,7 @@
         </div>
         <div>
             <label >描述:</label>
-            <textarea maxLength="100" name="description"></textarea>
+            <textarea maxLength="255" name="remark"></textarea>
         </div>
     </form>
 </div>

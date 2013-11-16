@@ -117,7 +117,7 @@ public  class BaseEntity extends AutoEntity implements Serializable,
 	 * 状态描述
 	 */
 	@Transient
-	public String getStatusDesc() {
+	public String getStatusView() {
 		StatusState s = StatusState.getStatusState(status);
 		String str = "";
 		if(s != null){

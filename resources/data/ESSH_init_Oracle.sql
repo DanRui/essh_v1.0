@@ -11,7 +11,7 @@ Target Server Type    : ORACLE
 Target Server Version : 100100
 File Encoding         : 65001
 
-Date: 2013-11-13 22:44:03
+Date: 2013-11-16 14:14:09
 */
 
 
@@ -47,8 +47,6 @@ NOCACHE
 -- ----------------------------
 -- Records of T_BASE_ORGAN
 -- ----------------------------
-INSERT INTO "T_BASE_ORGAN" VALUES ('10', TO_TIMESTAMP(' 2013-11-13 22:38:39:580000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, null, null, '尔演科技', '1', null, 'eryan', '1', null);
-INSERT INTO "T_BASE_ORGAN" VALUES ('11', TO_TIMESTAMP(' 2013-11-13 22:39:04:700000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, null, null, '研发中心', '2', null, 'e001', '0', '10');
 
 -- ----------------------------
 -- Table structure for T_BASE_RESOURCE
@@ -104,7 +102,8 @@ CREATE TABLE "T_BASE_ROLE" (
 "UPDATE_USER" VARCHAR2(36 CHAR) NULL ,
 "VERSION" NUMBER(10) NULL ,
 "NAME" VARCHAR2(100 CHAR) NOT NULL ,
-"REMARK" VARCHAR2(255 CHAR) NULL 
+"REMARK" VARCHAR2(255 CHAR) NULL ,
+"CODE" VARCHAR2(36 CHAR) NULL 
 )
 LOGGING
 NOCOMPRESS
@@ -153,7 +152,8 @@ CREATE TABLE "T_BASE_USER" (
 "NAME" VARCHAR2(36 CHAR) NULL ,
 "PASSWORD" VARCHAR2(64 CHAR) NOT NULL ,
 "SEX" NUMBER(10) NULL ,
-"TEL" VARCHAR2(36 CHAR) NULL 
+"TEL" VARCHAR2(36 CHAR) NULL ,
+"DEFAULT_ORGANID" NUMBER(19) NULL 
 )
 LOGGING
 NOCOMPRESS
@@ -164,7 +164,7 @@ NOCACHE
 -- ----------------------------
 -- Records of T_BASE_USER
 -- ----------------------------
-INSERT INTO "T_BASE_USER" VALUES ('1', null, null, '0', null, null, '0', null, null, 'admin', null, null, '5f4dcc3b5aa765d61d8327deb882cf99', null, null);
+INSERT INTO "T_BASE_USER" VALUES ('1', null, null, '0', null, null, '0', null, null, 'admin', null, null, '5f4dcc3b5aa765d61d8327deb882cf99', null, null, null);
 
 -- ----------------------------
 -- Table structure for T_BASE_USER_ORGAN
@@ -312,7 +312,7 @@ CREATE SEQUENCE "HIBERNATE_SEQUENCE"
  INCREMENT BY 1
  MINVALUE 1
  MAXVALUE 999999999999999999999999999
- START WITH 21
+ START WITH 61
  CACHE 20;
 
 -- ----------------------------
@@ -487,6 +487,11 @@ ALTER TABLE "T_BASE_RESOURCE" ADD FOREIGN KEY ("PARENT_ID") REFERENCES "T_BASE_R
 -- ----------------------------
 ALTER TABLE "T_BASE_ROLE_RESOURCE" ADD FOREIGN KEY ("RESOURCE_ID") REFERENCES "T_BASE_RESOURCE" ("ID");
 ALTER TABLE "T_BASE_ROLE_RESOURCE" ADD FOREIGN KEY ("ROLE_ID") REFERENCES "T_BASE_ROLE" ("ID");
+
+-- ----------------------------
+-- Foreign Key structure for table "T_BASE_USER"
+-- ----------------------------
+ALTER TABLE "T_BASE_USER" ADD FOREIGN KEY ("DEFAULT_ORGANID") REFERENCES "T_BASE_ORGAN" ("ID");
 
 -- ----------------------------
 -- Foreign Key structure for table "T_BASE_USER_ORGAN"

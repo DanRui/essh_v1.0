@@ -28,7 +28,7 @@ $(function() {
 	    columns:[[  
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
             {field:'resourceNames',title:'关联资源',width:165},
-	        {field:'description',title:'描述',width:50}
+	        {field:'remark',title:'描述',width:50}
 	    ]],
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项

@@ -31,8 +31,8 @@ $(function() {
             {field:'url',title:'链接地址',width:260},
             {field:'markUrl',title:'标识地址',width:200},
             {field:'orderNo',title:'排序',align:'right',width:60,sortable:true},
-            {field:'typeDesc',title:'资源类型',align:'center',width:100},
-            {field:'statusDesc',title:'状态',align:'center',width:60}
+            {field:'typeView',title:'资源类型',align:'center',width:100},
+            {field:'statusView',title:'状态',align:'center',width:60}
         ]],
         onContextMenu : function(e, row) {
             e.preventDefault();

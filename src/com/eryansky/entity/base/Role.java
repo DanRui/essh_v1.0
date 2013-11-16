@@ -74,14 +74,14 @@ public class Role
         this.name = name;
     }
 
-//    @Column(length = 36)
-//    public String getCode() {
-//        return code;
-//    }
-//
-//    public void setCode(String code) {
-//        this.code = code;
-//    }
+    @Column(name = "CODE",length = 36)
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     @Column(name = "REMARK",length = 255)
     public String getRemark() {
