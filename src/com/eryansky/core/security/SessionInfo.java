@@ -1,4 +1,4 @@
-package com.eryansky.common.model;
+package com.eryansky.core.security;
 
 import java.util.Date;
 import java.util.List;
@@ -46,6 +46,14 @@ public class SessionInfo implements java.io.Serializable {
 	 * 角色名称组合
 	 */
 	private String roleNames;
+    /**
+     * 系统登录部门名称
+     */
+    private String loginOrganName;
+    /**
+     * 用户属组织机构名称 以","分割
+     */
+    private String organNames;
 	/**
 	 * 登录时间
 	 */
@@ -54,38 +62,6 @@ public class SessionInfo implements java.io.Serializable {
 	public SessionInfo() {
 	}
 
-	/**
-	 * 
-	 * @param id
-	 *            sessionID
-	 * @param userId
-	 *            用户ID
-	 * @param loginName
-	 *            登录名
-	 * @param userType
-	 *            用户类型
-	 * @param ip
-	 *            客户端IP
-	 * @param roleIds
-	 *            角色ID集合
-	 * @param roleNames
-	 *            角色名称组合
-	 * @param loginTime
-	 *            登录时间
-	 */
-	public SessionInfo(String id, Long userId, String loginName,
-			String userType, String ip, List<Long> roleIds, String roleNames,
-			Date loginTime) {
-		super();
-		this.id = id;
-		this.userId = userId;
-		this.loginName = loginName;
-		this.userType = userType;
-		this.ip = ip;
-		this.roleIds = roleIds;
-		this.roleNames = roleNames;
-		this.loginTime = loginTime;
-	}
 
 	/**
 	 * sessionID
@@ -201,7 +177,35 @@ public class SessionInfo implements java.io.Serializable {
 		this.loginTime = loginTime;
 	}
 
-	@Override
+    /**
+     * 默认登录组织机构名称
+     * @return
+     */
+    public String getLoginOrganName() {
+        return loginOrganName;
+    }
+    /**
+     * 设置默认登录组织机构名称
+     */
+    public void setLoginOrganName(String loginOrganName) {
+        this.loginOrganName = loginOrganName;
+    }
+
+    /**
+     * 组织机构名称
+     * @return
+     */
+    public String getOrganNames() {
+        return organNames;
+    }
+    /**
+     * 设置组织机构名称
+     */
+    public void setOrganNames(String organNames) {
+        this.organNames = organNames;
+    }
+
+    @Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}

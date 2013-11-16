@@ -3,10 +3,12 @@ package com.eryansky.service.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eryansky.core.security.SessionInfo;
 import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.utils.CacheConstants;
+import com.eryansky.core.security.SecurityUtils;
 import com.google.common.collect.Lists;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,7 @@ import com.eryansky.common.exception.ServiceException;
 import com.eryansky.common.exception.SystemException;
 import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.orm.hibernate.HibernateDao;
-import com.eryansky.common.utils.SysConstants;
 import com.eryansky.common.utils.collections.Collections3;
-import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.User;
 import com.eryansky.common.orm.entity.StatusState;
 
@@ -58,7 +58,6 @@ public class UserManager extends EntityManager<User, Long> {
         logger.debug("清空缓存:{}",CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
                 +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE
                 +","+CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE);
-        Assert.notNull(entity, "参数[entity]为空!");
         userDao.saveOrUpdate(entity);
     }
 
@@ -74,11 +73,26 @@ public class UserManager extends EntityManager<User, Long> {
         logger.debug("清空缓存:{}",CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
                 +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE
                 +","+CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE);
-        Assert.notNull(entity, "参数[entity]为空!");
         userDao.merge(entity);
     }
 
-	/**
+    /**
+     * 新增或修改角色.
+     * <br>修改角色的时候 会给角色重新授权菜单 更新导航菜单缓存.
+     */
+    @CacheEvict(value = {  CacheConstants.ROLE_ALL_CACHE,
+            CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE,
+            CacheConstants.RESOURCE_USER_MENU_TREE_CACHE,
+            CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},allEntries = true)
+    @Override
+    public void saveEntity(User entity) throws DaoException, SystemException, ServiceException {
+        logger.debug("清空缓存:{}",CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE
+                +","+CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE);
+        super.saveEntity(entity);
+    }
+
+    /**
 	 * 自定义删除方法.
 	 */
     @CacheEvict(value = {
@@ -124,7 +138,8 @@ public class UserManager extends EntityManager<User, Long> {
 	 * @throws ServiceException
 	 */
 	public User getCurrentUser() throws DaoException,SystemException,ServiceException{
-        User user = (User) Struts2Utils.getSessionAttribute(SysConstants.SESSION_USER);
+        SessionInfo sessionInfo = SecurityUtils.getCurrentSessionInfo();
+        User user = getEntityDao().load(sessionInfo.getUserId());
         return user;
     }
 	

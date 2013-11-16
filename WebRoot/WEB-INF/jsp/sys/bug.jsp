@@ -35,8 +35,10 @@ $(function() {
               {field:'typeName',title:'bug类型',width:120 },
               {field:'operater',title:'操作',align:'center',width:200,formatter:function(value,rowData,rowIndex){
             	  var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
-         	      var operaterHtml = "<a class='easyui-linkbutton' iconCls='icon-add' plain='true' onclick='view(\""+rowData.title+"\",\""+url+"\")' >查看</a>"
-                  +"<a class='easyui-linkbutton' iconCls='icon-edit' plain='true' href='#' onclick='edit("+rowIndex+");' >编辑</a>";
+         	      var operaterHtml = "<a class='easyui-linkbutton' iconCls='icon-add' plain='true' " +
+                          "onclick='view(\""+rowData.title+"\",\""+url+"\")' >查看</a>"
+                  +"<a class='easyui-linkbutton' iconCls='icon-edit' plain='true' href='#' " +
+                          "onclick='edit("+rowIndex+");' >编辑</a>";
          	      return operaterHtml;
               }}
 		    ]],
@@ -74,7 +76,7 @@ $(function() {
 	//加载bug类型
 	function loadBugType(){
 		$('#filter_EQS_type').combobox({
-	        url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug001&selectType=all',
+	        url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug&selectType=all',
 		    multiple:false,//是否可多选
 		    //editable:false,//是否可编辑
 		    width:120,
@@ -282,11 +284,17 @@ $(function() {
 </script>
 <%-- 列表右键 --%>
 <div id="bug_datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
-	<div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
-	<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
-	<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
-	<div onclick="exportExcel();" data-options="iconCls:'icon-edit'">Excel导出</div>
-	<div onclick="importExcel();" data-options="iconCls:'icon-edit'">Excel导入</div>
+    <%--带权限控制右键菜单--%>
+    <e:operation name="新增" permission="bug:add" type="menuItem" iconCls="icon-add"  method="showDialog()" ></e:operation>
+    <e:operation name="批量删除" permission="bug:remove" type="menuItem" iconCls="icon-remove"  method="del()" ></e:operation>
+    <e:operation name="Excel导出" permission="bug:exportExcel" type="menuItem" iconCls="icon-edit"  method="exportExcel()" ></e:operation>
+    <e:operation name="Excel导入" permission="bug:importExcel" type="menuItem" iconCls="icon-edit"  method="importExcel()" ></e:operation>
+
+    <%--<div onclick="showDialog();" iconCls="icon-add">新增</div>--%>
+	<%--<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>--%>
+	<%--<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>--%>
+	<%--<div onclick="exportExcel();" data-options="iconCls:'icon-edit'">Excel导出</div>--%>
+	<%--<div onclick="importExcel();" data-options="iconCls:'icon-edit'">Excel导入</div>--%>
 </div>
 
 <%-- 隐藏iframe --%>
@@ -303,10 +311,23 @@ $(function() {
 		</form>
 	</div>
 	<div align="right">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="showDialog()">新增</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()">批量删除</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit"  onclick="exportExcel()">Excel导出</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="importExcel()">Excel导入</a>
+
+        <%--按钮权限控制方式一 判断是否具有某个或几个权限 hasPermission name属性多个之间以“;”分割--%>
+        <%--<e:hasPermission name="bug:add">--%>
+            <%--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="showDialog()">新增</a>--%>
+		<%--</e:hasPermission>--%>
+
+        <%--按钮权限控制方式二 权限按钮标签--%>
+        <e:operation name="新增" permission="bug:add" type="linkbutton" iconCls="icon-add"  method="showDialog()" ></e:operation>
+        <e:operation name="批量删除" permission="bug:remove" type="linkbutton" iconCls="icon-remove"  method="del()" ></e:operation>
+        <e:operation name="Excel导出" permission="bug:exportExcel" type="linkbutton" iconCls="icon-edit"  method="exportExcel()" ></e:operation>
+        <e:operation name="Excel导入" permission="bug:importExcel" type="linkbutton" iconCls="icon-edit"  method="importExcel()" ></e:operation>
+
+
+        <%--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="showDialog()">新增</a>--%>
+		<%--<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()">批量删除</a>--%>
+		<%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit"  onclick="exportExcel()">Excel导出</a>--%>
+		<%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="importExcel()">Excel导入</a>--%>
 	</div>
 </div>
 <table id="bug_datagrid" toolbar="#bug_datagrid-toolbar" fit="true"></table>

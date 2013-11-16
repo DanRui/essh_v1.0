@@ -107,7 +107,7 @@ public class Resource
 
     @NotBlank(message = "{resource_name.notblank}")
     @Length(max = 20, message = "{resource_name.length}")
-    @Column(name = "NAME",length = 255,unique = true)
+    @Column(name = "NAME",length = 255)
     public String getName() {
         return name;
     }

@@ -150,6 +150,42 @@ public class ResourceManager extends EntityManager<Resource, Long> {
 	}
 
     /**
+     * 根据资源编码获取对象
+     * @param resourceCode 资源编码
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public Resource getResourceByCode(String resourceCode) throws DaoException, SystemException,
+            ServiceException {
+        return getEntityDao().findUniqueBy("code",resourceCode);
+    }
+
+    /**
+     * 检查用户是否具有某个资源编码的权限
+     * @param userId 用户ID
+     * @param resourceCode 资源编码
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public boolean isUserPermittedResourceCode(Long userId, String resourceCode) throws DaoException, SystemException,
+            ServiceException {
+        Assert.notNull(userId, "参数[userId]为空!");
+        Assert.notNull(resourceCode, "参数[resourceCode]为空!");
+        List<Resource> list = this.getResourcesByUserId(userId);
+        boolean flag = false;
+        for (Resource resource : list) {
+            if (resource != null && StringUtils.isNotBlank(resource.getCode()) && resource.getCode().equalsIgnoreCase(resourceCode)) {
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
+    /**
      * 用户导航菜单(排除非菜单资源).
      * @param userId 用户ID
      * @return

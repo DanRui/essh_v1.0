@@ -62,14 +62,14 @@ public class ResourceAction extends StrutsAction<Resource> {
 		try {
             model.setParentResource(null);
 			// 名称重复校验
-			Resource resource = resourceManager.getByName(model.getName());
-			if (resource != null && !resource.getId().equals(model.getId())) {
-				result = new Result(Result.WARN, "名称为[" + model.getName()
-						+ "]已存在,请修正!", "name");
-				logger.debug(result.toString());
-				Struts2Utils.renderText(result);
-				return null;
-			}
+//			Resource resource = resourceManager.getByName(model.getName());
+//			if (resource != null && !resource.getId().equals(model.getId())) {
+//				result = new Result(Result.WARN, "名称为[" + model.getName()
+//						+ "]已存在,请修正!", "name");
+//				logger.debug(result.toString());
+//				Struts2Utils.renderText(result);
+//				return null;
+//			}
 
 			// 设置上级节点
 			if (model.get_parentId() != null) {

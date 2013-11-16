@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.eryansky.core.security.SecurityConstants;
 import com.eryansky.entity.base.state.SexType;
+import com.eryansky.utils.AppConstants;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -15,7 +17,6 @@ import com.eryansky.common.orm.annotation.Delete;
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.ConvertUtils;
 import com.eryansky.common.utils.collections.Collections3;
-import com.eryansky.utils.AppConstants;
 import com.eryansky.utils.CacheConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
@@ -224,7 +225,7 @@ public class User
     public String getRoleNames() {
     	Long superId = 1L;
 	    if(superId.equals(this.getId())){
-	        return AppConstants.ROLE_SUPERADMIN;
+	        return SecurityConstants.ROLE_SUPERADMIN;
 	    }
         return ConvertUtils.convertElementPropertyToString(roles, "name",
                 ", ");

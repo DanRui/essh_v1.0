@@ -1,11 +1,12 @@
 package com.eryansky.listener;
 
 import javax.servlet.http.HttpSessionEvent;
+
+import com.eryansky.core.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.eryansky.common.web.listener.DefaultSystemInitListener;
-import com.eryansky.utils.AppUtils;
 
 /**
  * 系统初始化监听 继承默认系统启动监听器.
@@ -27,7 +28,7 @@ public class SystemInitListener extends DefaultSystemInitListener{
 	public void sessionDestroyed(HttpSessionEvent evt) {
 		logger.debug("sessionDestroyed");
 		String sessionId = evt.getSession().getId();
-		AppUtils.removeUserFromSession(sessionId);
+		SecurityUtils.removeUserFromSession(sessionId);
 	}
 
 }

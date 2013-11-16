@@ -1,9 +1,11 @@
 package com.eryansky.core;
 
+import com.eryansky.core.security.SecurityConstants;
+import com.eryansky.core.security.SessionInfo;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
-import com.eryansky.entity.base.User;
 import com.eryansky.service.base.ResourceManager;
+import com.eryansky.core.security.SecurityUtils;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
@@ -32,27 +34,27 @@ public class AuthorityInterceptor extends MethodFilterInterceptor{
 	@Override
 	protected String doIntercept(ActionInvocation actioninvocation) throws Exception {
 	    //登录用户
-		User sessionUser = (User) Struts2Utils.getSessionAttribute(SysConstants.SESSION_USER);
+		SessionInfo sessionInfo = SecurityUtils.getCurrentSessionInfo();
         String requestUrl = Struts2Utils.getRequest().getRequestURI();
 
-		if(sessionUser != null){
+		if(sessionInfo != null){
             //清空session中清空未被授权的访问地址
-            Object unAuthorityUrl = Struts2Utils.getSession().getAttribute(SysConstants.SESSION_UNAUTHORITY_URL);
+            Object unAuthorityUrl = Struts2Utils.getSession().getAttribute(SecurityConstants.SESSION_UNAUTHORITY_URL);
             if(unAuthorityUrl != null){
-                Struts2Utils.getSession().setAttribute(SysConstants.SESSION_UNAUTHORITY_URL,null);
+                Struts2Utils.getSession().setAttribute(SecurityConstants.SESSION_UNAUTHORITY_URL,null);
             }
 
             String url = StringUtils.replaceOnce(requestUrl,  Struts2Utils.getRequest().getContextPath(), "");
             //检查用户是否授权该URL
-            boolean isAuthority = resourceManager.isAuthority(url,sessionUser.getId());
+            boolean isAuthority = resourceManager.isAuthority(url,sessionInfo.getUserId());
             if(!isAuthority){
-                logger.warn("用户{}未被授权URL:{}！", sessionUser.getLoginName(), requestUrl);
+                logger.warn("用户{}未被授权URL:{}！", sessionInfo.getLoginName(), requestUrl);
                 return RESULT_NOAUTHORITY;
             }
 
 			return actioninvocation.invoke(); //递归调用拦截器
 		}else{
-            Struts2Utils.getSession().setAttribute(SysConstants.SESSION_UNAUTHORITY_URL,requestUrl);
+            Struts2Utils.getSession().setAttribute(SecurityConstants.SESSION_UNAUTHORITY_URL,requestUrl);
 			return Action.LOGIN; //返回到登录页面
 		}
 		

@@ -3,7 +3,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 <div>
 	<form id="login_password_form" method="post" novalidate>
-		<input type="hidden" id="login_password_form_id" name="id" value="${user.id}"></input>
+		<input type="hidden" id="login_password_form_id" name="id" value="${sessionInfo.userId}"></input>
 		<div>
 			<label>原始密码:</label> <input type="password" id="password"
 				name="password" class="easyui-validatebox" required="true"

@@ -14,6 +14,7 @@ import com.eryansky.entity.base.Organ;
 import com.eryansky.entity.base.Resource;
 import com.eryansky.service.base.OrganManager;
 import com.eryansky.service.base.ResourceManager;
+import com.eryansky.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.eryansky.common.model.Result;
@@ -26,7 +27,6 @@ import com.eryansky.entity.base.Role;
 import com.eryansky.entity.base.User;
 import com.eryansky.service.base.RoleManager;
 import com.eryansky.service.base.UserManager;
-import com.eryansky.utils.AppConstants;
 import com.google.common.collect.Lists;
 
 /**

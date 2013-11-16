@@ -3,7 +3,7 @@ package com.eryansky.utils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.eryansky.common.model.SessionInfo;
+import com.eryansky.core.security.SessionInfo;
 
 /**
  * 系统使用的静态变量.
@@ -21,15 +21,7 @@ public class AppConstants {
 	 */
 	public static final String USER_UPDATE_PASSWORD_NO = "0";
 	
-	/**
-	 * 超级管理员
-	 */
-	public static final String ROLE_SUPERADMIN = "超级管理员";
-	
-	/**
-	 * 在线用户列表.
-	 */
-	public static final Map<String,SessionInfo> sessionUser = new ConcurrentHashMap<String, SessionInfo>();
+
 	
 
 }

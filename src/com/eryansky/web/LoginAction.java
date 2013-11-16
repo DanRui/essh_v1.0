@@ -1,11 +1,14 @@
 package com.eryansky.web;
 
 import com.eryansky.common.model.Menu;
+import com.eryansky.core.security.SecurityConstants;
+import com.eryansky.core.security.SessionInfo;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.Page;
 import com.eryansky.entity.base.Resource;
 import com.eryansky.entity.base.state.ResourceType;
 import com.eryansky.service.base.ResourceManager;
+import com.eryansky.core.security.SecurityUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +22,9 @@ import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.User;
 import com.eryansky.common.orm.entity.StatusState;
 import com.eryansky.service.base.UserManager;
-import com.eryansky.utils.AppUtils;
 import org.springframework.util.Assert;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -117,17 +120,16 @@ public class LoginAction
             }
 
             //将用户信息放入session中
-            Struts2Utils.getSession().setAttribute(SysConstants.SESSION_USER, user);
-            AppUtils.putUserToSession(user);
+            SecurityUtils.putUserToSession(user);
             logger.info("用户{}登录系统,IP:{}.", user.getLoginName(),Struts2Utils.getIp());
 
             //设置调整URL 如果session中包含未被授权的URL 则跳转到该页面
             String resultUrl = Struts2Utils.getRequest().getContextPath()+"/login!index.action";
-            Object unAuthorityUrl = Struts2Utils.getSession().getAttribute(SysConstants.SESSION_UNAUTHORITY_URL);
+            Object unAuthorityUrl = Struts2Utils.getSession().getAttribute(SecurityConstants.SESSION_UNAUTHORITY_URL);
             if(unAuthorityUrl != null){
                 resultUrl = unAuthorityUrl.toString();
                 //清空未被授权的URL
-                Struts2Utils.getSession().setAttribute(SysConstants.SESSION_UNAUTHORITY_URL,null);
+                Struts2Utils.getSession().setAttribute(SecurityConstants.SESSION_UNAUTHORITY_URL,null);
             }
             //返回
         	result = new Result(Result.SUCCESS, "用户验证通过!",resultUrl);
@@ -144,7 +146,7 @@ public class LoginAction
      */
     public void onlineDatagrid() throws Exception{
     	try {
-			Struts2Utils.renderJson(AppUtils.getSessionUser());
+			Struts2Utils.renderJson(SecurityUtils.getSessionUser());
 		} catch (Exception e) {
 			throw e;
 		}
@@ -156,10 +158,9 @@ public class LoginAction
     public void navTree() throws Exception {
         List<TreeNode> treeNodes = Lists.newArrayList();
         try {
-            User user = (User) Struts2Utils
-                    .getSessionAttribute(SysConstants.SESSION_USER);
-            if (user != null) {
-                treeNodes = resourceManager.getNavMenuTreeByUserId(user.getId());
+            SessionInfo sessionInfo = SecurityUtils.getCurrentSessionInfo();
+            if (sessionInfo != null) {
+                treeNodes = resourceManager.getNavMenuTreeByUserId(sessionInfo.getUserId());
             }
             Struts2Utils.renderJson(treeNodes);
         } catch (Exception e) {
@@ -173,31 +174,30 @@ public class LoginAction
     public void startMenu() throws Exception {
         List<Menu> menus = Lists.newArrayList();
         try {
-//            User user = (User) Struts2Utils
-//                    .getSessionAttribute(SysConstants.SESSION_USER);
-//            if (user != null) {
-//                List<Resource> rootResources = Lists.newArrayList();
-//                User superUser = userManager.getSuperUser();
-//                if (user != null && superUser != null
-//                        && user.getId() == superUser.getId()) {// 超级用户
-//                    rootResources = resourceManager.getByParentId(null, StatusState.normal.getValue());
-//                } else if (user != null) {
-//                    rootResources = resourceManager.getResourcesByUserId(user.getId(), null);
-//                    //去除非菜单资源
-//                    Iterator<Resource> iterator = rootResources.iterator();
-//                    while (iterator.hasNext()){
-//                        if(!ResourceType.menu.getValue().equals(iterator.next().getType())) {
-//                            iterator.remove();
-//                        }
-//                    }
-//                }
-//                for(Resource parentResource:rootResources){
-//                    Menu menu = this.resourceToMenu(parentResource, true);
-//                    if(menu!=null){
-//                        menus.add(menu);
-//                    }
-//                }
-//            }
+            SessionInfo sessionInfo = SecurityUtils.getCurrentSessionInfo();
+            if (sessionInfo != null) {
+                List<Resource> rootResources = Lists.newArrayList();
+                User superUser = userManager.getSuperUser();
+                if (sessionInfo != null && superUser != null
+                        && sessionInfo.getUserId() == superUser.getId()) {// 超级用户
+                    rootResources = resourceManager.getByParentId(null, StatusState.normal.getValue());
+                } else if (sessionInfo != null) {
+                    rootResources = resourceManager.getResourcesByUserId(sessionInfo.getUserId(), null);
+                    //去除非菜单资源
+                    Iterator<Resource> iterator = rootResources.iterator();
+                    while (iterator.hasNext()){
+                        if(!ResourceType.menu.getValue().equals(iterator.next().getType())) {
+                            iterator.remove();
+                        }
+                    }
+                }
+                for(Resource parentResource:rootResources){
+                    Menu menu = this.resourceToMenu(parentResource, true);
+                    if(menu!=null){
+                        menus.add(menu);
+                    }
+                }
+            }
             Struts2Utils.renderJson(menus);
         } catch (Exception e) {
             throw e;
@@ -212,16 +212,15 @@ public class LoginAction
         List<Menu> menus = Lists.newArrayList();
         try {
             String head = this.getHeadFromUrl(Struts2Utils.getRequest().getRequestURL().toString());
-            User user = (User) Struts2Utils
-                    .getSessionAttribute(SysConstants.SESSION_USER);
-            if (user != null) {
+            SessionInfo sessionInfo = SecurityUtils.getCurrentSessionInfo();
+            if (sessionInfo != null) {
                 List<Resource> resources = Lists.newArrayList();
                 User superUser = userManager.getSuperUser();
-                if (user != null && superUser != null
-                        && user.getId() == superUser.getId()) {// 超级用户
+                if (sessionInfo != null && superUser != null
+                        && sessionInfo.getUserId() == superUser.getId()) {// 超级用户
                     resources = resourceManager.getAll("orderNo", Page.ASC);
-                } else if (user != null) {
-                    resources = resourceManager.getResourcesByUserId(user.getId());
+                } else if (sessionInfo != null) {
+                    resources = resourceManager.getResourcesByUserId(sessionInfo.getUserId());
                 }
                 for(Resource resource:resources){
                     if(StringUtils.isNotBlank(resource.getUrl())){
@@ -297,13 +296,12 @@ public class LoginAction
      */
     public String logout() {
         try {
+            SessionInfo sessionInfo = SecurityUtils.getCurrentSessionInfo();
             // 退出时清空session中的内容
-            User user = (User) Struts2Utils.getSessionAttribute(SysConstants.SESSION_USER);
-            Struts2Utils.getSession().setAttribute(SysConstants.SESSION_USER, null);
             String sessionId = Struts2Utils.getSession().getId();
             //由监听器更新在线用户列表
-//            AppUtils.removeUserFromSession(sessionId);
-            logger.info("用户{}退出系统.", user.getLoginName());
+            SecurityUtils.removeUserFromSession(sessionId);
+            logger.info("用户{}退出系统.", sessionInfo.getLoginName());
         } catch (Exception e) {
             e.printStackTrace();
         }

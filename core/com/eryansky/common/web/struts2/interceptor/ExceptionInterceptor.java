@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import com.eryansky.common.utils.SysConstants;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.StaleObjectStateException;
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import com.eryansky.common.exception.ServiceException;
 import com.eryansky.common.exception.SystemException;
 import com.eryansky.common.model.Result;
 import com.eryansky.common.utils.Exceptions;
-import com.eryansky.common.utils.SysConstants;
 import com.eryansky.common.utils.SysUtils;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.common.web.utils.WebUtils;

@@ -11,15 +11,6 @@ import com.eryansky.common.utils.io.PropertiesLoader;
  */
 public class SysConstants {
     /**
-     * session 登录用户key
-     */
-    public static final String SESSION_USER = "user";
-
-    /**
-     * session 未授权的URL
-     */
-    public static final String SESSION_UNAUTHORITY_URL = "UNAUTHORITY_URL";
-    /**
      * session 验证码key
      */
     public static final String SESSION_VALIDATE_CODE = "validateCode";

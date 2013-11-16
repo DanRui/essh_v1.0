@@ -101,7 +101,7 @@ function logout() {
 	    <img alt="essh" title="永远的小女儿" class="easyui-tooltip" data-options="position:'right'" src="${ctx}/img/essh_logo.png">
 	</div>
 	<div style="float: right; position: absolute; bottom: 20px; right: 10px">
-	    <div style="text-align: right;">您好,<span style="color: red;">${user.loginName}</span>[${user.roleNames}] 欢迎您！</div>
+	    <div style="text-align: right;">您好,<span style="color: red;">${sessionInfo.loginName}</span>[${sessionInfo.roleNames}] 欢迎您！</div>
 		<a href="javascript:void(0);" class="easyui-menubutton" menu="#layout_north_pfMenu" iconCls="icon-user_red">更换皮肤</a>
 		<div id="layout_north_pfMenu" style="width: 120px; display: none;">
 			<div onclick="eu.changeTheme('bootstrap');">bootstrap</div>

@@ -157,5 +157,8 @@
 			<tx:method name="*" propagation="REQUIRED" />
 		</tx:attributes>
 	</tx:advice>
+
+    <!--Spring上下文获取工具-->
+    <bean class="com.eryansky.common.spring.SpringContextHolder"></bean>
 	
 </beans>

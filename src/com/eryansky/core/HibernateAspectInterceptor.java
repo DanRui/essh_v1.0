@@ -3,16 +3,14 @@ package com.eryansky.core;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.eryansky.core.security.SessionInfo;
+import com.eryansky.core.security.SecurityUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 
-import com.eryansky.common.utils.SysConstants;
-import com.eryansky.common.web.struts2.utils.Struts2Utils;
-import com.eryansky.entity.base.User;
-
 /**
- * Hiberate拦截器 实现修改人自动注入.
+ * Hibernate拦截器 实现修改人自动注入.
  * 
  * @author 尔演&Eryan eryanwcp@gmail.com
  * @date 2013-3-21 上午12:30:54
@@ -27,11 +25,10 @@ public class HibernateAspectInterceptor extends EmptyInterceptor {
 	public boolean onSave(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) {
 		logger.debug("onSave");
-		User user = null;
+		SessionInfo sessionInfo = null;
 		try {
-			user = (User) Struts2Utils
-					.getSessionAttribute(SysConstants.SESSION_USER);
-			if (user == null) {
+            sessionInfo = SecurityUtils.getCurrentSessionInfo();
+			if (sessionInfo == null) {
 				logger.warn("session中未获取到用户.");
 				return true;
 			}
@@ -44,7 +41,7 @@ public class HibernateAspectInterceptor extends EmptyInterceptor {
 				if ("createUser".equals(propertyNames[index])) {
 					/* 使用拦截器将对象的"创建人名称"属性赋上值 */
 					if (state[index] == null) {
-						state[index] = user.getLoginName();
+						state[index] = sessionInfo.getLoginName();
 					}
 					continue;
 				}
@@ -68,11 +65,10 @@ public class HibernateAspectInterceptor extends EmptyInterceptor {
 			Object[] currentState, Object[] previousState,
 			String[] propertyNames, Type[] types) {
 		logger.debug("onFlushDirty");
-		User user = null;
-		try {
-			user = (User) Struts2Utils
-					.getSessionAttribute(SysConstants.SESSION_USER);
-			if (user == null) {
+        SessionInfo sessionInfo = null;
+        try {
+            sessionInfo = SecurityUtils.getCurrentSessionInfo();
+			if (sessionInfo == null) {
 				logger.warn("session中未获取到用户.");
 				return true;
 			}
@@ -84,7 +80,7 @@ public class HibernateAspectInterceptor extends EmptyInterceptor {
 			for (int index = 0; index < propertyNames.length; index++) {
 				if ("updateUser".equals(propertyNames[index])) {
 					/* 使用拦截器将对象的"修改人名称"属性赋上值 */
-					currentState[index] = user.getLoginName();
+					currentState[index] = sessionInfo.getLoginName();
 					continue;
 				}
 				if ("updateTime".equals(propertyNames[index])) {
