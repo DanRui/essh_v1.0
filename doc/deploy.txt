@@ -14,7 +14,7 @@
 
 [环境要求] 
 	运行环境:JDK1.6 Tomcat6
-	数据库:MySQL5.1 Oracle10G (/resource/data/ 目录下有相关脚本 建议使用Navicat导入) dmp导入(表空间名:essh_data 临时表空间:essh_temp)
+	数据库:MySQL5.1 、SQL Server2005、 Oracle10G (/resource/data/ 目录下有相关脚本 建议使用Navicat导入) dmp导入(表空间名:essh_data 临时表空间:essh_temp)
 
 [主要技术]
     后台:
@@ -25,6 +25,6 @@
 	EhCache(+Spring3.1)
 	Hibernate validator4.3.1(后台校验框架,基于BO注解)
     前台:
-    jQuery1.9.1
+    jQuery1.9.10
     jQuery EasyUI1.3.4(前台ui组件)
 
