@@ -97,8 +97,11 @@ public class UserManager extends EntityManager<User, Long> {
 				}
 				User user = userDao.get(id);
 				if(user != null){
-					//设置角色为空
+					//清空关联关系
+                    user.setDefaultOrgan(null);
+                    user.setOrgans(null);
 					user.setRoles(null);
+                    user.setResources(null);
 					//逻辑删除
 					//手工方式(此处不使用 由注解方式实现逻辑删除)
 //					user.setStatus(StatusState.delete.getValue());
