@@ -223,7 +223,7 @@ public class LoginAction
                     resources = resourceManager.getResourcesByUserId(sessionInfo.getUserId());
                 }
                 for(Resource resource:resources){
-                    if(StringUtils.isNotBlank(resource.getUrl())){
+                    if(resource!=null && StringUtils.isNotBlank(resource.getUrl())){
                         if(ResourceType.menu.getValue().equals(resource.getType())) {
                             Menu menu = new Menu();
                             menu.setId(resource.getId().toString());
