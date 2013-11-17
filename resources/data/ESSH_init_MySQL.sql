@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50153
 File Encoding         : 65001
 
-Date: 2013-11-16 13:57:39
+Date: 2013-11-17 18:57:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -41,7 +41,7 @@ CREATE TABLE `t_base_organ` (
   UNIQUE KEY `NAME` (`NAME`),
   KEY `FKFE2373CE3E535456` (`PARENT_ID`),
   CONSTRAINT `FKFE2373CE3E535456` FOREIGN KEY (`PARENT_ID`) REFERENCES `t_base_organ` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_base_organ
@@ -69,10 +69,9 @@ CREATE TABLE `t_base_resource` (
   `URL` varchar(255) DEFAULT NULL,
   `PARENT_ID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `NAME` (`NAME`),
   KEY `FKFCD7B111A886F349` (`PARENT_ID`),
   CONSTRAINT `FKFCD7B111A886F349` FOREIGN KEY (`PARENT_ID`) REFERENCES `t_base_resource` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_base_resource
@@ -86,6 +85,12 @@ INSERT INTO `t_base_resource` VALUES ('6', '2013-11-12 22:14:54', 'admin', '0', 
 INSERT INTO `t_base_resource` VALUES ('7', '2013-11-12 22:15:13', 'admin', '0', '2013-11-12 22:28:36', 'admin', '1', '', null, 'icon-book', '', '字典类型', '7', '0', '/sys/dictionary-type.action', '6');
 INSERT INTO `t_base_resource` VALUES ('8', '2013-11-12 22:15:40', 'admin', '0', '2013-11-12 22:28:43', 'admin', '1', '', null, 'icon-ipod', '', '数据字典', '8', '0', '/sys/dictionary.action', '6');
 INSERT INTO `t_base_resource` VALUES ('9', '2013-11-12 22:15:57', 'admin', '0', null, null, '0', '', null, 'icon-bug', '', 'bug管理', '9', '0', '/sys/bug.action', '6');
+INSERT INTO `t_base_resource` VALUES ('11', '2013-11-16 23:45:54', 'admin', '0', '2013-11-17 00:40:32', 'eryan', '3', 'bug:add', null, '', '/sys/bug!input*;/sys/bug!save*', '新增', '10', '0', '', '9');
+INSERT INTO `t_base_resource` VALUES ('16', '2013-11-17 00:10:23', 'admin', '0', '2013-11-17 00:18:48', 'eryan', '1', 'bug:edit', null, '', '/sys/bug!save*', '编辑', '11', '0', '', '9');
+INSERT INTO `t_base_resource` VALUES ('17', '2013-11-17 00:11:05', 'admin', '0', '2013-11-17 00:12:40', 'admin', '1', 'bug:importExcel', null, '', '/sys/bug!importExcel*', 'Excel导入', '12', '0', '', '9');
+INSERT INTO `t_base_resource` VALUES ('18', '2013-11-17 00:13:35', 'admin', '0', null, null, '0', 'bug:exportExcel', null, '', '/sys/bug!exportExcel*', 'Excel导出', '13', '0', '', '9');
+INSERT INTO `t_base_resource` VALUES ('19', '2013-11-17 00:14:32', 'admin', '0', null, null, '0', 'bug:remove', null, '', '/sys/bug!delete*;/sys/bug!remove*', '批量删除', '14', '0', '', '9');
+INSERT INTO `t_base_resource` VALUES ('20', '2013-11-17 00:46:09', 'eryan', '0', null, null, '0', 'bug:view', null, '', '/sys/bug!view*', '查看', '15', '0', '', '9');
 
 -- ----------------------------
 -- Table structure for t_base_role
@@ -99,9 +104,9 @@ CREATE TABLE `t_base_role` (
   `UPDATE_TIME` datetime DEFAULT NULL,
   `UPDATE_USER` varchar(36) DEFAULT NULL,
   `VERSION` int(11) DEFAULT NULL,
+  `CODE` varchar(36) DEFAULT NULL,
   `NAME` varchar(100) NOT NULL,
   `REMARK` varchar(255) DEFAULT NULL,
-  `CODE` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `NAME` (`NAME`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -152,7 +157,7 @@ CREATE TABLE `t_base_user` (
   UNIQUE KEY `LOGIN_NAME` (`LOGIN_NAME`),
   KEY `FKBDE2DA4E7AEFAE74` (`DEFAULT_ORGANID`),
   CONSTRAINT `FKBDE2DA4E7AEFAE74` FOREIGN KEY (`DEFAULT_ORGANID`) REFERENCES `t_base_organ` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_base_user
@@ -168,8 +173,8 @@ CREATE TABLE `t_base_user_organ` (
   `ORGAN_ID` bigint(20) NOT NULL,
   KEY `FK1F9964C01162FD8F` (`ORGAN_ID`),
   KEY `FK1F9964C0712445C5` (`USER_ID`),
-  CONSTRAINT `FK1F9964C01162FD8F` FOREIGN KEY (`ORGAN_ID`) REFERENCES `t_base_organ` (`ID`),
-  CONSTRAINT `FK1F9964C0712445C5` FOREIGN KEY (`USER_ID`) REFERENCES `t_base_user` (`ID`)
+  CONSTRAINT `FK1F9964C0712445C5` FOREIGN KEY (`USER_ID`) REFERENCES `t_base_user` (`ID`),
+  CONSTRAINT `FK1F9964C01162FD8F` FOREIGN KEY (`ORGAN_ID`) REFERENCES `t_base_organ` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -185,8 +190,8 @@ CREATE TABLE `t_base_user_resource` (
   `RESOURCE_ID` bigint(20) NOT NULL,
   KEY `FKD8C9C2DF712445C5` (`USER_ID`),
   KEY `FKD8C9C2DF76B5CD65` (`RESOURCE_ID`),
-  CONSTRAINT `FKD8C9C2DF712445C5` FOREIGN KEY (`USER_ID`) REFERENCES `t_base_user` (`ID`),
-  CONSTRAINT `FKD8C9C2DF76B5CD65` FOREIGN KEY (`RESOURCE_ID`) REFERENCES `t_base_resource` (`ID`)
+  CONSTRAINT `FKD8C9C2DF76B5CD65` FOREIGN KEY (`RESOURCE_ID`) REFERENCES `t_base_resource` (`ID`),
+  CONSTRAINT `FKD8C9C2DF712445C5` FOREIGN KEY (`USER_ID`) REFERENCES `t_base_user` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -257,8 +262,8 @@ CREATE TABLE `t_sys_dictionary` (
   UNIQUE KEY `CODE_2` (`CODE`),
   KEY `FK79C52CB373CC8B3F` (`DICTIONARYTYPE_CODE`),
   KEY `FK79C52CB3BD49F8CB` (`PARENT_CODE`),
-  CONSTRAINT `FK79C52CB373CC8B3F` FOREIGN KEY (`DICTIONARYTYPE_CODE`) REFERENCES `t_sys_dictionarytype` (`CODE`),
-  CONSTRAINT `FK79C52CB3BD49F8CB` FOREIGN KEY (`PARENT_CODE`) REFERENCES `t_sys_dictionary` (`CODE`)
+  CONSTRAINT `FK79C52CB3BD49F8CB` FOREIGN KEY (`PARENT_CODE`) REFERENCES `t_sys_dictionary` (`CODE`),
+  CONSTRAINT `FK79C52CB373CC8B3F` FOREIGN KEY (`DICTIONARYTYPE_CODE`) REFERENCES `t_sys_dictionarytype` (`CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
