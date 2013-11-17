@@ -28,6 +28,11 @@ import com.google.common.collect.Lists;
 @SuppressWarnings("serial")
 public class RoleAction extends StrutsAction<Role> {
 
+    /**
+     * 资源ID集合
+     */
+    private List<Long> resourceIds = Lists.newArrayList();
+
 	@Autowired
 	private RoleManager roleManager;
 	@Autowired
@@ -62,7 +67,6 @@ public class RoleAction extends StrutsAction<Role> {
 	public String save() throws Exception {
 		Result result;
 		try {
-            model.setResources(null);
 			// 名称重复校验
 			Role role = roleManager.findUniqueBy("name", model.getName());
             if (role != null && !role.getId().equals(model.getId())) {
@@ -71,15 +75,18 @@ public class RoleAction extends StrutsAction<Role> {
                 Struts2Utils.renderText(result);
                 return null;
             }
-            
-            //设置用户角色信息
-			List<Resource> resourceList = Lists.newArrayList();
-			for (Long resourceId : model.getResourceIds()) {
-				Resource resource = resourceManager.loadById(resourceId);
-				resourceList.add(resource);
-			}
-			model.setResources(resourceList);
-			
+
+            // 编码重复校验
+            if(StringUtils.isNotBlank(model.getCode())){
+                Role checkRole = roleManager.findUniqueBy("code", model.getCode());
+                if (checkRole != null && !checkRole.getId().equals(model.getId())) {
+                    result = new Result(Result.WARN,"编码为["+model.getCode()+"]已存在,请修正!", "code");
+                    logger.debug(result.toString());
+                    Struts2Utils.renderText(result);
+                    return null;
+                }
+            }
+
 			roleManager.saveEntity(model);
             result = Result.successResult();
             logger.debug(result.toString());
@@ -90,9 +97,12 @@ public class RoleAction extends StrutsAction<Role> {
 		return null;
 	}
 
-
-    @Override
-    public String input() throws Exception {
+    /**
+     * 设置资源 页面
+     * @return
+     * @throws Exception
+     */
+    public String resource() throws Exception {
         List<TreeNode> treeNodes = Lists.newArrayList();
         try {
             treeNodes = resourceManager.getResourceTree(null,true);
@@ -102,8 +112,38 @@ public class RoleAction extends StrutsAction<Role> {
         } catch (Exception e) {
             throw e;
         }
-        return super.input();
+        return "resource";
     }
+
+    /**
+     * 设置角色资源
+     * @return
+     * @throws Exception
+     */
+    public String updateRoleResource() throws Exception {
+        Result result;
+        try {
+            super.prepareModel();
+            //设置用户角色信息
+            List<Resource> resourceList = Lists.newArrayList();
+            for (Long resourceId : resourceIds) {
+                Resource resource = resourceManager.loadById(resourceId);
+                resourceList.add(resource);
+            }
+            model.setResources(resourceList);
+
+            roleManager.saveEntity(model);
+            result = Result.successResult();
+            logger.debug(result.toString());
+            Struts2Utils.renderText(result);
+        } catch (Exception e) {
+            throw e;
+        }
+        return "resource";
+    }
+
+
+
 	/**
 	 * 角色下拉框列表.
 	 */
@@ -131,5 +171,7 @@ public class RoleAction extends StrutsAction<Role> {
 		}
 	}
 
-
+    public void setResourceIds(List<Long> resourceIds) {
+        this.resourceIds = resourceIds;
+    }
 }

@@ -33,7 +33,7 @@
     }
 </script>
 <div>
-    <form id="role_form" method="post" novalidate>
+    <form id="role_resource_form" method="post" novalidate>
         <input type="hidden"  name="id" />
         <!-- 用户版本控制字段 version -->
         <input type="hidden" id="version" name="version" />
@@ -41,20 +41,6 @@
             <label>关联资源:</label>
             <input id="resourceIds" name="resourceIds"  style="width:200px" />
             级联模式<input id="changeMode" type="checkbox"/>
-        </div>
-        <div>
-            <label>角色名称:</label>
-            <input name="name" type="text" class="easyui-validatebox"
-                   maxLength="100" data-options="required:true,missingMessage:'请输入角色名称.',validType:['minLength[1]','legalInput']">
-        </div>
-        <div>
-            <label>角色编码:</label>
-            <input name="code" type="text" class="easyui-validatebox"
-                   maxLength="36" >
-        </div>
-        <div>
-            <label >描述:</label>
-            <textarea maxLength="255" name="remark"></textarea>
         </div>
     </form>
 </div>

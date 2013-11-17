@@ -50,7 +50,7 @@ $(function() {
         onDblClickRow:function(row){
             edit(row);
         }
-	});
+	}).datagrid('showTooltip');
 
     loadGroupDictionaryType();
 });

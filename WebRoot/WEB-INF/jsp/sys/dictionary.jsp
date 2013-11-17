@@ -221,7 +221,7 @@ $(function() {
 					top : e.pageY
 				});
 			}
-		});
+		}).datagrid('showTooltip');
 
     dictionary_filter_EQS_dictionaryType__code = $('#filter_EQS_dictionaryType__code').combobox({
     	url:'${ctx}/sys/dictionary-type!combobox.action?selectType=all',

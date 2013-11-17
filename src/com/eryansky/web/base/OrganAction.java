@@ -68,7 +68,6 @@ public class OrganAction extends StrutsAction<Organ> {
     public String save() throws Exception {
         Result result = null;
         try {
-            model.setUsers(null);
             model.setParentOrgan(null);
             // 名称重复校验
             Organ organ = organManager.getByName(model.getName());
@@ -90,6 +89,51 @@ public class OrganAction extends StrutsAction<Organ> {
                 model.setParentOrgan(parentOrgan);
             }
 
+            //自关联校验
+            if (model.getId() != null) {
+                if (model.getId().equals(model.get_parentId())) {
+                    result = new Result(Result.ERROR, "[上级机构]不能与[机构名称]相同.",
+                            null);
+                    logger.debug(result.toString());
+                    Struts2Utils.renderText(result);
+                    return null;
+                }
+            }
+            organManager.saveOrgan(model);
+            result = Result.successResult();
+            logger.debug(result.toString());
+            Struts2Utils.renderText(result);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
+
+    /**
+     * 设置机构用户 页面
+     * @return
+     * @throws Exception
+     */
+    public String user() throws Exception{
+        return "user";
+    }
+
+    /**
+     * 二次绑定
+     * @throws Exception
+     */
+    public void prepareUpdateOrganUser() throws Exception{
+         super.prepareModel();
+    }
+
+    /**
+     * 设置机构用户
+     * @return
+     * @throws Exception
+     */
+    public String updateOrganUser() throws Exception{
+        Result result;
+        try {
             //设置机构用户
             List<User> userList = Lists.newArrayList();
             if(!Collections3.isEmpty(userIds)) {
@@ -119,17 +163,6 @@ public class OrganAction extends StrutsAction<Organ> {
                         orgUsers.add(managerUser);
                         model.setUsers(orgUsers);
                     }
-                }
-            }
-
-            //自关联校验
-            if (model.getId() != null) {
-                if (model.getId().equals(model.get_parentId())) {
-                    result = new Result(Result.ERROR, "[上级机构]不能与[机构名称]相同.",
-                            null);
-                    logger.debug(result.toString());
-                    Struts2Utils.renderText(result);
-                    return null;
                 }
             }
             organManager.saveOrgan(model);

@@ -5,7 +5,9 @@
 var role_datagrid;
 var role_form;
 var role_search_form;
+var role_resource_form;
 var role_dialog;
+var role_resource_dialog;
 $(function() {  
 	role_form = $('#role_form').form();
 	role_search_form = $('#role_search_form').form();
@@ -23,7 +25,8 @@ $(function() {
 		idField : 'id',
         frozenColumns:[[
             {field:'ck',checkbox:true},
-            {field:'name',title:'角色名称',width:200}
+            {field:'name',title:'角色名称',width:200},
+            {field:'code',title:'角色编码',width:120}
         ]],
 	    columns:[[  
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
@@ -33,8 +36,6 @@ $(function() {
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
 	    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
-            //鼠标移动提示列表信息tooltip
-            $(this).datagrid('showTooltip');
 		},
 	    onRowContextMenu : function(e, rowIndex, rowData) {
 			e.preventDefault();
@@ -48,7 +49,7 @@ $(function() {
         onDblClickRow:function(rowIndex, rowData){
             edit(rowIndex, rowData);
         }
-	});
+	}).datagrid('showTooltip');
     
 });
 </script>
@@ -149,6 +150,80 @@ $(function() {
 				eu.showMsg("请选择要操作的对象！");
 			}
 		}
+
+
+        //初始化角色角色表单
+        function initRoleResourceForm(){
+            role_resource_form = $('#role_resource_form').form({
+                url: '${ctx}/base/role!updateRoleResource.action',
+                onSubmit: function(param){
+                    $.messager.progress({
+                        title : '提示信息！',
+                        text : '数据处理中，请稍后....'
+                    });
+                    var isValid = $(this).form('validate');
+                    if (!isValid) {
+                        $.messager.progress('close');
+                    }
+                    return isValid;
+                },
+                success: function(data){
+                    $.messager.progress('close');
+                    var json = $.parseJSON(data);
+                    if (json.code == 1){
+                        role_resource_dialog.dialog('destroy');//销毁对话框
+                        role_datagrid.datagrid('reload');	// reload the role data
+                        eu.showMsg(json.msg);//操作结果提示
+                    }else {
+                        eu.showAlertMsg(json.msg,'error');
+                    }
+                }
+            });
+        }
+        //修改角色角色
+        function editRoleResource(){
+            //选中的所有行
+            var rows = role_datagrid.datagrid('getSelections');
+            //选中的行（第一条）
+            var row = role_datagrid.datagrid('getSelected');
+            if (row){
+                if(rows.length>1){
+                    eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+                }
+                //弹出对话窗口
+                role_resource_dialog = $('<div/>').dialog({
+                    title:'角色资源信息',
+                    width : 500,
+                    height : 200,
+                    modal : true,
+                    maximizable:true,
+                    href : '${ctx}/base/role!resource.action',
+                    buttons : [ {
+                        text : '保存',
+                        iconCls : 'icon-save',
+                        handler : function() {
+                            role_resource_form.submit();
+                        }
+                    },{
+                        text : '关闭',
+                        iconCls : 'icon-cancel',
+                        handler : function() {
+                            role_resource_dialog.dialog('destroy');
+                        }
+                    }],
+                    onClose : function() {
+                        $(this).dialog('destroy');
+                    },
+                    onLoad:function(){
+                        initRoleResourceForm();
+                        role_resource_form.form('load', row);
+                    }
+                }).dialog('open');
+
+            }else{
+                eu.showMsg("请选择要操作的对象！");
+            }
+        }
 		
 		//删除
 		function del(){
@@ -188,6 +263,7 @@ $(function() {
 	<div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
 	<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
 	<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
+    <div onclick="editRoleResource();" data-options="iconCls:'icon-edit'">设置资源</div>
 </div>
 		
 <%-- 工具栏 操作按钮 --%>
@@ -204,8 +280,10 @@ $(function() {
 		<span class="toolbar-btn-separator"></span>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
 		<span class="toolbar-btn-separator"></span>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a> 
-	</div>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
+        <span class="toolbar-btn-separator"></span>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editRoleResource()">设置资源</a>
+    </div>
 </div>
 <table id="role_datagrid" toolbar="#role_datagrid-toolbar" fit="true"></table>
    
