@@ -8,7 +8,7 @@
      */
     function isSuperUser(){
         //登录用户id
-        var sessonUserId = "${user.id}";
+        var sessonUserId = "${sessionInfo.userId}";
         //超级管理员id为"1"
         if(sessonUserId ==1){
             return true;
