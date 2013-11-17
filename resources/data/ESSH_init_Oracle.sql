@@ -11,7 +11,7 @@ Target Server Type    : ORACLE
 Target Server Version : 100100
 File Encoding         : 65001
 
-Date: 2013-11-16 14:14:09
+Date: 2013-11-17 19:35:40
 */
 
 
@@ -79,15 +79,21 @@ NOCACHE
 -- ----------------------------
 -- Records of T_BASE_RESOURCE
 -- ----------------------------
-INSERT INTO "T_BASE_RESOURCE" VALUES ('1', null, null, '0', TO_TIMESTAMP(' 2013-11-13 22:31:10:917000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '1', null, null, 'icon-application', null, '权限管理', '1', '0', null, null);
-INSERT INTO "T_BASE_RESOURCE" VALUES ('2', null, null, '0', TO_TIMESTAMP(' 2013-11-13 22:34:39:362000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '3', null, null, 'icon-folder', '/base/resource*', '资源管理', '2', '0', '/base/resource.action', '1');
-INSERT INTO "T_BASE_RESOURCE" VALUES ('3', TO_TIMESTAMP(' 2013-11-13 22:32:49:676000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-11-13 22:34:31:327000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '2', null, null, 'icon-group', '/base/role*', '角色管理', '3', '0', '/base/role.action', '1');
-INSERT INTO "T_BASE_RESOURCE" VALUES ('4', TO_TIMESTAMP(' 2013-11-13 22:33:22:678000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-11-13 22:34:19:146000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '1', null, null, 'icon-user', '/base/user*', '用户管理', '4', '0', '/base/user.action', '1');
-INSERT INTO "T_BASE_RESOURCE" VALUES ('5', TO_TIMESTAMP(' 2013-11-13 22:34:05:831000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', TO_TIMESTAMP(' 2013-11-13 22:36:47:027000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '1', null, null, 'icon-group', '/base/organ*', '机构管理', '5', '0', '/base/organ.action', '1');
-INSERT INTO "T_BASE_RESOURCE" VALUES ('6', TO_TIMESTAMP(' 2013-11-13 22:34:50:333000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-application', null, '系统配置', '6', '0', null, null);
-INSERT INTO "T_BASE_RESOURCE" VALUES ('7', TO_TIMESTAMP(' 2013-11-13 22:35:21:271000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-vcard', null, '字典类型', '7', '0', '/sys/dictionary-type.action', '6');
-INSERT INTO "T_BASE_RESOURCE" VALUES ('8', TO_TIMESTAMP(' 2013-11-13 22:35:54:961000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-book', '/sys/dictionary*', '数据字典', '8', '0', '/sys/dictionary.action', '6');
-INSERT INTO "T_BASE_RESOURCE" VALUES ('9', TO_TIMESTAMP(' 2013-11-13 22:36:20:135000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-bug', '/sys/bug*', 'bug管理', '9', '0', '/sys/bug.action', '6');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('1', null, null, '0', TO_TIMESTAMP(' 2013-11-17 19:28:00:628000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '2', null, null, 'icon-application', null, '权限管理', '1', '0', null, null);
+INSERT INTO "T_BASE_RESOURCE" VALUES ('2', null, null, '0', TO_TIMESTAMP(' 2013-11-17 19:28:13:297000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '2', null, null, 'icon-folder', '/base/resource*', '资源管理', '2', '0', '/base/resource.action', '1');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('42', TO_TIMESTAMP(' 2013-11-17 19:28:39:732000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-group', '/base/role*', '角色管理', '3', '0', '/base/role.action', '1');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('43', TO_TIMESTAMP(' 2013-11-17 19:28:59:333000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-group', '/base/organ*', '机构管理', '4', '0', '/base/organ.action', '1');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('44', TO_TIMESTAMP(' 2013-11-17 19:29:16:907000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-user', '/base/user*', '用户管理', '5', '0', '/base/user.action', '1');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('45', TO_TIMESTAMP(' 2013-11-17 19:29:28:759000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, null, null, '系统配置', '6', '0', null, null);
+INSERT INTO "T_BASE_RESOURCE" VALUES ('46', TO_TIMESTAMP(' 2013-11-17 19:30:05:172000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-book', '/sys/dictionary-type*', '字典类型', '7', '0', '/sys/dictionary-type.action', '45');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('47', TO_TIMESTAMP(' 2013-11-17 19:30:24:761000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-book', '/sys/dictionary*', '数据字典', '8', '0', '/sys/dictionary.action', '45');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('48', TO_TIMESTAMP(' 2013-11-17 19:30:47:197000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', null, null, 'icon-bug', '/sys/bug*', 'bug管理', '9', '0', '/sys/bug.action', '45');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('49', TO_TIMESTAMP(' 2013-11-17 19:31:29:795000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'bug:add', null, null, '/sys/bug!add*;/sys/bug!save*', '新增', '10', '0', null, '48');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('50', TO_TIMESTAMP(' 2013-11-17 19:31:52:937000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'bug:edit', null, null, '/sys/bug!save*', '编辑', '11', '0', null, '48');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('51', TO_TIMESTAMP(' 2013-11-17 19:33:20:400000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'bug:importExcel', null, null, '/sys/bug!importExcel*', 'Excel导入', '12', '0', null, '48');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('52', TO_TIMESTAMP(' 2013-11-17 19:33:51:989000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'bug:exportExcel', null, null, '/sys/bug!exportExcel*', 'Excel导出', '13', '0', null, '48');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('53', TO_TIMESTAMP(' 2013-11-17 19:34:31:801000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'bug:remove', null, null, '/sys/bug!delete*;/sys/bug!remove*', '删除', '14', '0', null, '48');
+INSERT INTO "T_BASE_RESOURCE" VALUES ('54', TO_TIMESTAMP(' 2013-11-17 19:35:04:289000', 'YYYY-MM-DD HH24:MI:SS:FF6'), 'admin', '0', null, null, '0', 'bug:view', null, null, '/sys/bug!view*', '查看', '15', '0', null, '48');
 
 -- ----------------------------
 -- Table structure for T_BASE_ROLE
@@ -101,9 +107,9 @@ CREATE TABLE "T_BASE_ROLE" (
 "UPDATE_TIME" TIMESTAMP(6)  NULL ,
 "UPDATE_USER" VARCHAR2(36 CHAR) NULL ,
 "VERSION" NUMBER(10) NULL ,
+"CODE" VARCHAR2(36 CHAR) NULL ,
 "NAME" VARCHAR2(100 CHAR) NOT NULL ,
-"REMARK" VARCHAR2(255 CHAR) NULL ,
-"CODE" VARCHAR2(36 CHAR) NULL 
+"REMARK" VARCHAR2(255 CHAR) NULL 
 )
 LOGGING
 NOCOMPRESS
@@ -312,7 +318,7 @@ CREATE SEQUENCE "HIBERNATE_SEQUENCE"
  INCREMENT BY 1
  MINVALUE 1
  MAXVALUE 999999999999999999999999999
- START WITH 61
+ START WITH 62
  CACHE 20;
 
 -- ----------------------------
@@ -338,11 +344,6 @@ ALTER TABLE "T_BASE_ORGAN" ADD PRIMARY KEY ("ID");
 -- ----------------------------
 -- Indexes structure for table T_BASE_RESOURCE
 -- ----------------------------
-
--- ----------------------------
--- Uniques structure for table T_BASE_RESOURCE
--- ----------------------------
-ALTER TABLE "T_BASE_RESOURCE" ADD UNIQUE ("NAME");
 
 -- ----------------------------
 -- Checks structure for table T_BASE_RESOURCE

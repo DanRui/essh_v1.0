@@ -11,7 +11,7 @@ Target Server Type    : SQL Server
 Target Server Version : 90000
 File Encoding         : 65001
 
-Date: 2013-11-16 14:45:55
+Date: 2013-11-17 19:53:00
 */
 
 
@@ -37,7 +37,7 @@ CREATE TABLE [dbo].[T_BASE_ORGAN] (
 [PHONE] varchar(64) NULL ,
 [SYS_CODE] varchar(36) NULL ,
 [TYPE] int NULL ,
-[PARENT_ID] numeric(19) NULL
+[PARENT_ID] numeric(19) NULL 
 )
 
 
@@ -72,12 +72,12 @@ CREATE TABLE [dbo].[T_BASE_RESOURCE] (
 [ORDER_NO] int NULL ,
 [TYPE] int NULL ,
 [URL] varchar(255) NULL ,
-[PARENT_ID] numeric(19) NULL
+[PARENT_ID] numeric(19) NULL 
 )
 
 
 GO
-DBCC CHECKIDENT(N'[dbo].[T_BASE_RESOURCE]', RESEED, 9)
+DBCC CHECKIDENT(N'[dbo].[T_BASE_RESOURCE]', RESEED, 15)
 GO
 
 -- ----------------------------
@@ -85,31 +85,49 @@ GO
 -- ----------------------------
 SET IDENTITY_INSERT [dbo].[T_BASE_RESOURCE] ON
 GO
-INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'1', null, null, N'0', N'2013-11-16 14:41:25.663', N'admin', N'2', N'', null, N'icon-application', N'', N'权限管理', N'1', N'0', N'', null)
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'1', null, null, N'0', N'2013-11-17 19:46:28.790', N'admin', N'1', N'', null, N'icon-application', N'', N'权限管理', N'1', N'0', N'', null)
 GO
 GO
-INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'2', null, null, N'0', N'2013-11-16 14:44:37.540', N'admin', N'3', N'', null, N'icon-folder', N'/base/resource*', N'资源管理', N'2', N'0', N'/base/resource.action', N'1')
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'2', null, null, N'0', N'2013-11-17 19:47:00.723', N'admin', N'2', N'', null, N'icon-folder', N'', N'资源管理', N'2', N'0', N'/base/resource.action', N'1')
 GO
 GO
-INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'3', N'2013-11-16 14:41:20.413', N'admin', N'0', N'2013-11-16 14:44:28.617', N'admin', N'2', N'', null, N'icon-group', N'/base/role*', N'角色管理', N'3', N'0', N'/base/role.action', N'1')
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'3', N'2013-11-17 19:47:27.743', N'admin', N'0', N'2013-11-17 19:47:32.677', N'admin', N'1', N'', null, N'icon-group', N'/base/role*', N'角色管理', N'3', N'0', N'/base/role.action', N'1')
 GO
 GO
-INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'4', N'2013-11-16 14:41:58.950', N'admin', N'0', N'2013-11-16 14:44:15.870', N'admin', N'1', N'', null, N'icon-group', N'/base/organ*', N'机构管理', N'4', N'0', N'/base/organ.action', N'1')
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'4', N'2013-11-17 19:47:47.393', N'admin', N'0', null, null, N'0', N'', null, N'icon-group', N'/base/organ*', N'机构管理', N'4', N'0', N'/base/organ.action', N'1')
 GO
 GO
-INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'5', N'2013-11-16 14:42:18.750', N'admin', N'0', N'2013-11-16 14:43:25.193', N'admin', N'1', N'', null, N'icon-user', N'/base/user*', N'用户管理', N'5', N'0', N'/base/user.action', N'1')
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'5', N'2013-11-17 19:48:08.310', N'admin', N'0', null, null, N'0', N'', null, N'icon-user', N'/base/user*', N'用户管理', N'5', N'0', N'/base/user.action', N'1')
 GO
 GO
-INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'6', N'2013-11-16 14:42:34.367', N'admin', N'0', null, null, N'0', N'', null, N'icon-application', N'', N'系统配置', N'6', N'0', N'', null)
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'6', N'2013-11-17 19:48:30.157', N'admin', N'0', null, null, N'0', N'', null, N'icon-application', N'', N'系统配置', N'6', N'0', N'', null)
 GO
 GO
-INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'7', N'2013-11-16 14:43:01.670', N'admin', N'0', N'2013-11-16 14:45:18.717', N'admin', N'2', N'', null, N'icon-vcard', N'/sys/dictionary-type*', N'字典类型', N'7', N'0', N'/sys/dictionary-type.action', N'6')
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'7', N'2013-11-17 19:48:52.357', N'admin', N'0', null, null, N'0', N'', null, N'', N'/sys/dictionary-type*', N'字典类型', N'7', N'0', N'/sys/dictionary-type.action', N'6')
 GO
 GO
-INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'8', N'2013-11-16 14:43:49.810', N'admin', N'0', N'2013-11-16 14:45:09.203', N'admin', N'1', N'', null, N'icon-book', N'/sys/dictionary*', N'数据字典', N'8', N'0', N'/sys/dictionary.action', N'6')
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'8', N'2013-11-17 19:49:22.753', N'admin', N'0', null, null, N'0', N'', null, N'icon-book', N'/sys/dictionary*', N'数据字典', N'8', N'0', N'/sys/dictionary.action', N'6')
 GO
 GO
-INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'9', N'2013-11-16 14:44:08.693', N'admin', N'0', null, null, N'0', N'', null, N'icon-bug', N'/sys/bug*', N'bug管理', N'9', N'0', N'/sys/bug.action', N'6')
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'9', N'2013-11-17 19:49:43.537', N'admin', N'0', null, null, N'0', N'', null, N'icon-bug', N'/sys/bug*', N'bug管理', N'9', N'0', N'/sys/bug.action', N'6')
+GO
+GO
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'10', N'2013-11-17 19:50:28.270', N'admin', N'0', null, null, N'0', N'bug:add', null, N'', N'/sys/bug!add*;/sys/bug!save*', N'新增', N'10', N'0', N'', N'9')
+GO
+GO
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'11', N'2013-11-17 19:50:50.727', N'admin', N'0', null, null, N'0', N'bug:edit', null, N'', N'/sys/bug!save*', N'编辑', N'11', N'0', N'', N'9')
+GO
+GO
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'12', N'2013-11-17 19:51:10.133', N'admin', N'0', null, null, N'0', N'bug:remove', null, N'', N'/sys/bug!delete*;/sys/bug!remove*', N'删除', N'12', N'0', N'', N'9')
+GO
+GO
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'13', N'2013-11-17 19:51:34.767', N'admin', N'0', null, null, N'0', N'bug:importExcel', null, N'', N'/sys/bug!importExcel*', N'Excel导入', N'13', N'0', N'', N'9')
+GO
+GO
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'14', N'2013-11-17 19:52:01.260', N'admin', N'0', null, null, N'0', N'bug:exportExcel', null, N'', N'/sys/bug!exportExcel*', N'Excel导出', N'14', N'0', N'', N'9')
+GO
+GO
+INSERT INTO [dbo].[T_BASE_RESOURCE] ([ID], [CREATE_TIME], [CREATE_USER], [STATUS], [UPDATE_TIME], [UPDATE_USER], [VERSION], [CODE], [ICON], [ICON_CLS], [MARK_URL], [NAME], [ORDER_NO], [TYPE], [URL], [PARENT_ID]) VALUES (N'15', N'2013-11-17 19:52:24.270', N'admin', N'0', null, null, N'0', N'bug:view', null, N'', N'/sys/bug!view*', N'查看', N'15', N'0', N'', N'9')
 GO
 GO
 SET IDENTITY_INSERT [dbo].[T_BASE_RESOURCE] OFF
@@ -130,7 +148,7 @@ CREATE TABLE [dbo].[T_BASE_ROLE] (
 [VERSION] int NULL ,
 [CODE] varchar(36) NULL ,
 [NAME] varchar(100) NOT NULL ,
-[REMARK] varchar(255) NULL
+[REMARK] varchar(255) NULL 
 )
 
 
@@ -151,7 +169,7 @@ DROP TABLE [dbo].[T_BASE_ROLE_RESOURCE]
 GO
 CREATE TABLE [dbo].[T_BASE_ROLE_RESOURCE] (
 [ROLE_ID] numeric(19) NOT NULL ,
-[RESOURCE_ID] numeric(19) NOT NULL
+[RESOURCE_ID] numeric(19) NOT NULL 
 )
 
 
@@ -182,7 +200,7 @@ CREATE TABLE [dbo].[T_BASE_USER] (
 [PASSWORD] varchar(64) NOT NULL ,
 [SEX] int NULL ,
 [TEL] varchar(36) NULL ,
-[DEFAULT_ORGANID] numeric(19) NULL
+[DEFAULT_ORGANID] numeric(19) NULL 
 )
 
 
@@ -206,7 +224,7 @@ DROP TABLE [dbo].[T_BASE_USER_ORGAN]
 GO
 CREATE TABLE [dbo].[T_BASE_USER_ORGAN] (
 [USER_ID] numeric(19) NOT NULL ,
-[ORGAN_ID] numeric(19) NOT NULL
+[ORGAN_ID] numeric(19) NOT NULL 
 )
 
 
@@ -223,7 +241,7 @@ DROP TABLE [dbo].[T_BASE_USER_RESOURCE]
 GO
 CREATE TABLE [dbo].[T_BASE_USER_RESOURCE] (
 [USER_ID] numeric(19) NOT NULL ,
-[RESOURCE_ID] numeric(19) NOT NULL
+[RESOURCE_ID] numeric(19) NOT NULL 
 )
 
 
@@ -240,7 +258,7 @@ DROP TABLE [dbo].[T_BASE_USER_ROLE]
 GO
 CREATE TABLE [dbo].[T_BASE_USER_ROLE] (
 [USER_ID] numeric(19) NOT NULL ,
-[ROLE_ID] numeric(19) NOT NULL
+[ROLE_ID] numeric(19) NOT NULL 
 )
 
 
@@ -265,7 +283,7 @@ CREATE TABLE [dbo].[T_SYS_BUG] (
 [VERSION] int NULL ,
 [CONTENT] text NULL ,
 [TITLE] varchar(255) NULL ,
-[TYPE] varchar(36) NULL
+[TYPE] varchar(36) NULL 
 )
 
 
@@ -298,7 +316,7 @@ CREATE TABLE [dbo].[T_SYS_DICTIONARY] (
 [REMAK] varchar(100) NULL ,
 [VALUE] varchar(100) NULL ,
 [DICTIONARYTYPE_CODE] varchar(20) NULL ,
-[PARENT_CODE] varchar(36) NULL
+[PARENT_CODE] varchar(36) NULL 
 )
 
 
@@ -329,7 +347,7 @@ CREATE TABLE [dbo].[T_SYS_DICTIONARYTYPE] (
 [NAME] varchar(100) NULL ,
 [ORDER_NO] int NULL ,
 [REMARK] varchar(255) NULL ,
-[GROUP_CODE] varchar(20) NULL
+[GROUP_CODE] varchar(20) NULL 
 )
 
 
@@ -367,12 +385,6 @@ GO
 -- Primary Key structure for table T_BASE_RESOURCE
 -- ----------------------------
 ALTER TABLE [dbo].[T_BASE_RESOURCE] ADD PRIMARY KEY ([ID])
-GO
-
--- ----------------------------
--- Uniques structure for table T_BASE_RESOURCE
--- ----------------------------
-ALTER TABLE [dbo].[T_BASE_RESOURCE] ADD UNIQUE ([NAME] ASC)
 GO
 
 -- ----------------------------
@@ -432,10 +444,6 @@ GO
 -- ----------------------------
 ALTER TABLE [dbo].[T_SYS_DICTIONARY] ADD UNIQUE ([CODE] ASC)
 GO
-ALTER TABLE [dbo].[T_SYS_DICTIONARY] ADD UNIQUE ([NAME] ASC)
-GO
-ALTER TABLE [dbo].[T_SYS_DICTIONARY] ADD UNIQUE ([CODE] ASC)
-GO
 
 -- ----------------------------
 -- Indexes structure for table T_SYS_DICTIONARYTYPE
@@ -450,10 +458,6 @@ GO
 -- ----------------------------
 -- Uniques structure for table T_SYS_DICTIONARYTYPE
 -- ----------------------------
-ALTER TABLE [dbo].[T_SYS_DICTIONARYTYPE] ADD UNIQUE ([CODE] ASC)
-GO
-ALTER TABLE [dbo].[T_SYS_DICTIONARYTYPE] ADD UNIQUE ([NAME] ASC)
-GO
 ALTER TABLE [dbo].[T_SYS_DICTIONARYTYPE] ADD UNIQUE ([CODE] ASC)
 GO
 

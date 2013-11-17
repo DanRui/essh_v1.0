@@ -315,6 +315,10 @@ $(function() {
             <%--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="showDialog()">新增</a>--%>
 		<%--</e:hasPermission>--%>
 
+        <%--<e:hasRole name="admin">--%>
+            <%--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="showDialog()">新增</a>--%>
+        <%--</e:hasRole>--%>
+
         <%--按钮权限控制方式二 权限按钮标签--%>
         <e:operation name="新增" permission="bug:add" type="linkbutton" iconCls="icon-add"  method="showDialog()" ></e:operation>
         <e:operation name="批量删除" permission="bug:remove" type="linkbutton" iconCls="icon-remove"  method="del()" ></e:operation>

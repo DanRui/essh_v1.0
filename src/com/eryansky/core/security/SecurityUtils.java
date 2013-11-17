@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.eryansky.common.spring.SpringContextHolder;
+import com.eryansky.entity.base.Role;
 import com.eryansky.service.base.ResourceManager;
+import com.eryansky.service.base.RoleManager;
 import com.eryansky.service.base.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +46,36 @@ public class SecurityUtils {
                 flag = true;
             } else {
                 flag = resourceManager.isUserPermittedResourceCode(sessionInfo.getUserId(), resourceCode);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    /**
+     * 是否授权某个资源
+     * @param roleCode 资源编码
+     * @return
+     */
+    public static boolean isPermittedRole(String roleCode) {
+        boolean flag = false;
+        try {
+            UserManager userManager = SpringContextHolder.getBean("userManager");
+            User superUser = userManager.getSuperUser();
+            SessionInfo sessionInfo = getCurrentSessionInfo();
+            if (sessionInfo != null && superUser != null
+                    && sessionInfo.getUserId() == superUser.getId()) {// 超级用户
+                flag = true;
+            } else {
+                User user = userManager.loadById(sessionInfo.getUserId());
+                List<Role> userRoles = user.getRoles();
+                for(Role role:userRoles){
+                       if(roleCode.equalsIgnoreCase(role.getCode())){
+                           return true;
+                       }
+                }
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

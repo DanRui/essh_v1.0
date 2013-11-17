@@ -109,6 +109,18 @@ public class RoleManager extends EntityManager<Role, Long> {
     }
 
     /**
+     * 根据角色编码查找
+     * @param code 角色编
+     * @return
+     * @throws DaoException
+     * @throws SystemException
+     * @throws ServiceException
+     */
+    public Role getByCode(String code) throws DaoException,SystemException,ServiceException {
+        return this.findUniqueBy("code",code);
+    }
+
+    /**
      * 查找所有
      * @return
      * @throws DaoException
