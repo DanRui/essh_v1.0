@@ -5,6 +5,8 @@ import java.util.List;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Resource;
+import com.eryansky.entity.base.User;
+import com.eryansky.service.base.UserManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,13 +34,19 @@ public class RoleAction extends StrutsAction<Role> {
      * 资源ID集合
      */
     private List<Long> resourceIds = Lists.newArrayList();
+    /**
+     * 用户ID集合
+     */
+    private List<Long> userIds = Lists.newArrayList();
 
 	@Autowired
 	private RoleManager roleManager;
 	@Autowired
 	private ResourceManager resourceManager;
+    @Autowired
+    private UserManager userManager;
 
-	@Override
+    @Override
 	public EntityManager<Role, Long> getEntityManager() {
 		return roleManager;
 	}
@@ -114,6 +122,11 @@ public class RoleAction extends StrutsAction<Role> {
         }
         return "resource";
     }
+    //updateRoleResource()方法之前执行
+    public void prepareUpdateRoleResource() throws Exception {
+        super.prepareModel();
+    }
+
 
     /**
      * 设置角色资源
@@ -123,7 +136,6 @@ public class RoleAction extends StrutsAction<Role> {
     public String updateRoleResource() throws Exception {
         Result result;
         try {
-            super.prepareModel();
             //设置用户角色信息
             List<Resource> resourceList = Lists.newArrayList();
             for (Long resourceId : resourceIds) {
@@ -142,6 +154,47 @@ public class RoleAction extends StrutsAction<Role> {
         return "resource";
     }
 
+    /**
+     * 设置角色用户 页面
+     * @return
+     * @throws Exception
+     */
+    public String user() throws Exception{
+        return "user";
+    }
+
+    /**
+     * 二次绑定
+     * @throws Exception
+     */
+    public void prepareUpdateRoleUser() throws Exception{
+        super.prepareModel();
+    }
+    /**
+     * 设置机构用户
+     * @return
+     * @throws Exception
+     */
+    public String updateRoleUser() throws Exception{
+        Result result;
+        try {
+            //设置用户角色信息
+            List<User> userList = Lists.newArrayList();
+            for (Long userId : userIds) {
+                User user = userManager.loadById(userId);
+                userList.add(user);
+            }
+            model.setUsers(userList);
+
+            roleManager.saveEntity(model);
+            result = Result.successResult();
+            logger.debug(result.toString());
+            Struts2Utils.renderText(result);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
 
 
 	/**
@@ -173,5 +226,9 @@ public class RoleAction extends StrutsAction<Role> {
 
     public void setResourceIds(List<Long> resourceIds) {
         this.resourceIds = resourceIds;
+    }
+
+    public void setUserIds(List<Long> userIds) {
+        this.userIds = userIds;
     }
 }

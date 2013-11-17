@@ -33,7 +33,7 @@ import com.google.common.collect.Lists;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
 @JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler",
-        "resources","roles","organs"})
+        "password","resources","roles","defaultOrgan","organs"})
 //逻辑删除注解标记 propertyName:字段名 value:删除标记的值（使用默认值"1"） type:属性类型
 @Delete(propertyName = "status",type = PropertyType.I)
 public class User
@@ -138,7 +138,7 @@ public class User
     }
 
     // 多对多定义
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     // 中间表定义,表名采用默认命名规则
     @JoinTable(name = "T_BASE_USER_ROLE", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") })
     // Fecth策略定义
@@ -247,6 +247,7 @@ public class User
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "T_BASE_USER_RESOURCE", joinColumns = {@JoinColumn(name = "USER_ID")},
             inverseJoinColumns = {@JoinColumn(name = "RESOURCE_ID")})
+//    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
     public List<Resource> getResources() {
         return resources;
     }
@@ -301,6 +302,7 @@ public class User
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "T_BASE_USER_ORGAN", joinColumns = {@JoinColumn(name = "USER_ID")},
             inverseJoinColumns = {@JoinColumn(name = "ORGAN_ID")})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
     public List<Organ> getOrgans() {
         return organs;
     }

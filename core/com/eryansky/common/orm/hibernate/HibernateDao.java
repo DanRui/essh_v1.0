@@ -160,7 +160,7 @@ public class HibernateDao<T, PK extends Serializable> extends
 	/**
 	 * 设置分页参数到Query对象,辅助函数.
 	 */
-	protected Query setPageParameterToQuery(final Query q, final Page<T> page) {
+    public Query setPageParameterToQuery(final Query q, final Page<T> page) {
 		Assert.isTrue(page.getPageSize() > 0, "Page Size must larger than zero");
 
 		// hibernate的firstResult的序号从0开始
@@ -190,7 +190,7 @@ public class HibernateDao<T, PK extends Serializable> extends
 	 * 
 	 * 本函数只能自动处理简单的hql语句,复杂的hql查询请另行编写count语句查询.
 	 */
-	protected long countHqlResult(final String hql, final Object... values) {
+    public long countHqlResult(final String hql, final Object... values) {
 		String countHql = prepareCountHql(hql);
 
 		try {

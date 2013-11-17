@@ -36,6 +36,8 @@
 <div>
     <form id="user_resource_form"  method="post" novalidate>
         <input type="hidden" id="id" name="id" />
+        <!-- 用户版本控制字段 version -->
+        <input type="hidden" id="version" name="version" />
         <div>
             <label>关联资源:</label>
             <input id="resourceIds" name="resourceIds"  style="width:200px" />

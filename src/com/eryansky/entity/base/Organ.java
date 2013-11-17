@@ -212,7 +212,7 @@ public class Organ extends BaseEntity implements Serializable {
         this.managerUserLoginName = managerUserLoginName;
     }
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "T_BASE_USER_ORGAN", joinColumns = {@JoinColumn(name = "ORGAN_ID")}, inverseJoinColumns = {@JoinColumn(name = "USER_ID")})
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")

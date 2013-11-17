@@ -28,7 +28,8 @@ import com.eryansky.utils.CacheConstants;
 @Table(name = "T_BASE_ROLE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
-@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler" , "resources","users"})
+@JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler" ,
+        "resources","users"})
 public class Role
         extends BaseEntity
         implements Serializable {
@@ -58,6 +59,10 @@ public class Role
      * 关联的用户
      */
     private List<User> users = Lists.newArrayList();
+    /**
+     * 关联用户ID集合    @Transient
+     */
+    private List<Long> userIds = Lists.newArrayList();
     
 
 
@@ -92,11 +97,11 @@ public class Role
         this.remark = remark;
     }
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "T_BASE_ROLE_RESOURCE", joinColumns = { @JoinColumn(name = "ROLE_ID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCE_ID") })
 //    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
+//    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
     public List<Resource> getResources() {
         return resources;
     }
@@ -153,7 +158,10 @@ public class Role
     }
 
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    // 中间表定义,表名采用默认命名规则
+    @JoinTable(name = "T_BASE_USER_ROLE", joinColumns = { @JoinColumn(name = "ROLE_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
+    @OrderBy("id")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
     public List<User> getUsers() {
         return users;
@@ -163,5 +171,15 @@ public class Role
         this.users = users;
     }
 
+    @Transient
+    public List<Long> getUserIds() {
+        if (!Collections3.isEmpty(users)) {
+            userIds = ConvertUtils.convertElementPropertyToList(users, "id");
+        }
+        return userIds;
+    }
 
+    public void setUserIds(List<Long> userIds) {
+        this.userIds = userIds;
+    }
 }

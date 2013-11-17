@@ -17,15 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * 受保护的资源菜案Resource.
@@ -39,7 +31,7 @@ import javax.persistence.Transient;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
 @JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler" ,  "parentResource",
-        "roles", "roleNames", "subResources", "navigation" })
+        "roles","roleNames", "users", "subResources", "navigation" })
 public class Resource
         extends BaseEntity
         implements Serializable {
@@ -88,6 +80,10 @@ public class Resource
      * 有序的关联对象集合
      */
     private List<Role> roles = Lists.newArrayList();
+    /**
+     * 有序的关联对象集合
+     */
+    private List<User> users = Lists.newArrayList();
     /**
      * 子Resource集合
      */
@@ -180,7 +176,9 @@ public class Resource
         this.parentResource = parentResource;
     }
 
-    @ManyToMany(mappedBy = "resources")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(name = "T_BASE_ROLE_RESOURCE", joinColumns = {@JoinColumn(name = "RESOURCE_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "ROLE_ID")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
     public List<Role> getRoles() {
         return roles;
@@ -199,6 +197,17 @@ public class Resource
     public String getRoleNames() {
         return ConvertUtils.convertElementPropertyToString(roles, "name",
                 ", ");
+    }
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(name = "T_BASE_USER_RESOURCE", joinColumns = {@JoinColumn(name = "RESOURCE_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "USER_ID")})
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     @OneToMany(mappedBy = "parentResource",cascade = {CascadeType.REMOVE})

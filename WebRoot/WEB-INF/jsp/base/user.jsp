@@ -79,12 +79,13 @@
                         $(this).tree('select', selectedNode.target);
                     }
                 }
+                $(this).tree("expandAll");
             }
         });
 
         //数据列表
         user_datagrid = $('#user_datagrid').datagrid({
-            url:'${ctx}/base/user!datagrid.action',
+            url:'${ctx}/base/user!userDatagrid.action',
             pagination:true,//底部分页
             rownumbers:true,//显示行数
             fitColumns:true,//自适应列宽
@@ -166,6 +167,7 @@ function formInit(){
             if (json.code ==1){
                 user_dialog.dialog('destroy');//销毁对话框
                 user_datagrid.datagrid('reload');//重新加载列表数据
+                organ_tree.tree("reload");
                 eu.showMsg(json.msg);//操作结果提示
             }else if(json.code == 2){
                 $.messager.alert('提示信息！', json.msg, 'warning',function(){
@@ -284,6 +286,7 @@ function initPasswordForm(){
             if (json.code == 1){
                 user_password_dialog.dialog('destroy');//销毁对话框
                 user_datagrid.datagrid('reload');	// reload the user data
+                organ_tree.tree("reload");
                 eu.showMsg(json.msg);//操作结果提示
             }else {
                 eu.showAlertMsg(json.msg,'error');
@@ -363,6 +366,7 @@ function initUserRoleForm(){
             if (json.code == 1){
                 user_role_dialog.dialog('destroy');//销毁对话框
                 user_datagrid.datagrid('reload');	// reload the user data
+                organ_tree.tree("reload");
                 eu.showMsg(json.msg);//操作结果提示
             }else {
                 eu.showAlertMsg(json.msg,'error');
@@ -453,6 +457,7 @@ function initUserResourceForm(){
             if (json.code == 1){
                 user_resource_dialog.dialog('destroy');//销毁对话框
                 user_datagrid.datagrid('reload');	// reload the user data
+                organ_tree.tree("reload");
                 eu.showMsg(json.msg);//操作结果提示
             }else {
                 eu.showAlertMsg(json.msg,'error');
@@ -536,6 +541,7 @@ function initUserOrganForm(){
             if (json.code == 1){
                 user_organ_dialog.dialog('destroy');//销毁对话框
                 user_datagrid.datagrid('reload');	// reload the user data
+                organ_tree.tree("reload");
                 eu.showMsg(json.msg);//操作结果提示
             }else {
                 eu.showAlertMsg(json.msg,'error');
@@ -567,7 +573,7 @@ function editUserOrgan(){
         //弹出对话窗口
         user_organ_dialog = $('<div/>').dialog({
             title:'用户机构信息',
-            width : 400,
+            width : 500,
             height : 200,
             modal : true,
             maximizable:true,

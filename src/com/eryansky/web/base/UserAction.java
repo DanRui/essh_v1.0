@@ -1,5 +1,6 @@
 package com.eryansky.web.base;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.SystemException;
@@ -8,6 +9,9 @@ import com.eryansky.common.model.Combobox;
 import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.Page;
+import com.eryansky.common.orm.PropertyFilter;
+import com.eryansky.common.orm.entity.StatusState;
+import com.eryansky.common.orm.hibernate.HibernateWebUtils;
 import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Organ;
@@ -15,6 +19,10 @@ import com.eryansky.entity.base.Resource;
 import com.eryansky.service.base.OrganManager;
 import com.eryansky.service.base.ResourceManager;
 import com.eryansky.utils.AppConstants;
+import org.apache.commons.lang.ArrayUtils;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.eryansky.common.model.Result;
@@ -76,10 +84,60 @@ public class UserAction extends StrutsAction<User> {
 		return userManager;
 	}
 
-    @Override
-    public String datagrid() throws Exception {
+    /**
+     * 自定义查询
+     * @return
+     * @throws Exception
+     */
+    public String userDatagrid() throws Exception {
         try {
             Page<User> p = userManager.getUsersByQuery(organId, loginNameOrName, page, rows, sort, order);
+            Datagrid<User> dg = new Datagrid<User>(p.getTotalCount(), p.getResult());
+            Struts2Utils.renderJson(dg);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
+
+    /**
+     * combogrid
+     * @return
+     * @throws Exception
+     */
+    public String combogrid() throws Exception {
+        try {
+            Criterion statusCriterion = Restrictions.eq("status", StatusState.normal.getValue());
+            Criterion[] criterions = new Criterion[0];
+            criterions = (Criterion[]) ArrayUtils.add(criterions, 0, statusCriterion);
+            Criterion criterion = null;
+            if(!Collections3.isEmpty(ids)){
+                //in条件
+                Criterion inCriterion= Restrictions.in("id", ids);
+
+                if(StringUtils.isNotBlank(loginNameOrName)){
+                    Criterion loginNameCriterion = Restrictions.like("loginName", loginNameOrName, MatchMode.ANYWHERE);
+                    Criterion nameCriterion = Restrictions.like("name",loginNameOrName, MatchMode.ANYWHERE);
+                    Criterion criterion1 = Restrictions.or(loginNameCriterion,nameCriterion);
+                    criterion = Restrictions.or(inCriterion,criterion1) ;
+                }else{
+                    criterion =  inCriterion;
+                }
+                //合并查询条件
+                criterions = (Criterion[]) ArrayUtils.add(criterions, 0, criterion);
+            }else{
+                if(StringUtils.isNotBlank(loginNameOrName)){
+                    Criterion loginNameCriterion = Restrictions.like("loginName", loginNameOrName, MatchMode.ANYWHERE);
+                    Criterion nameCriterion = Restrictions.like("name",loginNameOrName, MatchMode.ANYWHERE);
+                    criterion = Restrictions.or(loginNameCriterion,nameCriterion);
+                    //合并查询条件
+                    criterions = (Criterion[]) ArrayUtils.add(criterions, 0, criterion);
+                }
+            }
+
+            //分页查询
+            Page<User> p = new Page<User>(rows);//分页对象
+            p = userManager.findByCriteria(p, criterions);
             Datagrid<User> dg = new Datagrid<User>(p.getTotalCount(), p.getResult());
             Struts2Utils.renderJson(dg);
         } catch (Exception e) {

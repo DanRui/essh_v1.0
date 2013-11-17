@@ -5,10 +5,14 @@ import com.eryansky.common.model.Combobox;
 import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.Result;
 import com.eryansky.common.model.TreeNode;
+import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
+import com.eryansky.common.orm.entity.StatusState;
 import com.eryansky.common.orm.hibernate.EntityManager;
+import com.eryansky.common.orm.hibernate.HibernateWebUtils;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.utils.collections.Collections3;
+import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.Organ;
@@ -19,6 +23,10 @@ import com.eryansky.service.base.UserManager;
 import com.eryansky.utils.SelectType;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -36,6 +44,14 @@ public class OrganAction extends StrutsAction<Organ> {
      * 机构用户
      */
     private List<Long> userIds;
+    /**
+     * 管理员用户ID
+     */
+    private Long managerUserId;
+    /**
+     * 机构名称或编码
+     */
+    private String nameOrCode;
     @Autowired
     private OrganManager organManager;
     @Autowired
@@ -54,6 +70,52 @@ public class OrganAction extends StrutsAction<Organ> {
 //                    .buildPropertyFilters(Struts2Utils.getRequest());
             List<Organ> list = getEntityManager().find(filters,sort,order);
             Datagrid<Organ> dg = new Datagrid<Organ>(list.size(), list);
+            Struts2Utils.renderJson(dg);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
+
+    /**
+     * combogrid
+     * @return
+     * @throws Exception
+     */
+    public String combogrid() throws Exception {
+        try {
+            Criterion statusCriterion = Restrictions.eq("status", StatusState.normal.getValue());
+            Criterion[] criterions = new Criterion[0];
+            criterions = (Criterion[]) ArrayUtils.add(criterions, 0, statusCriterion);
+            Criterion criterion = null;
+            if(!Collections3.isEmpty(ids)){
+                //in条件
+                Criterion inCriterion= Restrictions.in("id", ids);
+
+                if(StringUtils.isNotBlank(nameOrCode)){
+                    Criterion nameCriterion = Restrictions.like("name", nameOrCode, MatchMode.ANYWHERE);
+                    Criterion codeCriterion = Restrictions.like("code",nameOrCode, MatchMode.ANYWHERE);
+                    Criterion criterion1 = Restrictions.or(nameCriterion,codeCriterion);
+                    criterion = Restrictions.or(inCriterion,criterion1) ;
+                }else{
+                    criterion =  inCriterion;
+                }
+                //合并查询条件
+                criterions = (Criterion[]) ArrayUtils.add(criterions, 0, criterion);
+            }else{
+                if(StringUtils.isNotBlank(nameOrCode)){
+                    Criterion nameCriterion = Restrictions.like("name", nameOrCode, MatchMode.ANYWHERE);
+                    Criterion codeCriterion = Restrictions.like("code", nameOrCode, MatchMode.ANYWHERE);
+                    criterion = Restrictions.or(nameCriterion,codeCriterion);
+                    //合并查询条件
+                    criterions = (Criterion[]) ArrayUtils.add(criterions, 0, criterion);
+                }
+            }
+
+            //分页查询
+            Page<Organ> p = new Page<Organ>(rows);//分页对象
+            p = organManager.findByCriteria(p, criterions);
+            Datagrid<Organ> dg = new Datagrid<Organ>(p.getTotalCount(), p.getResult());
             Struts2Utils.renderJson(dg);
         } catch (Exception e) {
             throw e;
@@ -115,6 +177,16 @@ public class OrganAction extends StrutsAction<Organ> {
      * @throws Exception
      */
     public String user() throws Exception{
+        try {
+            super.prepareModel();
+            List<User> organUsers = model.getUsers();
+            Datagrid<User> dg = new Datagrid<User>(organUsers.size(), organUsers);
+            String managerUserCombogridData = JsonMapper.nonDefaultMapper().toJson(dg);
+            logger.debug(managerUserCombogridData);
+            Struts2Utils.getRequest().setAttribute("managerUserCombogridData", managerUserCombogridData);
+        } catch (Exception e) {
+            throw e;
+        }
         return "user";
     }
 
@@ -143,28 +215,29 @@ public class OrganAction extends StrutsAction<Organ> {
                 }
             }
             model.setUsers(userList);
-
-            //判断主管是否在这个组织机构用户中
-            List<User> orgUsers = Lists.newArrayList();
-            if(model.getManagerUserId() != null){
-                User managerUser = userManager.loadById(model.getManagerUserId()) ;
-                if(Collections3.isEmpty(model.getUsers())){
-                    orgUsers.add(managerUser);
-                    model.setUsers(orgUsers);
-                }else{
-                    orgUsers =  model.getUsers();
-                    boolean isContain = false;
-                    for(User user:model.getUsers()){
-                        if(user.getId().equals(model.getManagerUserId())){
-                            isContain = true;
-                        }
-                    }
-                    if(!isContain){
-                        orgUsers.add(managerUser);
-                        model.setUsers(orgUsers);
-                    }
-                }
-            }
+            model.setManagerUserId(managerUserId);
+//
+//            //判断主管是否在这个组织机构用户中
+//            List<User> orgUsers = Lists.newArrayList();
+//            if(model.getManagerUserId() != null){
+//                User managerUser = userManager.loadById(model.getManagerUserId()) ;
+//                if(Collections3.isEmpty(model.getUsers())){
+//                    orgUsers.add(managerUser);
+//                    model.setUsers(orgUsers);
+//                }else{
+//                    orgUsers =  model.getUsers();
+//                    boolean isContain = false;
+//                    for(User user:model.getUsers()){
+//                        if(user.getId().equals(model.getManagerUserId())){
+//                            isContain = true;
+//                        }
+//                    }
+//                    if(!isContain){
+//                        orgUsers.add(managerUser);
+//                        model.setUsers(orgUsers);
+//                    }
+//                }
+//            }
             organManager.saveOrgan(model);
             result = Result.successResult();
             logger.debug(result.toString());
@@ -272,5 +345,13 @@ public class OrganAction extends StrutsAction<Organ> {
 
     public void setUserIds(List<Long> userIds) {
         this.userIds = userIds;
+    }
+
+    public void setManagerUserId(Long managerUserId) {
+        this.managerUserId = managerUserId;
+    }
+
+    public void setNameOrCode(String nameOrCode) {
+        this.nameOrCode = nameOrCode;
     }
 }

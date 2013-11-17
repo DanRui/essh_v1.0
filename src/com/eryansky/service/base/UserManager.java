@@ -10,6 +10,7 @@ import com.eryansky.common.utils.StringUtils;
 import com.eryansky.utils.CacheConstants;
 import com.eryansky.core.security.SecurityUtils;
 import com.google.common.collect.Lists;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -100,10 +101,10 @@ public class UserManager extends EntityManager<User, Long> {
             CacheConstants.RESOURCE_USER_MENU_TREE_CACHE,
             CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE},allEntries = true)
 	public void deleteByIds(List<Long> ids) throws DaoException,SystemException,ServiceException {
+        logger.debug("清空缓存:{}",CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
+                +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE
+                +","+CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE);
 		if(!Collections3.isEmpty(ids)){
-            logger.debug("清空缓存:{}",CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
-                    +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE
-                    +","+CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE);
 			for(Long id :ids){
 				User superUser = this.getSuperUser();
 				if (id.equals(superUser.getId())) {
@@ -126,8 +127,6 @@ public class UserManager extends EntityManager<User, Long> {
 		}else{
 			logger.warn("参数[ids]为空.");
 		}
-		
-		
 	}
 	
 	/**
@@ -267,6 +266,64 @@ public class UserManager extends EntityManager<User, Long> {
         logger.debug(hql.toString());
         Page<User> userPage = userDao.findPage(p,hql.toString(),params.toArray());
         return userPage;
+    }
+
+    /**
+     * 根据组织机构Id以及登录名或姓名分页查询
+     * @param inUserIds 用户id集合
+     * @param loginNameOrName 姓名或手机号码
+     * @param page 第几页
+     * @param rows 页大小
+     * @param sort 排序字段
+     * @param order 排序方式 增序:'asc',降序:'desc'
+     * @return
+     */
+    public Page<User> getUsersByQuery(List<Long> inUserIds, String loginNameOrName, int page, int rows, String sort, String order) {
+        List<Object> params = Lists.newArrayList();
+        StringBuilder hql = new StringBuilder();
+        hql.append("from User u where 1=1 ");
+        if(!Collections3.isEmpty(inUserIds)){
+            hql.append("and (u.id in (:ids) ");
+            if(StringUtils.isNotBlank(loginNameOrName)){
+                hql.append("or u.loginName like ? or u.name like ? ) ");
+                params.add("%"+loginNameOrName+"%");
+                params.add("%"+loginNameOrName+"%");
+            }
+        }else{
+            if(StringUtils.isNotBlank(loginNameOrName)){
+                hql.append("and (u.loginName like ? or u.name like ?) ");
+                params.add("%"+loginNameOrName+"%");
+                params.add("%"+loginNameOrName+"%");
+            }
+        }
+
+        hql.append("and u.status = ? ");
+        params.add(StatusState.normal.getValue());
+        //设置分页
+        Page<User> p = new Page<User>(rows);
+        p.setPageNo(page);
+        if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
+            p.setOrder(order);
+            p.setOrderBy(sort);
+        } else {
+            p.setOrder(Page.ASC);
+            p.setOrderBy("id");
+        }
+        Query q = userDao.createQuery(hql.toString(), params.toArray());
+        if(!Collections3.isEmpty(inUserIds)){
+            q.setParameterList("ids",inUserIds);
+        }
+
+        if (p.isAutoCount()) {
+            long totalCount = getEntityDao().countHqlResult(hql.toString(), params.toArray());
+            p.setTotalCount(totalCount);
+        }
+
+        getEntityDao().setPageParameterToQuery(q, p);
+
+        List result = q.list();
+        p.setResult(result);
+        return p;
     }
 
 }

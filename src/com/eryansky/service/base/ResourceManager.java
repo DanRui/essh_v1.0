@@ -146,7 +146,17 @@ public class ResourceManager extends EntityManager<Resource, Long> {
         logger.debug("清空缓存:{}", CacheConstants.RESOURCE_USER_RESOURCE_TREE_CACHE
                 +","+CacheConstants.RESOURCE_USER_AUTHORITY_URLS_CACHE
                 +","+CacheConstants.RESOURCE_USER_MENU_TREE_CACHE);
-		 super.deleteByIds(ids);
+        if(!Collections3.isEmpty(ids)){
+            for(Long id :ids){
+                Resource resource = getEntityDao().load(id);
+                resource.setRoles(null);
+                resource.setUsers(null);
+                getEntityDao().delete(resource);
+            }
+        }else{
+            logger.warn("参数[ids]为空.");
+        }
+
 	}
 
     /**

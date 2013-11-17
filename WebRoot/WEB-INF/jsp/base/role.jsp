@@ -5,9 +5,11 @@
 var role_datagrid;
 var role_form;
 var role_search_form;
-var role_resource_form;
+var role_resource_form
+var role_user_form;
 var role_dialog;
 var role_resource_dialog;
+var role_user_dialog;
 $(function() {  
 	role_form = $('#role_form').form();
 	role_search_form = $('#role_search_form').form();
@@ -224,7 +226,84 @@ $(function() {
                 eu.showMsg("请选择要操作的对象！");
             }
         }
-		
+
+        //初始化角色用户表单
+        function initRoleUserForm(){
+            role_user_form = $('#role_user_form').form({
+                url: '${ctx}/base/role!updateRoleUser.action',
+                onSubmit: function(param){
+                    $.messager.progress({
+                        title : '提示信息！',
+                        text : '数据处理中，请稍后....'
+                    });
+                    var isValid = $(this).form('validate');
+                    if (!isValid) {
+                        $.messager.progress('close');
+                    }
+                    return isValid;
+                },
+                success: function(data){
+                    $.messager.progress('close');
+                    var json = $.parseJSON(data);
+                    if (json.code == 1){
+                        role_user_dialog.dialog('destroy');//销毁对话框
+                        role_datagrid.datagrid('reload');	// reload the role data
+                        eu.showMsg(json.msg);//操作结果提示
+                    }else {
+                        eu.showAlertMsg(json.msg,'error');
+                    }
+                }
+            });
+        }
+        //修改角色用户
+        function editRoleUser(){
+            //选中的所有行
+            var rows = role_datagrid.datagrid('getSelections');
+            //选中的行（第一条）
+            var row = role_datagrid.datagrid('getSelected');
+            if (row){
+                if(rows.length>1){
+                    eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
+                }
+                var userUrl = "${ctx}/base/role!user.action";
+                if(row != undefined && row.id){
+                    userUrl = userUrl+"?id="+row.id;
+                }
+                //弹出对话窗口
+                role_user_dialog = $('<div/>').dialog({
+                    title:'角色用户信息',
+                    width : 500,
+                    height : 200,
+                    modal : true,
+                    maximizable:true,
+                    href : userUrl,
+                    buttons : [ {
+                        text : '保存',
+                        iconCls : 'icon-save',
+                        handler : function() {
+                            role_user_form.submit();
+                        }
+                    },{
+                        text : '关闭',
+                        iconCls : 'icon-cancel',
+                        handler : function() {
+                            role_user_dialog.dialog('destroy');
+                        }
+                    }],
+                    onClose : function() {
+                        $(this).dialog('destroy');
+                    },
+                    onLoad:function(){
+                        initRoleUserForm();
+                        role_user_form.form('load', row);
+                    }
+                }).dialog('open');
+
+            }else{
+                eu.showMsg("请选择要操作的对象！");
+            }
+        }
+
 		//删除
 		function del(){
 			var rows = role_datagrid.datagrid('getSelections');
@@ -264,6 +343,7 @@ $(function() {
 	<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
 	<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
     <div onclick="editRoleResource();" data-options="iconCls:'icon-edit'">设置资源</div>
+    <div onclick="editRoleUser();" data-options="iconCls:'icon-edit'">设置用户</div>
 </div>
 		
 <%-- 工具栏 操作按钮 --%>
@@ -283,6 +363,8 @@ $(function() {
 		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
         <span class="toolbar-btn-separator"></span>
         <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editRoleResource()">设置资源</a>
+        <span class="toolbar-btn-separator"></span>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editRoleUser()">设置用户</a>
     </div>
 </div>
 <table id="role_datagrid" toolbar="#role_datagrid-toolbar" fit="true"></table>
