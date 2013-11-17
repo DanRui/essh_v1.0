@@ -33,7 +33,7 @@ import com.google.common.collect.Lists;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region = CacheConstants.HIBERNATE_CACHE_BASE)
 //jackson标记不生成json对象的属性 
 @JsonIgnoreProperties (value = { "hibernateLazyInitializer" , "handler","fieldHandler",
-        "password","resources","roles","defaultOrgan","organs"})
+        "resources","roles","defaultOrgan","organs"})
 //逻辑删除注解标记 propertyName:字段名 value:删除标记的值（使用默认值"1"） type:属性类型
 @Delete(propertyName = "status",type = PropertyType.I)
 public class User
