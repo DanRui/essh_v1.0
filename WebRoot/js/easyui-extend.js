@@ -1156,7 +1156,7 @@ $.extend($.fn.datagrid.defaults.editors, {
             return $(target).datebox('getValue');
         },
         setValue: function (target, value) {
-            $(target).datebox('setValue', $.formatDate(value,'yyyy-MM-dd'));
+            $(target).datebox('setValue', value);
         },
         resize: function (target, width) {
             $(target).datebox('resize', width);
@@ -1175,23 +1175,23 @@ $.extend($.fn.datagrid.defaults.editors, {
 			return $(target).datetimebox('getValue');
 		},
 		setValue : function(target, value) {
-			$(target).datetimebox('setValue', $.formatDate(value,'yyyy-MM-dd HH:mm:ss'));
+			$(target).datetimebox('setValue', value);
 		},
 		resize : function(target, width) {
 			$(target).datetimebox('resize', width);
 		}
 	},
-	my97 : {   
+	my97 : {
 		init : function(container, options) {
 			var editor = $('<input />').appendTo(container);
 			editor.my97(options);
 			return editor;
 		},
 		getValue : function(target) {
-			return $(target).my97('getValue');
+			return $(target).val();
 		},
 		setValue : function(target, value) {
-			$(target).my97('setValue', value);
+            $(target).val(value);
 		},
 		setDisabled : function(target, width) {
 			$(target).my97('setDisabled', width);
@@ -1303,12 +1303,12 @@ $.extend($.fn.datagrid.defaults.editors, {
  */
 $.fn.datebox.defaults.formatter = function(date){
     var vDate = new Date(date);
-    return vDate.format('yyyy-MM-dd');
+    return $.formatDate(vDate,'yyyy-MM-dd');
 }
 $.fn.datebox.defaults.parser = function(s) {
 	if (!s)
 		return new Date();
-	var ss = new Date(s).format('yyyy-MM-dd').split('-');
+	var ss = s.split('-');
 	var y = parseInt(ss[0], 10);
 	var m = parseInt(ss[1], 10);
 	var d = parseInt(ss[2], 10);
@@ -1319,22 +1319,26 @@ $.fn.datebox.defaults.parser = function(s) {
 	}
 }
 $.fn.datetimebox.defaults.formatter = function(date){
-    var vDate = new Date(date);
-    return vDate.format('yyyy-MM-dd hh:mm:ss');
+    return $.formatDate(date,'yyyy-MM-dd HH:mm:ss');
 }
 $.fn.datetimebox.defaults.parser = function(s) {
 	if (!s)
 		return new Date();
-	var ss = new Date(s).format('yyyy-MM-dd hh:mm:ss').split('-');
+	var ss = s.split(' ')[0].split('-');//年月日
 	var y = parseInt(ss[0], 10);
-	var m = parseInt(ss[1], 10);
+	var M = parseInt(ss[1], 10);
 	var d = parseInt(ss[2], 10);
-	if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-		return new Date(y, m - 1, d);
+    var ts = s.split(' ')[1].split(':'); //时分秒
+    var H =  parseInt(ts[0], 10);
+    var m =  parseInt(ts[1], 10);
+    var s =  parseInt(ts[2], 10);
+	if (!isNaN(y) && !isNaN(M) && !isNaN(d)) {
+		return new Date(y, M - 1, d,H,m,s);
 	} else {
 		return new Date();
 	}
 }
+
 
 /**
  * @requires jQuery,EasyUI
