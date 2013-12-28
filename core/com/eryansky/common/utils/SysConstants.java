@@ -28,6 +28,19 @@ public class SysConstants {
     	}
         return appconfig;
     }
+
+    /**
+     * 修改配置文件
+     * @param key
+     * @param value
+     */
+    public static void modifyAppConfig(String key,String value) {
+        String filePath = "appconfig.properties";
+        if(appconfig == null){
+            appconfig = new PropertiesLoader(filePath);
+        }
+        appconfig.modifyProperties(filePath,key,value);
+    }
     
     /**
      * 配置文件(sensitive.properties)

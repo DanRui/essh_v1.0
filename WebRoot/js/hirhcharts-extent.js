@@ -10,7 +10,7 @@ $.extend(Highcharts.getOptions().lang, {
 });
 $.extend(Highcharts.getOptions().exporting, {
     filename : 'chart',
-    url : eu.contextPath + '/downloadChart'
+    url : eu.contextPath + '/servlet/DownloadChartServlet'
 });
 $.extend(Highcharts.getOptions(), {
     credits : {

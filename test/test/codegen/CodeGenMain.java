@@ -14,7 +14,7 @@ public class CodeGenMain {
 	private List<Table> tables = null;
 	private Builder builder = null;
 	DataSource db = null;
-	String t = "T_TEST%";//user_info
+	String t = "T_SYS%";//user_info
 	Table table = null;
 
 	@Before

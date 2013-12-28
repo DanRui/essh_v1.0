@@ -12,9 +12,10 @@ $(function () {
     //数据列表
         ${entityInstance}_datagrid = $('#${entityInstance}_datagrid').datagrid({
         url: '${ctx}/${moudle}/${entityInstance}!datagrid.action',
+        fit:true,
         pagination: true,//底部分页
         pagePosition: 'bottom',//'top','bottom','both'.
-        fitColumns: true,//自适应列宽
+        fitColumns: false,//自适应列宽
         striped: true,//显示条纹
         pageSize: 20,//每页记录数
         singleSelect: false,//单选模式
@@ -26,35 +27,21 @@ $(function () {
         sortName: 'id',//默认排序字段
         sortOrder: 'desc',//默认排序方式 'desc' 'asc'
         idField: 'id',
-        fitColumns: false,//自适应宽度
-        columns: [
-            [
-                {
-                    field: 'ck',
-                    checkbox: true,
-                    width: 60
-                },{
-                    field: 'id',
-                    title: '主键',
-                    hidden: true,
-                    sortable: true,
-                    align: 'right',
-                    width: 80
-                }
+        frozenColumns:[[
+            {field:'ck',checkbox:true}
+        ]],
+        columns: [[
+            {field: 'id',title: '主键',hidden: true, sortable: true,align: 'right',width: 80}
             #foreach ($column in $columns)
                 #if($column.comment)
-                    ,{
-                        field: '$column.fieldName',
-                        title: '$column.comment',
-                        width: 200,
+                    ,{field: '$column.fieldName', title: '$column.comment',width: 100,
                         editor: {
                             type: 'validatebox'
                         }
                     }
                 #end
             #end
-            ]
-        ],
+        ]],
         onDblClickRow: function (rowIndex, rowData) {
             if (editRow != undefined) {
                 eu.showMsg("请先保存正在编辑的数据！");
@@ -116,7 +103,7 @@ $(function () {
                 top: e.pageY
             });
         }
-    });
+    }).datagrid("showTooltip");;
 });
 
 //新增
@@ -258,7 +245,7 @@ function search() {
                 </form>
             </div>
         </div>
-        <table id="${entityInstance}_datagrid" toolbar="#${entityInstance}_toolbar" fit="true"></table>
+        <table id="${entityInstance}_datagrid" toolbar="#${entityInstance}_toolbar"></table>
 
     </div>
 </div>

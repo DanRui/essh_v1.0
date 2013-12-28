@@ -15,10 +15,11 @@ $(function() {
 	role_search_form = $('#role_search_form').form();
     //数据列表
     role_datagrid = $('#role_datagrid').datagrid({  
-	    url:'${ctx}/base/role!datagrid.action',  
+	    url:'${ctx}/base/role!datagrid.action',
+        fit:true,
 	    pagination:true,//底部分页
 	    rownumbers:true,//显示行数
-	    fitColumns:true,//自适应列宽
+	    fitColumns:false,//自适应列宽
 	    striped:true,//显示条纹
 	    pageSize:20,//每页记录数
         remoteSort:false,//是否通过远程服务器对数据排序
@@ -30,11 +31,45 @@ $(function() {
             {field:'name',title:'角色名称',width:200},
             {field:'code',title:'角色编码',width:120}
         ]],
-	    columns:[[  
+	    columns:[[
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
-            {field:'resourceNames',title:'关联资源',width:165},
-	        {field:'remark',title:'描述',width:50}
+            {field:'resourceNames',title:'关联资源',width:420},
+	        {field:'remark',title:'描述',width:200}
 	    ]],
+        toolbar:[{
+            text:'新增',
+            iconCls:'icon-add',
+            handler:function(){showDialog()}
+        },'-',{
+            text:'编辑',
+            iconCls:'icon-edit',
+            handler:function(){edit()}
+        },'-',{
+            text:'删除',
+            iconCls:'icon-remove',
+            handler:function(){del()}
+        },'-',{
+            text:'设置资源',
+            iconCls:'icon-edit',
+            handler:function(){editRoleResource()}
+        },'-',{
+            text:'设置用户',
+            iconCls:'icon-edit',
+            handler:function(){editRoleUser()}
+        },'-',{
+            text:'过滤条件',
+            iconCls:'icon-search',
+            handler:function(){
+//                $(".easyui-layout").layout('expand','north');
+                search();
+            }
+        },'-',{
+            text:'清空条件',
+            iconCls:'icon-no',
+            handler:function(){
+                role_search_form.form('reset');
+            }
+        }],
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
 	    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
@@ -345,27 +380,21 @@ $(function() {
     <div onclick="editRoleResource();" data-options="iconCls:'icon-edit'">设置资源</div>
     <div onclick="editRoleUser();" data-options="iconCls:'icon-edit'">设置用户</div>
 </div>
-		
-<%-- 工具栏 操作按钮 --%>
-<div id="role_datagrid-toolbar">
-    <div style="margin-left:10px; float: left;">
-        <form id="role_search_form" style="padding: 0px;">
-			角色名称:<input type="text" name="filter_LIKES_name" placeholder="请输入角色名称..."  maxLength="25" style="width: 160px" /> 
-			<a href="javascript:search();" class="easyui-linkbutton"
-					iconCls="icon-search" plain="true" >查 询</a>
-		</form>
-	</div>
-	<div align="right">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
-		<span class="toolbar-btn-separator"></span>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
-		<span class="toolbar-btn-separator"></span>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
-        <span class="toolbar-btn-separator"></span>
-        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editRoleResource()">设置资源</a>
-        <span class="toolbar-btn-separator"></span>
-        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editRoleUser()">设置用户</a>
+
+<div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
+    <div data-options="region:'north',title:'过滤条件',collapsed:true,split:false,border:false"
+         style="padding: 0px; height: 56px;width:100%; overflow-y: hidden;">
+        <form id="role_search_form" style="padding: 2px;">
+            角色名称:<input type="text" name="filter_LIKES_name" placeholder="请输入角色名称..."
+                        maxLength="25" style="width: 160px" />
+        </form>
+    </div>
+    <%-- 中间部分 列表 --%>
+    <div data-options="region:'center',split:false,border:false"
+         style="padding: 0px; height: 100%;width:100%; overflow-y: hidden;">
+        <table id="role_datagrid"></table>
     </div>
 </div>
-<table id="role_datagrid" toolbar="#role_datagrid-toolbar" fit="true"></table>
+
+
    

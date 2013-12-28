@@ -13,7 +13,8 @@ $(function() {
     //数据列表
     organ_treegrid = $('#organ_treegrid').treegrid({
         url:'${ctx}/base/organ!treegrid.action',
-        fitColumns:true,//自适应列宽
+        fit:true,
+        fitColumns:false,//自适应列宽
         striped:true,//显示条纹
         singleSelect:false,//单选模式
         rownumbers:true,//显示行数
@@ -25,21 +26,39 @@ $(function() {
         sortOrder:'asc',//默认排序方式 'desc' 'asc'
         idField : 'id',
         treeField:"name",
-        fitColumns:false,//自适应宽度
-        frozenColumns:[[{field:'name',title:'机构名称',width:200}]],
+        frozenColumns:[[
+            {field:'name',title:'机构名称',width:200},
+            {field:'sysCode',title:'机构系统编码',width:120}
+        ]],
         columns:[[
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
-            {field:'sysCode',title:'机构系统编码',width:120},
+            {field:'managerUserLoginName',title:'主管',width:120},
             {field:'code',title:'机构编码',width:120},
             {field:'address',title:'地址',width:120},
-            {field:'managerUserLoginName',title:'主管',width:120},
             {field:'phone',title:'电话号码',width:120},
             {field:'fax',title:'传真号',width:120},
             {field:'typeDesc',title:'机构类型',align:'center',width:100},
             {field:'orderNo',title:'排序',align:'right',width:60,sortable:true},
-            {field:'userLoginNames',title:'机构用户',width:120},
+            {field:'userLoginNames',title:'机构用户',width:420},
             {field:'statusDesc',title:'状态',align:'center',width:60}
         ]],
+        toolbar:[{
+                text:'新增',
+                iconCls:'icon-add',
+                handler:function(){showDialog()}
+            },'-',{
+                text:'编辑',
+                iconCls:'icon-edit',
+                handler:function(){edit()}
+            },'-',{
+                text:'删除',
+                iconCls:'icon-remove',
+                handler:function(){del()}
+            },'-',{
+                text:'设置用户',
+                iconCls:'icon-edit',
+                handler:function(){editOrganUser()}
+        }],
         onContextMenu : function(e, row) {
             e.preventDefault();
             $(this).treegrid('select', row.id);
@@ -292,20 +311,7 @@ function del(){
             <div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
             <div onclick="editOrganUser();" data-options="iconCls:'icon-edit'">设置用户</div>
         </div>
-
-        <%-- 工具栏 操作按钮 --%>
-        <div id="organ_toolbar">
-            <div style="margin-bottom:5px">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editOrganUser()">设置用户</a>
-            </div>
-        </div>
-        <table id="organ_treegrid" toolbar="#organ_toolbar" fit="true"></table>
+        <table id="organ_treegrid"></table>
 
     </div>
 </div>

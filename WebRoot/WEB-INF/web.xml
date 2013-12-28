@@ -13,8 +13,8 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 		    classpath*:applicationContext.xml,
-		    classpath*:applicationContext-ehcache.xml
-		    <!-- classpath*:applicationContext-task.xml, -->
+		    classpath*:applicationContext-ehcache.xml,
+		     classpath*:applicationContext-task.xml,
 		    <!-- classpath*:applicationContext-quartz.xml -->
             <!--classpath*:applicationContext-minaServer.xml-->
 		</param-value>
@@ -248,14 +248,14 @@
 		<url-pattern>/servlet/ValidateCodeServlet</url-pattern>
 	</servlet-mapping>
 
-    <!-- Servlet 验证码 -->
+    <!--hightcharts导出下载功能-->
     <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>com.eryansky.servlet.LoginServlet</servlet-class>
+        <servlet-name>DownloadChartServlet</servlet-name>
+        <servlet-class>com.eryansky.common.web.servlet.DownloadChartServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/servlet/LoginServlet</url-pattern>
+        <servlet-name>DownloadChartServlet</servlet-name>
+        <url-pattern>/servlet/DownloadChartServlet</url-pattern>
     </servlet-mapping>
 
 

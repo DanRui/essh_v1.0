@@ -24,7 +24,7 @@ public class Resources {
     /**
      * 模块名称
      */
-    public static final String MODULE = "test";
+    public static final String MODULE = "sys";
 	
 
 	/************ 模板配置 ************/

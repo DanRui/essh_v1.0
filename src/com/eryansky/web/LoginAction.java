@@ -300,7 +300,7 @@ public class LoginAction
             // 退出时清空session中的内容
             String sessionId = Struts2Utils.getSession().getId();
             //由监听器更新在线用户列表
-            SecurityUtils.removeUserFromSession(sessionId);
+            SecurityUtils.removeUserFromSession(sessionId,false);
             logger.info("用户{}退出系统.", sessionInfo.getLoginName());
         } catch (Exception e) {
             e.printStackTrace();

@@ -33,4 +33,9 @@ public class SecurityConstants {
      */
     public static final Map<String,SessionInfo> sessionInfoMap = new ConcurrentHashMap<String, SessionInfo>();
 
+    /**
+     * 安全日志拦截bean名称
+     */
+    public static final String SERVICE_SECURITY_LOGINASPECT = "securityLogAspect";
+
 }

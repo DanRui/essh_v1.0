@@ -76,7 +76,6 @@
             panelWidth:500,
             idField:'id',
             textField:'loginName',
-            <%--url:'${ctx}/base/user!datagrid.action',--%>
             data:${managerUserCombogridData},
             fitColumns: true,
             striped: true,

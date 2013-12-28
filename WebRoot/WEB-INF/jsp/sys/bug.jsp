@@ -18,10 +18,11 @@ $(function() {
 	bug_search_form = $('#bug_search_form').form();
     //数据列表
     bug_datagrid = $('#bug_datagrid').datagrid({  
-	    url:'${ctx}/sys/bug!datagrid.action',  
+	    url:'${ctx}/sys/bug!datagrid.action',
+        fit:true,
 	    pagination:true,//底部分页
 	    rownumbers:true,//显示行数
-	    fitColumns:true,//自适应列宽
+	    fitColumns:false,//自适应列宽
 	    striped:true,//显示条纹
 	    nowrap : true,
 	    pageSize:20,//每页记录数
@@ -29,23 +30,60 @@ $(function() {
 	    sortName:'id',//默认排序字段
 		sortOrder:'asc',//默认排序方式 'desc' 'asc'
 		idField : 'id',
-        frozenColumns:[[{field:'ck',checkbox:true},{field:'title',title:'bug标题',width:260 }]],
+        frozenColumns:[[
+            {field:'ck',checkbox:true},
+            {field:'title',title:'bug标题',width:360 }
+        ]],
         columns:[[
               {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
               {field:'typeName',title:'bug类型',width:120 },
               {field:'operater',title:'操作',align:'center',width:200,formatter:function(value,rowData,rowIndex){
             	  var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
-         	      var operaterHtml = "<a class='easyui-linkbutton' iconCls='icon-add' plain='true' " +
+         	      var operaterHtml = "<a class='easyui-linkbutton' iconCls='icon-add'  " +
                           "onclick='view(\""+rowData.title+"\",\""+url+"\")' >查看</a>"
-                  +"<a class='easyui-linkbutton' iconCls='icon-edit' plain='true' href='#' " +
+                  +"<a class='easyui-linkbutton' iconCls='icon-edit'  href='#' " +
                           "onclick='edit("+rowIndex+");' >编辑</a>";
          	      return operaterHtml;
               }}
 		    ]],
+            toolbar:[{
+                text:'新增',
+                iconCls:'icon-add',
+                handler:function(){showDialog()}
+            },'-',{
+                text:'编辑',
+                iconCls:'icon-edit',
+                handler:function(){edit()}
+            },'-',{
+                text:'删除',
+                iconCls:'icon-remove',
+                handler:function(){del()}
+            },'-',{
+                text:'Excel导出',
+                iconCls:'icon-edit',
+                handler:function(){exportExcel()}
+            },'-',{
+                text:'Excel导入',
+                iconCls:'icon-edit',
+                handler:function(){importExcel()}
+            },'-',{
+                text:'过滤条件',
+                iconCls:'icon-search',
+                handler:function(){
+        //                $(".easyui-layout").layout('expand','north');
+                    search();
+                }
+            },'-',{
+                text:'清空条件',
+                iconCls:'icon-no',
+                handler:function(){
+                    bug_search_form.form('reset');
+                }
+            }],
 	    onLoadSuccess:function(){
 	    	$(this).datagrid('clearSelections');//取消所有的已选择项
 	    	$(this).datagrid('unselectAll');//取消全选按钮为全选状态
-            $.parser.parse();
+            $.parser.parse($(".easyui-linkbutton").parent());
 		},
 	    onRowContextMenu : function(e, rowIndex, rowData) {
 			e.preventDefault();
@@ -280,57 +318,29 @@ $(function() {
 		}).dialog('open');
 	}
 </script>
-<%-- 列表右键 --%>
-<div id="bug_datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
-    <%--带权限控制右键菜单--%>
-    <e:operation name="新增" permission="bug:add" type="menuItem" iconCls="icon-add"  method="showDialog()" ></e:operation>
-    <e:operation name="批量删除" permission="bug:remove" type="menuItem" iconCls="icon-remove"  method="del()" ></e:operation>
-    <e:operation name="Excel导出" permission="bug:exportExcel" type="menuItem" iconCls="icon-edit"  method="exportExcel()" ></e:operation>
-    <e:operation name="Excel导入" permission="bug:importExcel" type="menuItem" iconCls="icon-edit"  method="importExcel()" ></e:operation>
-
-    <%--<div onclick="showDialog();" iconCls="icon-add">新增</div>--%>
-	<%--<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>--%>
-	<%--<div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>--%>
-	<%--<div onclick="exportExcel();" data-options="iconCls:'icon-edit'">Excel导出</div>--%>
-	<%--<div onclick="importExcel();" data-options="iconCls:'icon-edit'">Excel导入</div>--%>
-</div>
 
 <%-- 隐藏iframe --%>
 <iframe id="bug_temp_iframe" style="display: none;"></iframe>
-	
-<%-- 工具栏 操作按钮 --%>
-<div id="bug_datagrid-toolbar">
-    <div style="margin-left:10px; float: left;">
+
+<div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
+    <div data-options="region:'north',title:'过滤条件',collapsed:true,split:false,border:false"
+         style="padding: 0px; height: 56px;width:100%; overflow-y: hidden;">
         <form id="bug_search_form" style="padding: 0px;">
-            bug类型:<input type="text" id="filter_EQS_type" name="filter_EQS_type" /> 
-			bug标题:<input type="text" name="filter_LIKES_title" maxLength="25" style="width: 160px" /> 
-			<a href="javascript:search();" class="easyui-linkbutton"
-					iconCls="icon-search" plain="true" >查 询</a>
-		</form>
-	</div>
-	<div align="right">
-
-        <%--按钮权限控制方式一 判断是否具有某个或几个权限 hasPermission name属性多个之间以“;”分割--%>
-        <%--<e:hasPermission name="bug:add">--%>
-            <%--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="showDialog()">新增</a>--%>
-		<%--</e:hasPermission>--%>
-
-        <%--<e:hasRole name="admin">--%>
-            <%--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="showDialog()">新增</a>--%>
-        <%--</e:hasRole>--%>
-
-        <%--按钮权限控制方式二 权限按钮标签--%>
-        <e:operation name="新增" permission="bug:add" type="linkbutton" iconCls="icon-add"  method="showDialog()" ></e:operation>
-        <e:operation name="批量删除" permission="bug:remove" type="linkbutton" iconCls="icon-remove"  method="del()" ></e:operation>
-        <e:operation name="Excel导出" permission="bug:exportExcel" type="linkbutton" iconCls="icon-edit"  method="exportExcel()" ></e:operation>
-        <e:operation name="Excel导入" permission="bug:importExcel" type="linkbutton" iconCls="icon-edit"  method="importExcel()" ></e:operation>
-
-
-        <%--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="showDialog()">新增</a>--%>
-		<%--<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()">批量删除</a>--%>
-		<%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit"  onclick="exportExcel()">Excel导出</a>--%>
-		<%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="importExcel()">Excel导入</a>--%>
-	</div>
+            bug类型:<input type="text" id="filter_EQS_type" name="filter_EQS_type" />
+            bug标题:<input type="text" name="filter_LIKES_title" maxLength="25" style="width: 160px" />
+        </form>
+    </div>
+    <%-- 中间部分 列表 --%>
+    <div data-options="region:'center',split:false,border:false"
+         style="padding: 0px; height: 100%;width:100%; overflow-y: hidden;">
+        <%-- 列表右键 --%>
+        <div id="bug_datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
+            <div onclick="showDialog();" iconCls="icon-add">新增</div>
+            <div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
+            <div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
+            <div onclick="exportExcel();" data-options="iconCls:'icon-edit'">Excel导出</div>
+            <div onclick="importExcel();" data-options="iconCls:'icon-edit'">Excel导入</div>
+        </div>
+        <table id="bug_datagrid"></table>
+    </div>
 </div>
-<table id="bug_datagrid" toolbar="#bug_datagrid-toolbar" fit="true"></table>
-   

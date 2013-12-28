@@ -43,6 +43,15 @@ $(function() {
 	layout_center_tabs.tabs({
 		fit : true,
 		border : false,
+        tools:[{
+            text:'',
+            iconCls:'icon-reload',
+            handler:function(){refresh()}
+        },{
+            text:'',
+            iconCls:'icon-cancel',
+            handler:function(){cancel()}
+        }],
 		onContextMenu : function(e, title,index) {
 			e.preventDefault();
 			layout_center_tabsMenu.menu('show', {
@@ -108,7 +117,7 @@ function cancel(){
 	}
 }
 </script>
-<div id="layout_center_tabs" data-options="tools:'#layout_center_tabs-tools'" style="overflow: hidden;">
+<div id="layout_center_tabs" style="overflow: hidden;">
 	<div id="layout_center_tabs_index" title="首页" data-options="href:'${ctx}/fileRedirect.action?toPage=portal.jsp',iconCls:'icon-application'"></div>
 </div>
 <div id="layout_center_tabsMenu" style="width: 120px;display:none;">
@@ -117,10 +126,4 @@ function cancel(){
 	<div type="close" data-options="iconCls:'icon-cancel'">关闭</div>
 	<div type="closeOther">关闭其他</div>
 	<div type="closeAll">关闭所有</div>
-</div>
-<div id="layout_center_tabs-tools">
-   <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true"  
-       onclick="javascript:refresh();"></a> 
-   <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true"  
-       onclick="javascript:cancel();"></a> 
 </div>

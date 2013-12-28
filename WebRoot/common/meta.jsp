@@ -18,17 +18,18 @@
 <%-- jQuery Cookie插件 --%>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery.cookie.js" charset="utf-8"></script>
 
-<link id="easyuiTheme" rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.4/themes/<c:out value="${cookie.easyuiThemeName.value}" default="bootstrap"/>/easyui.css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.4/themes/default/my97.css" />
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.5/themes/<c:out value="${cookie.easyuiThemeName.value}" default="bootstrap"/>/easyui.css" />
+<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.5/themes/default/my97.css" />
 
-<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.4/themes/icon.css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.4/portal/portal.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.5/themes/icon.css" />
+<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.5/portal/portal.css">
 <script type="text/javascript" src="${ctx}/js/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
-<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/jquery.easyui.mine.js" charset="utf-8"></script>
-<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/jquery.easyui.my97.js" charset="utf-8"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.5/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.5/jquery.easyui.min.mine.js" charset="utf-8"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.5/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.5/jquery.easyui.my97.js" charset="utf-8"></script>
 
-<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/portal/jquery.portal.js" charset="utf-8"></script>
-<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/easyui-lang-zh_CN.js" charset="utf-8"></script>
+<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.5/portal/jquery.portal.js" charset="utf-8"></script>
 
 <%-- jQuery方法扩展 --%>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery-extend.js" charset="utf-8"></script>

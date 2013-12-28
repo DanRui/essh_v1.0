@@ -244,8 +244,10 @@ public class ResourceManager extends EntityManager<Resource, Long> {
         //角色权限
         List<Resource> roleResources = resourceDao.distinct(resourceDao.createQuery("select ms from User u left join u.roles rs left join rs.resources ms where u.id= ? order by ms.orderNo asc", userId)).list();
         //用户直接权限
-        List<Resource> userResources =  resourceDao.createQuery("select distinct ur from User u,u.resources.elements ur where u.id = ?",
-                new Object[]{userId}).list();
+        User user = userManager.loadById(userId);
+        List<Resource> userResources = user.getResources();
+        System.out.println(userResources.size());
+        System.out.println(roleResources.size());
         List<Resource> rs = Collections3.aggregate(roleResources,userResources);
         return rs;
     }
@@ -655,7 +657,7 @@ public class ResourceManager extends EntityManager<Resource, Long> {
         //检查该URL是否需要拦截
         boolean isInterceptorUrl = this.isInterceptorUrl(requestUrl);
         if (isInterceptorUrl){
-            //用户权限
+            //用户权限Lo
             List<String> userAuthoritys = this.getUserAuthoritysByUserId(userId);
             for(String markUrl :userAuthoritys){
                 String[] markUrls = markUrl.split(";");

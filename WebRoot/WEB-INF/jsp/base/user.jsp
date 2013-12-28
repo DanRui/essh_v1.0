@@ -86,9 +86,10 @@
         //数据列表
         user_datagrid = $('#user_datagrid').datagrid({
             url:'${ctx}/base/user!userDatagrid.action',
+            fit:true,
             pagination:true,//底部分页
             rownumbers:true,//显示行数
-            fitColumns:true,//自适应列宽
+            fitColumns:false,//自适应列宽
             striped:true,//显示条纹
             pageSize:20,//每页记录数
             remoteSort:false,//是否通过远程服务器对数据排序
@@ -106,11 +107,14 @@
                         }
                         return value;
                     }
-                }
+                },
+                {field:'name',title:'姓名',width:100,sortable:true}
             ]],
             columns:[[
                 {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80} ,
-                {field:'roleNames',title:'关联角色',width:160,
+                {field:'defaultOrganName',title:'默认机构',width:160},
+                {field:'organNames',title:'所属组织机构',width:200},
+                {field:'roleNames',title:'关联角色',width:200,
                     formatter:function(value,rowData,rowIndex){
                         if(isSuperOwner(rowData.id)){
                             return $.formatString('<span  style="color:red">{0}</span>','超级管理员(无需设置角色)');
@@ -118,15 +122,54 @@
                         return value;
                     }
                 },
-                {field:'defaultOrganName',title:'默认机构',width:160},
-                {field:'organNames',title:'所属组织机构',width:160},
-                {field:'name',title:'姓名',width:100,sortable:true},
                 {field:'sexDesc',title:'性别',width:60,align:'center'},
-                {field:'email',title:'邮箱',width:100},
-                {field:'address',title:'地址',width:100},
-                {field:'tel',title:'电话',width:100},
+                {field:'email',title:'邮箱',width:120},
+                {field:'address',title:'地址',width:200},
+                {field:'tel',title:'电话',width:120},
                 {field:'statusDesc',title:'状态',align:'center',width:60}
             ]],
+            toolbar:[{
+                text:'新增',
+                iconCls:'icon-add',
+                handler:function(){showDialog()}
+            },'-',{
+                text:'编辑',
+                iconCls:'icon-edit',
+                handler:function(){edit()}
+            },'-',{
+                text:'删除',
+                iconCls:'icon-remove',
+                handler:function(){del()}
+            },'-',{
+                text:'修改密码',
+                iconCls:'icon-lock',
+                handler:function(){editPassword()}
+            },'-',{
+                text:'设置机构',
+                iconCls:'icon-group',
+                handler:function(){editUserOrgan()}
+            },'-',{
+                text:'设置角色',
+                iconCls:'icon-group',
+                handler:function(){editUserRole()}
+            },'-',{
+                text:'设置资源',
+                iconCls:'icon-edit',
+                handler:function(){editUserResource()}
+            },'-',{
+                text:'过滤条件',
+                iconCls:'icon-search',
+                handler:function(){
+//                $(".easyui-layout").layout('expand','north');
+                    search();
+                }
+            },'-',{
+                text:'清空条件',
+                iconCls:'icon-no',
+                handler:function(){
+                    user_search_form.form('clear');
+                }
+            }],
             onLoadSuccess:function(){
                 $(this).datagrid('clearSelections');//取消所有的已选择项
                 $(this).datagrid('unselectAll');//取消全选按钮为全选状态
@@ -666,34 +709,17 @@ function search(){
 
     <!-- 中间部分 列表 -->
     <div data-options="region:'center',split:true" style="overflow: hidden;">
+        <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
+            <div data-options="region:'center',split:true" style="overflow: hidden;">
+                <table id="user_datagrid" ></table>
+            </div>
 
-        <%-- 工具栏 操作按钮 --%>
-        <div id="user_datagrid-toolbar">
-            <div style="margin-left:10px; float: left;">
+            <div data-options="region:'north',title:'过滤条件',split:false,collapsed:true,border:false"
+                 style="width: 100%;height:56px; ">
                 <form id="user_search_form" style="padding: 0px;">
                     登录名或姓名:<input type="text" id="loginNameOrName" name="loginNameOrName" placeholder="请输入登录名或姓名..." maxLength="25" style="width: 160px"></input>
-                    <a href="javascript:search();" class="easyui-linkbutton"
-                       iconCls="icon-search" plain="true" >查 询</a>
                 </form>
             </div>
-            <div align="right">
-
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-lock" plain="true" onclick="editPassword()">修改密码</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserOrgan()">设置机构</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserRole()">设置角色</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-group" plain="true" onclick="editUserResource()">设置资源</a>
-            </div>
         </div>
-
-        <table id="user_datagrid" toolbar="#user_datagrid-toolbar" fit="true" ></table>
     </div>
 </div>

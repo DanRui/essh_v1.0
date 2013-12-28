@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.eryansky.common.spring.SpringContextHolder;
+import com.eryansky.core.aop.SecurityLogAspect;
 import com.eryansky.entity.base.Role;
 import com.eryansky.service.base.ResourceManager;
 import com.eryansky.service.base.RoleManager;
@@ -120,13 +121,23 @@ public class SecurityUtils {
     public static SessionInfo getCurrentSessionInfo(){
         return (SessionInfo)Struts2Utils.getSessionAttribute(SecurityConstants.SESSION_SESSIONINFO);
     }
-	
-	public static void removeUserFromSession(String sessionId){
+
+    /**
+     * 将用户信息从sessionInf中移除
+     * @param sessionId  session ID
+     * @param saveLog 是否 保存切面日志
+     */
+	public static void removeUserFromSession(String sessionId,boolean saveLog){
 		if(StringUtils.isNotBlank(sessionId)){
 			Set<String> keySet = SecurityConstants.sessionInfoMap.keySet();
 			for(String key:keySet){
 				if(key.equals(sessionId)){
 					logger.debug("removeUserFromSession:{}",sessionId);
+                    if(saveLog){
+                        SecurityLogAspect securityLogAspect = SpringContextHolder.getBean(SecurityConstants.SERVICE_SECURITY_LOGINASPECT);
+                        SessionInfo sessionInfo = SecurityConstants.sessionInfoMap.get(key);
+                        securityLogAspect.saveLog(sessionInfo,null,SecurityType.logout_abnormal);
+                    }
                     SecurityConstants.sessionInfoMap.remove(key);
 				}
 			}

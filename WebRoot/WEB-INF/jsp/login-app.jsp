@@ -5,8 +5,8 @@
 <head>
 <title>essh桌面版</title>
 <%@ include file="/common/meta.jsp"%>
-<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.4/themes/windows/app.css" />
-<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/jquery.app.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/easyui-1.3.5/themes/windows/app.css" />
+<script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.5/jquery.app.js" charset="utf-8"></script>
 
 <script type="text/javascript">
     $(function(){
@@ -15,7 +15,7 @@
         }
     });
 </script>
-    <script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.4/initApp.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${ctx}/js/jquery/easyui-1.3.5/initApp.js" charset="utf-8"></script>
 </head>
 <body>
 

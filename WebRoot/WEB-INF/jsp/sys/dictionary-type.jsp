@@ -10,7 +10,8 @@ $(function() {
     //数据列表
     dictionaryType_treegrid = $('#dictionaryType_treegrid').treegrid({
 	    url:'${ctx}/sys/dictionary-type!treegrid.action',
-	    fitColumns:true,//自适应列宽
+        fit:true,
+	    fitColumns:false,//自适应列宽
 	    striped:true,//显示条纹
 	    pageSize:20,//每页记录数
 	    singleSelect:false,//单选模式
@@ -23,14 +24,28 @@ $(function() {
 		sortOrder:'asc',//默认排序方式 'desc' 'asc'
 		idField : 'code',
         treeField:"name",
-		fitColumns:false,//自适应宽度
-        frozenColumns:[[{field:'name',title:'机构名称',width:200}]],
+        frozenColumns:[[
+            {field:'name',title:'机构名称',width:200}
+        ]],
 		columns:[ [
             {field : 'id',title : '主键',hidden : true,sortable:true,align : 'right',width : 80},
             {field : 'code',title : '类型编码',width : 100,sortable:true},
             {field : 'orderNo',title : '排序',align : 'right',width : 80,sortable:true } ,
             {field : 'remark', title : '备注',width : 200}
         ] ],
+        toolbar:[{
+            text:'新增',
+            iconCls:'icon-add',
+            handler:function(){showDialog()}
+        },'-',{
+            text:'编辑',
+            iconCls:'icon-edit',
+            handler:function(){edit()}
+        },'-',{
+            text:'删除',
+            iconCls:'icon-remove',
+            handler:function(){del()}
+        }],
         onContextMenu : function(e, row) {
             e.preventDefault();
             $(this).treegrid('select', row.code);
@@ -237,25 +252,8 @@ $(function() {
             <div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
             <div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
         </div>
-		
-	   <%-- 工具栏 操作按钮 --%>
-	   <div id="dictionaryType_toolbar">
-			<div style="margin-bottom:5px">    
-		       <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
-				<span class="toolbar-btn-separator"></span>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
-				<span class="toolbar-btn-separator"></span>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a> 
-		    </div>
-		    <%--<div>
-			    <form id="dictionaryType_search_form" style="padding: 0px;">
-				    类型名称或编码: <input type="text" id="filter_LIKES_name_OR_code" name="filter_LIKES_name_OR_code" placeholder="请输入类型名称或编码..." maxLength="25" style="width: 160px"></input>
-					<a href="javascript:search();" class="easyui-linkbutton"
-							iconCls="icon-search" plain="true" >查 询</a>
-                </form>
-		    </div>--%>
-		</div>
-	   <table id="dictionaryType_treegrid" toolbar="#dictionaryType_toolbar" fit="true"></table>
+
+	   <table id="dictionaryType_treegrid"></table>
 
 	</div>
 </div>

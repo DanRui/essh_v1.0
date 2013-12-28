@@ -7,6 +7,7 @@ import com.eryansky.core.security.SessionInfo;
 import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.utils.StringUtils;
+import com.eryansky.entity.base.Organ;
 import com.eryansky.utils.CacheConstants;
 import com.eryansky.core.security.SecurityUtils;
 import com.google.common.collect.Lists;
@@ -36,6 +37,9 @@ import com.eryansky.common.orm.entity.StatusState;
 public class UserManager extends EntityManager<User, Long> {
 	
 	private HibernateDao<User, Long> userDao;
+
+    @Autowired
+    private OrganManager organManager;
 	
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
@@ -243,10 +247,11 @@ public class UserManager extends EntityManager<User, Long> {
         }
         List<Object> params = Lists.newArrayList();
         StringBuilder hql = new StringBuilder();
-        hql.append("select distinct u from User u,u.organs.elements o where 1=1 ");
+        hql.append("from User u where 1=1 ");
         if(organId != null){
-            hql.append("and o.id =? ");
-            params.add(organId);
+            Organ organ = organManager.loadById(organId);
+            hql.append("and ? in elements(u.organs) ");
+            params.add(organ);
         }
         if(StringUtils.isNotBlank(loginNameOrName)){
             hql.append("and (u.loginName like ? or u.name like ?) ");

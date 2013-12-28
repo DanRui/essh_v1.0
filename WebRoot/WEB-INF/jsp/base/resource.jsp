@@ -11,7 +11,8 @@ $(function() {
     //数据列表
     resource_treegrid = $('#resource_treegrid').treegrid({
         url:'${ctx}/base/resource!treegrid.action',
-        fitColumns:true,//自适应列宽
+        fit:true,
+        fitColumns:false,//自适应列宽
         striped:true,//显示条纹
         singleSelect:false,//单选模式
         rownumbers:true,//显示行数
@@ -23,17 +24,31 @@ $(function() {
         sortOrder:'asc',//默认排序方式 'desc' 'asc'
         idField : 'id',
         treeField:"name",
-        fitColumns:false,//自适应宽度
-        frozenColumns:[[{field:'name',title:'机构名称',width:200}]],
+        frozenColumns:[[
+            {field:'name',title:'资源名称',width:200},
+            {field:'code',title:'资源编码',width:120}
+        ]],
         columns:[[
             {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
-            {field:'code',title:'资源编码',width:120},
             {field:'url',title:'链接地址',width:260},
-            {field:'markUrl',title:'标识地址',width:200},
+            {field:'markUrl',title:'标识地址',width:260},
             {field:'orderNo',title:'排序',align:'right',width:60,sortable:true},
             {field:'typeView',title:'资源类型',align:'center',width:100},
             {field:'statusView',title:'状态',align:'center',width:60}
         ]],
+        toolbar:[{
+            text:'新增',
+            iconCls:'icon-add',
+            handler:function(){showDialog()}
+        },'-',{
+            text:'编辑',
+            iconCls:'icon-edit',
+            handler:function(){edit()}
+        },'-',{
+            text:'删除',
+            iconCls:'icon-remove',
+            handler:function(){del()}
+        }],
         onContextMenu : function(e, row) {
             e.preventDefault();
             $(this).treegrid('select', row.id);
@@ -202,35 +217,24 @@ function del(){
 </script>
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
 
+    <%-- 列表右键 --%>
+    <div id="resource_menu" class="easyui-menu" style="width:120px;display: none;">
+        <div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
+        <div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
+        <div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
+    </div>
+
+    <%-- 工具栏 操作按钮 --%>
+    <div id="resource_toolbar">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
+    </div>
+
     <%-- 中间部分 列表 --%>
     <div data-options="region:'center',split:false,border:false"
          style="padding: 0px; height: 100%;width:100%; overflow-y: hidden;">
-
-        <%-- 列表右键 --%>
-        <div id="resource_menu" class="easyui-menu" style="width:120px;display: none;">
-            <div onclick="showDialog();" data-options="iconCls:'icon-add'">新增</div>
-            <div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
-            <div onclick="del();" data-options="iconCls:'icon-remove'">删除</div>
-        </div>
-
-        <%-- 工具栏 操作按钮 --%>
-        <div id="resource_toolbar">
-            <div style="margin-bottom:5px">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="showDialog()">新增</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
-                <span class="toolbar-btn-separator"></span>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
-            </div>
-            <%--<div>
-                <form id="resource_search_form" style="padding: 0px;">
-                    类型名称或编码: <input type="text" id="filter_LIKES_name_OR_code" name="filter_LIKES_name_OR_code" placeholder="请输入类型名称或编码..." maxLength="25" style="width: 160px"></input>
-                    <a href="javascript:search();" class="easyui-linkbutton"
-                            iconCls="icon-search" plain="true" >查 询</a>
-                </form>
-            </div>--%>
-        </div>
-        <table id="resource_treegrid" toolbar="#resource_toolbar" fit="true"></table>
+        <table id="resource_treegrid" toolbar="#resource_toolbar"></table>
 
     </div>
 </div>
