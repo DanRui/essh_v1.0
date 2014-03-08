@@ -5,6 +5,12 @@
 <head>
 <title>后台管理主界面</title>
 <%@ include file="/common/meta.jsp"%>
+    <script type="text/javascript" charset="utf-8">
+        var indexLayout;
+        $(function(){
+            indexLayout = $("#indexLayout").layout();
+        });
+    </script>
 </head>
 <body id="indexLayout" class="easyui-layout" style="height: 100%;width: 100%;overflow-y: hidden;">
 	<noscript>

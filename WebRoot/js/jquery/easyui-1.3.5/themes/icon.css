@@ -68,6 +68,19 @@
 }
 
 /* 自定义新增图标 */
+.icon-mini-full_screen{
+    background:url('icons/mini_full_screen.png') no-repeat center center;
+}
+.icon-mini-exit_full_screen{
+    background:url('icons/mini_exit_full_screen.png') no-repeat center center;
+}
+
+.icon-full_screen{
+    background:url('icons/full_screen.png') no-repeat center center;
+}
+.icon-exit_full_screen{
+    background:url('icons/exit_full_screen.png') no-repeat center center;
+}
 .icon-next{
     background:url('icons/next.png') no-repeat center center;
 }

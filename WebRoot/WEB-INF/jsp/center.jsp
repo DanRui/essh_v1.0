@@ -43,15 +43,16 @@ $(function() {
 	layout_center_tabs.tabs({
 		fit : true,
 		border : false,
-        tools:[{
-            text:'',
-            iconCls:'icon-reload',
-            handler:function(){refresh()}
-        },{
-            text:'',
-            iconCls:'icon-cancel',
-            handler:function(){cancel()}
-        }],
+        tools:'#layout_center_tabs_full-tools',
+//        tools:[{
+//            text:'',
+//            iconCls:'icon-reload',
+//            handler:function(){refresh()}
+//        },{
+//            text:'',
+//            iconCls:'icon-cancel',
+//            handler:function(){cancel()}
+//        }],
 		onContextMenu : function(e, title,index) {
 			e.preventDefault();
 			layout_center_tabsMenu.menu('show', {
@@ -93,6 +94,9 @@ function refresh(selectedTab){
 	}else{
 		tab = layout_center_tabs.tabs('getSelected');
 	}
+    if(tab == undefined){//未添加任何tab
+        return;
+    }
 	var href = tab.panel('options').href;
 	if (href) {/*说明tab是以href方式引入的目标页面*/
 		var index = layout_center_tabs.tabs('getTabIndex', tab);
@@ -110,11 +114,41 @@ function refresh(selectedTab){
 function cancel(){
 	var index = layout_center_tabs.tabs('getTabIndex', layout_center_tabs.tabs('getSelected'));
 	var tab = layout_center_tabs.tabs('getTab', index);
+    if(tab == undefined){//未添加任何tab
+        return;
+    }
 	if (tab.panel('options').closable) {
 		layout_center_tabs.tabs('close', index);
 	} else {
 		eu.showAlertMsg('[' + tab.panel('options').title + ']不可以被关闭.', 'error');
 	}
+}
+/**
+ *  全屏切换
+ * @param flag
+ */
+function screenToggle(flag){
+    var tools ;
+    $(".easyui-tooltip").tooltip("hide","click");//  点击图标 隐藏tooltip提示
+    //选中的tab页 防止 全屏导致的自动选择第一个tab
+    var selectedTab = layout_center_tabs.tabs("getSelected");
+    var selectedTab_Title = undefined;
+    if(selectedTab){
+        selectedTab_Title = selectedTab.panel("options").title;
+    }
+
+    if(flag){  //全屏
+        tools = "#layout_center_tabs_unfull-tools";
+        parent.indexLayout.layout("fullCenter");
+
+    }else{ //退出全屏
+        tools = "#layout_center_tabs_full-tools";
+        parent.indexLayout.layout("unFullCenter");
+    }
+    layout_center_tabs.tabs({tools:tools});
+    if(selectedTab_Title){
+        layout_center_tabs.tabs("select",selectedTab_Title);
+    }
 }
 </script>
 <div id="layout_center_tabs" style="overflow: hidden;">
@@ -126,4 +160,22 @@ function cancel(){
 	<div type="close" data-options="iconCls:'icon-cancel'">关闭</div>
 	<div type="closeOther">关闭其他</div>
 	<div type="closeAll">关闭所有</div>
+</div>
+<%--全屏工具栏--%>
+<div id="layout_center_tabs_full-tools" style="display: none">
+    <a href="#" class="easyui-linkbutton easyui-tooltip" title="全屏" data-options="iconCls:'icon-full_screen',plain:true"
+       onclick="javascript:screenToggle(true);"></a>
+    <a href="#" class="easyui-linkbutton easyui-tooltip" title="刷新" data-options="iconCls:'icon-reload',plain:true"
+       onclick="javascript:refresh();"></a>
+    <a href="#" class="easyui-linkbutton easyui-tooltip" title="关闭" data-options="iconCls:'icon-cancel',plain:true"
+       onclick="javascript:cancel();"></a>
+</div>
+<%--退出全屏工具栏--%>
+<div id="layout_center_tabs_unfull-tools" style="display: none;">
+    <a href="#" class="easyui-linkbutton easyui-tooltip" title="退出全屏" data-options="iconCls:'icon-exit_full_screen',plain:true"
+       onclick="javascript:screenToggle(false);"></a>
+    <a href="#" class="easyui-linkbutton easyui-tooltip" title="刷新" data-options="iconCls:'icon-reload',plain:true"
+       onclick="javascript:refresh();"></a>
+    <a href="#" class="easyui-linkbutton easyui-tooltip" title="关闭" data-options="iconCls:'icon-cancel',plain:true"
+       onclick="javascript:cancel();"></a>
 </div>
