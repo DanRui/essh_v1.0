@@ -816,7 +816,7 @@ var gridTooltipOptions = {
                         options.factContent = $(this).find('>div').clone().css({'margin-left':'-5000px', 'width':'auto', 'display':'inline', 'position':'absolute'}).appendTo('body');   
                         var factContentWidth = options.factContent.width();   
                         params.content = $(this).find('>div').clone().css({'width':'auto'}).html();   
-                        if (params.onlyShowInterrupt && params.fields === undefined) {   
+                        if (params.onlyShowNowrap && params.fields === undefined) {
                             if (factContentWidth > $(this).width()) {   
                                 showTip(params, this, e, grid);   
                             }   
