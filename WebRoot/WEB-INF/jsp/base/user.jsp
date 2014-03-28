@@ -108,7 +108,9 @@
                         return value;
                     }
                 },
-                {field:'name',title:'姓名',width:100,sortable:true}
+                {field:'name',title:'姓名',width:100,sortable:true},
+                {field:'tel',title:'电话',width:120},
+                {field:'mobilephone',title:'手机号',width:120},
             ]],
             columns:[[
                 {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80} ,
@@ -125,8 +127,7 @@
                 {field:'sexDesc',title:'性别',width:60,align:'center'},
                 {field:'email',title:'邮箱',width:120},
                 {field:'address',title:'地址',width:200},
-                {field:'tel',title:'电话',width:120},
-                {field:'statusDesc',title:'状态',align:'center',width:60}
+                {field:'statusView',title:'状态',align:'center',width:60}
             ]],
             toolbar:[{
                 text:'新增',

@@ -7,7 +7,7 @@
     //性别
     function loadSex(){
         $('#sex').combobox({
-            url: '${ctx}/js/json/sex.json',
+            url: '${ctx}/base/user!sexTypeCombobox.action?selectType=select',
             width: 120,
             editable:false,
             value:'2',
@@ -59,6 +59,10 @@
         <div>
             <label>电话:</label>
             <input name="tel" type="text" class="easyui-validatebox" validType="phone">
+        </div>
+        <div>
+            <label>手机号:</label>
+            <input name="mobilephone" type="text" class="easyui-validatebox" validType="mobile">
         </div>
         <div>
             <label>状态:</label>

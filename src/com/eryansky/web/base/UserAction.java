@@ -16,9 +16,11 @@ import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.common.utils.mapper.JsonMapper;
 import com.eryansky.entity.base.Organ;
 import com.eryansky.entity.base.Resource;
+import com.eryansky.entity.base.state.SexType;
 import com.eryansky.service.base.OrganManager;
 import com.eryansky.service.base.ResourceManager;
 import com.eryansky.utils.AppConstants;
+import com.eryansky.utils.SelectType;
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
@@ -373,6 +375,34 @@ public class UserAction extends StrutsAction<User> {
             throw e;
         }
 
+    }
+
+    /**
+     * 性别下拉框
+     * @throws Exception
+     */
+    public void sexTypeCombobox() throws Exception{
+        try {
+            List<Combobox> cList = Lists.newArrayList();
+
+            //为combobox添加  "---全部---"、"---请选择---"
+            if(!StringUtils.isBlank(selectType)){
+                SelectType s = SelectType.getSelectTypeValue(selectType);
+                if(s!=null){
+                    Combobox selectCombobox = new Combobox("", s.getDescription());
+                    cList.add(selectCombobox);
+                }
+            }
+            SexType[] _enums = SexType.values();
+            for(int i=0;i<_enums.length;i++){
+                Combobox combobox = new Combobox(_enums[i].getValue().toString(), _enums[i].getDescription());
+                cList.add(combobox);
+            }
+            Struts2Utils.renderJson(cList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 

@@ -123,6 +123,29 @@ $.extend($.fn.validatebox.defaults.rules, {
             return idCard(value);
         },
         message:'请输入正确的身份证号码.'
+    },
+    comboboxRequired: {
+        validator: function (value, param) {
+            var currVar = $(param[0]).combobox('getValue');
+            if( "" == currVar){
+                return false;
+            }
+            var data = $(param[0]).combobox('getData');
+            if(data == null || data.length == 0){
+                return false;
+            }
+            var i =0;
+            while(i<data.length){
+                if(currVar == data[i].value)
+                    return true;
+                i++;
+            }
+            if(i == data.length){
+                return false;
+            }
+            return true;
+        },
+        message:"请选择..."
     }
 });
 
