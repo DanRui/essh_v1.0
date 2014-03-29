@@ -14,7 +14,7 @@
 	$(function() {
 		panels = [ {
 			id : 'p1',
-			title : 'bug(或新闻)',
+			title : '内部新闻',
 			height : 360,
 			collapsible : true,
 			href:'${ctx}/fileRedirect.action?toPage=portal-bug.jsp'
