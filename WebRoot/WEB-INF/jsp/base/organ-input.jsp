@@ -1,6 +1,7 @@
 <%@ page language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <%@ include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
+    var organType_combobox;
     $(function() {
         loadParent();
         loadType();
@@ -24,12 +25,12 @@
                 param.id = "${id}";
             },
             onSelect:function(node){
-                //上级机构类型 部门：0 机构：1  限制:如果上级是部门则下级只能是部门
+                console.log(node);
+                //上级机构类型 机构：0 部门：1  小组：2
                 var parentType = node.attributes.type;
-                if(parentType != undefined && parentType ==0){
-                    $('#type').combobox('setValue',0).combobox('readonly',true);
-                }else{
-                    $('#type').combobox('readonly',false);
+                if(parentType != undefined){
+                    organType_combobox.combobox("clear");
+                    organType_combobox.combobox('reload',organTypeUrl+"&parentOrganType="+node.attributes.type);
                 }
             }
 
@@ -37,13 +38,14 @@
     }
 
     //加载机构类型
+    var organTypeUrl = '${ctx}/base/organ!organTypeCombobox.action?selectType=select';
     function loadType(){
-        $('#type').v({
-            url:'${ctx}/base/organ!organTypeCombobox.action',
+        organType_combobox = $('#type').combobox({
+            url:organTypeUrl,
             multiple:false,//是否可多选
             editable:false,//是否可编辑
             width:120,
-            value:'0'//默认值 ‘0’即菜单
+            validType:['comboboxRequired[\'#type\']']
         });
     }
 </script>
@@ -62,7 +64,7 @@
                    data-options="required:true,missingMessage:'请选择机构类型.'" />
             <%--提示小图标--%>
             <span class="tree-icon tree-file icon-tip easyui-tooltip"
-                  title="上级机构的机构类型为[部门]，则机构类型默认为[部门]，并且不可更改." ></span>
+                  title="顶级机构只能为[机构(法人单位)]；上级机构的机构类型为[部门]，则机构类型只可以为[部门]或者[小组]；上级机构的机构类型为[小组]，则机构类型只可以为[小组]." ></span>
         </div>
         <div>
             <label>机构名称:</label>

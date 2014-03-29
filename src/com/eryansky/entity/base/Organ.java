@@ -138,10 +138,10 @@ public class Organ extends BaseEntity implements Serializable {
     }
 
     /**
-     * 资源类型描述
+     * 资源类型 显示
      */
     @Transient
-    public String getTypeDesc() {
+    public String getTypeView() {
         OrganType r = OrganType.getOrganType(type);
         String str = "";
         if(r != null){

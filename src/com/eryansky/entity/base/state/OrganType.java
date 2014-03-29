@@ -7,10 +7,12 @@ package com.eryansky.entity.base.state;
  * @version 1.0
  */
 public enum OrganType {
-    /** 机构(1) */
-    organ(1, "机构(法人单位)"),
-    /** 部门(0) */
-    department(0, "部门");
+    /** 机构(0) */
+    organ(0, "机构(法人单位)"),
+    /** 部门(1) */
+    department(1, "部门"),
+    /** 小组(2) */
+    group(2, "小组");
 
 	/**
 	 * 值 Integer型

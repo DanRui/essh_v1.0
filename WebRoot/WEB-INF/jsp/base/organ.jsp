@@ -37,7 +37,7 @@ $(function() {
             {field:'address',title:'地址',width:120},
             {field:'phone',title:'电话号码',width:120},
             {field:'fax',title:'传真号',width:120},
-            {field:'typeDesc',title:'机构类型',align:'center',width:100},
+            {field:'typeView',title:'机构类型',align:'center',width:100},
             {field:'orderNo',title:'排序',align:'right',width:60,sortable:true},
             {field:'userLoginNames',title:'机构用户',width:420},
             {field:'statusDesc',title:'状态',align:'center',width:60}

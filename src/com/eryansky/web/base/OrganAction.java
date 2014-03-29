@@ -278,6 +278,7 @@ public class OrganAction extends StrutsAction<Organ> {
     public void organTypeCombobox() throws Exception {
         List<Combobox> cList = Lists.newArrayList();
         try {
+            String parentOrganType = Struts2Utils.getParameter("parentOrganType"); //上级节点类型
 
             //为combobox添加  "---全部---"、"---请选择---"
             if(!StringUtils.isBlank(selectType)){
@@ -288,12 +289,35 @@ public class OrganAction extends StrutsAction<Organ> {
                 }
             }
 
-            OrganType[] rss = OrganType.values();
-            for(int i=0;i<rss.length;i++){
-                Combobox combobox = new Combobox();
-                combobox.setValue(rss[i].getValue().toString());
-                combobox.setText(rss[i].getDescription());
-                cList.add(combobox);
+            Integer pOrganType = null;
+            if(StringUtils.isNotBlank(parentOrganType)){
+                pOrganType = Integer.valueOf(parentOrganType);
+            }
+            OrganType _enumParentType = null;
+            if(pOrganType !=null){
+                _enumParentType = OrganType.getOrganType(pOrganType);
+            }
+            if(_enumParentType != null){
+                if(_enumParentType.equals(OrganType.organ)){
+                    OrganType[] rss = OrganType.values();
+                    for(int i=0;i<rss.length;i++){
+                        Combobox combobox = new Combobox();
+                        combobox.setValue(rss[i].getValue().toString());
+                        combobox.setText(rss[i].getDescription());
+                        cList.add(combobox);
+                    }
+                } else if(_enumParentType.equals(OrganType.department)){
+                    Combobox departmentCombobox = new Combobox(OrganType.department.getValue().toString(),OrganType.department.getDescription().toString());
+                    Combobox groupCombobox = new Combobox(OrganType.group.getValue().toString(),OrganType.group.getDescription().toString());
+                    cList.add(departmentCombobox);
+                    cList.add(groupCombobox);
+                }else if(_enumParentType.equals(OrganType.group)){
+                    Combobox groupCombobox = new Combobox(OrganType.group.getValue().toString(),OrganType.group.getDescription().toString());
+                    cList.add(groupCombobox);
+                }
+            }else{
+                Combobox groupCombobox = new Combobox(OrganType.organ.getValue().toString(),OrganType.organ.getDescription().toString());
+                cList.add(groupCombobox);
             }
             Struts2Utils.renderJson(cList);
         } catch (Exception e) {
