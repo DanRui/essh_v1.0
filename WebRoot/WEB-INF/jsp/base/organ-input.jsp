@@ -25,7 +25,6 @@
                 param.id = "${id}";
             },
             onSelect:function(node){
-                console.log(node);
                 //上级机构类型 机构：0 部门：1  小组：2
                 var parentType = node.attributes.type;
                 if(parentType != undefined){
