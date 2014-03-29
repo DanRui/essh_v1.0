@@ -18,7 +18,8 @@ $(function() {
 		frozenColumns:[[ 
               {field:'title',title:'bug标题',width:600,formatter:function(value,rowData,rowIndex){
             	     var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
-            	     var title = $.formatString("<a href='javascript:eu.addTab(window.parent.layout_center_tabs, \"{0}\",\"{1}\", true)' >{2}</a>",value,url, value);
+            	     var title = $.formatString("<a style='color:{0}' href='javascript:eu.addTab(window.parent.layout_center_tabs, \"{1}\",\"{2}\", true)' >{3}</a>",
+                             rowData.color,value,url, value);
             	     return title;
                   }
               }

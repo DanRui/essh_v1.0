@@ -9,8 +9,6 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.eryansky.common.excel.annotation.Excel;
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.eryansky.common.utils.io.ClobUtil;
@@ -18,18 +16,27 @@ import com.eryansky.common.utils.jackson.ClobSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+/**
+ * BUG内容 PO
+ */
 @Entity
 @Table(name = "T_SYS_BUG")
 // jackson标记不生成json对象的属性
-@JsonIgnoreProperties(value = { "hibernateLazyInitializer" , "handler","fieldHandler","tcontent"})
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer" , "handler","fieldHandler",
+        "contentView"})
 @SuppressWarnings("serial")
 public class Bug extends BaseEntity implements Serializable{
 
 	/**
 	 * bug标题.
 	 */
-	@Excel(exportName="bug标题", exportFieldWidth = 50)
+	@Excel(exportName="标题", exportFieldWidth = 50)
 	private String title;
+    /**
+     * 颜色
+     */
+    @Excel(exportName="颜色", exportFieldWidth = 20)
+    private String color;
 	/**
 	 * bug类型 使用数据字典
 	 */
@@ -37,7 +44,7 @@ public class Bug extends BaseEntity implements Serializable{
     /**
      * bug类型名称 @Transient
      */
-	@Excel(exportName="bug类型", exportFieldWidth = 20)
+	@Excel(exportName="类型", exportFieldWidth = 20)
     private String typeName;
     
 	/**
@@ -47,7 +54,7 @@ public class Bug extends BaseEntity implements Serializable{
 	/**
 	 * bug描述. @Transient
 	 */
-	@Excel(exportName="bug描述", exportFieldWidth = 100)
+	@Excel(exportName="内容", exportFieldWidth = 100)
 	private String contentView;
 
 	public Bug() {
@@ -63,7 +70,16 @@ public class Bug extends BaseEntity implements Serializable{
 		this.title = title;
 	}
 
-	@Column(name = "TYPE",length = 36)
+    @Column(name = "COLOR",length = 12)
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    @Column(name = "TYPE",length = 36)
 	public String getType() {
 		return type;
 	}
@@ -95,7 +111,7 @@ public class Bug extends BaseEntity implements Serializable{
 	public void setContent(Clob content) {
 		this.content = content;
 	}
-	
+
 	/**
 	 * 用于view显示
 	 * @return

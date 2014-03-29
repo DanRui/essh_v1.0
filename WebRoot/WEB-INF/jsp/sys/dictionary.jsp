@@ -43,8 +43,6 @@ $(function() {
                         required : true,
                         missingMessage:'请选择字典类型(如果不存在,可以选择[字典类型管理]按钮,添加字典类型)！',
                         editable:false,//是否可编辑
-                        valueField:'value',
-                        displayField:'text',
                         groupField:'group',
                         onSelect:function(record){
                             dictionaryTypeCode = record.value;
@@ -249,8 +247,6 @@ $(function() {
 	    multiple:false,//是否可多选
 	    editable:false,//是否可编辑
 	    width:120,
-        valueField:'value',
-        displayField:'text',
         groupField:'group'
     });
 });

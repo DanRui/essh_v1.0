@@ -10,8 +10,6 @@
 	        multiple: true,
 	        width: 200,
 	        editable:false,
-	        valueField: 'value',
-	        displayField: 'text',
 	        url: '${ctx}/base/role!combobox.action'
 	    });
 	}	

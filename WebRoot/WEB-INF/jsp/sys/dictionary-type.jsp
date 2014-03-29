@@ -230,9 +230,7 @@ $(function() {
             url:'${ctx}/sys/dictionary-type!group_combobox.action?selectType=all',
             multiple:false,//是否可多选
             editable:false,//是否可编辑
-            width:120,
-            valueField:'value',
-            displayField:'text'
+            width:120
         });
     }
 </script>

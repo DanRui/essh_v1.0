@@ -104,7 +104,7 @@ public class BugAction extends StrutsAction<Bug> {
 					if(dictionary!=null){
 						bug.setTypeName(dictionary.getName());
 					}else{
-						logger.warn("[{}]未设置bug类型.",bug.getTitle());
+						logger.warn("[{}]未设置类型.",bug.getTitle());
 					}
 				}
 			}
@@ -173,7 +173,7 @@ public class BugAction extends StrutsAction<Bug> {
 	@SuppressWarnings("unchecked")
 	public void exportExcel() throws Exception {
 		// 生成提示信息，
-		final String fileName = "bug信息.xls";
+		final String fileName = "内容信息.xls";
 		OutputStream outStream = null;
 		try {
 			//设置文件类型

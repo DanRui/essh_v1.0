@@ -10,9 +10,7 @@
             url: '${ctx}/base/user!sexTypeCombobox.action?selectType=select',
             width: 120,
             editable:false,
-            value:'2',
-            valueField: 'value',
-            displayField: 'text'
+            value:'2'
         });
     }
 </script>

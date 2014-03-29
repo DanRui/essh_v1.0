@@ -32,17 +32,22 @@ $(function() {
 		idField : 'id',
         frozenColumns:[[
             {field:'ck',checkbox:true},
-            {field:'title',title:'bug标题',width:360 }
+            {field:'title',title:'标题',width:360,formatter:function(value,rowData,rowIndex){
+                var html = $.formatString("<span style='color:{0}'>{1}</span>",rowData.color,value);
+                return html;
+            }}
         ]],
         columns:[[
               {field:'id',title:'主键',hidden:true,sortable:true,align:'right',width:80},
-              {field:'typeName',title:'bug类型',width:120 },
-              {field:'operater',title:'操作',align:'center',width:200,formatter:function(value,rowData,rowIndex){
+              {field:'typeName',title:'类型',width:120 },
+              {field:'operater',title:'操作',align:'center',width:260,formatter:function(value,rowData,rowIndex){
             	  var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
          	      var operaterHtml = "<a class='easyui-linkbutton' iconCls='icon-add'  " +
                           "onclick='view(\""+rowData.title+"\",\""+url+"\")' >查看</a>"
                   +"<a class='easyui-linkbutton' iconCls='icon-edit'  href='#' " +
-                          "onclick='edit("+rowIndex+");' >编辑</a>";
+                          "onclick='edit("+rowIndex+");' >编辑</a>"
+                  +"<a class='easyui-linkbutton' iconCls='icon-remove'  href='#' " +
+                  "onclick='del("+rowIndex+");' >删除</a>";
          	      return operaterHtml;
               }}
 		    ]],
@@ -117,7 +122,7 @@ $(function() {
 		    //editable:false,//是否可编辑
 		    width:120,
 		    valueField:'value',
-	        displayField:'text'
+            textField:'text'
 		});
 	}
     function formInit(){
@@ -165,7 +170,7 @@ $(function() {
 
 		//弹出对话窗口
 		bug_dialog = $('<div/>').dialog({
-			title:'bug详细信息',
+			title:'详细信息',
 			width : document.body.clientWidth,
 			height : document.body.clientHeight,
 			modal : true,
@@ -227,11 +232,22 @@ $(function() {
 	}
 	
 	//删除
-	function del(){
-		var rows = bug_datagrid.datagrid('getSelections');
-		
+	function del(rowIndex){
+        var rows = new Array();
+        var tipMsg =  "您确定要删除选中的所有行？";
+        if(rowIndex != undefined) {
+            bug_datagrid.datagrid('unselectAll');
+            bug_datagrid.datagrid('selectRow',rowIndex);
+            var rowData = bug_datagrid.datagrid('getSelected');
+            rows[0] = rowData;
+            bug_datagrid.datagrid('unselectRow',rowIndex);
+            tipMsg =  "您确定要删除？";
+        }else{
+		    rows = bug_datagrid.datagrid('getSelections');
+        }
+
 		if(rows.length >0){
-			$.messager.confirm('确认提示！','您确定要删除选中的所有行？',function(r){
+			$.messager.confirm('确认提示！',tipMsg,function(r){
 				if (r){
 					var ids = new Object();
 					for(var i=0;i<rows.length;i++){
@@ -326,8 +342,8 @@ $(function() {
     <div data-options="region:'north',title:'过滤条件',collapsed:true,split:false,border:false"
          style="padding: 0px; height: 56px;width:100%; overflow-y: hidden;">
         <form id="bug_search_form" style="padding: 0px;">
-            bug类型:<input type="text" id="filter_EQS_type" name="filter_EQS_type" />
-            bug标题:<input type="text" name="filter_LIKES_title" maxLength="25" style="width: 160px" />
+            类型:<input type="text" id="filter_EQS_type" name="filter_EQS_type" />
+            标题:<input type="text" name="filter_LIKES_title" maxLength="25" style="width: 160px" />
         </form>
     </div>
     <%-- 中间部分 列表 --%>

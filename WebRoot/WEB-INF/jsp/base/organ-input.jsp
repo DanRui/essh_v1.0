@@ -13,7 +13,6 @@
             editable:false,//是否可编辑
             width:120,
             valueField:'id',
-            displayField:'text',
             onHidePanel:function(){
                 //防止自关联
                 if($('#id').val() && $(this).combotree('getValue') == $('#id').val()){
@@ -39,14 +38,12 @@
 
     //加载机构类型
     function loadType(){
-        $('#type').combobox({
+        $('#type').v({
             url:'${ctx}/base/organ!organTypeCombobox.action',
             multiple:false,//是否可多选
             editable:false,//是否可编辑
             width:120,
-            value:'0',//默认值 ‘0’即菜单
-            valueField:'value',
-            displayField:'text'
+            value:'0'//默认值 ‘0’即菜单
         });
     }
 </script>

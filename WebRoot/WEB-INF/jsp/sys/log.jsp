@@ -106,9 +106,7 @@
         $('#filter_EQI_type').combobox({
             url:'${ctx}/sys/log!logTypeCombobox.action?selectType=all',
             editable:false,//是否可编辑
-            width:120,
-            valueField:'value',
-            displayField:'text'
+            width:120
         });
     });
 

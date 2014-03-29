@@ -12,7 +12,7 @@
             editable:false,//是否可编辑
             width:120,
             valueField:'value',
-            displayField:'text',
+            textField:'text',
             onHidePanel:function(){
                 //防止自关联
                 if($('#id').val() != undefined && $(this).combobox('getValue') == $('#code').val()){

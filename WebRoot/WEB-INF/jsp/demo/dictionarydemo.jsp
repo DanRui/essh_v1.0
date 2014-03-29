@@ -11,9 +11,7 @@ $(function() {
         url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug&selectType=all',
         multiple:false,//是否可多选
         //editable:false,//是否可编辑
-        width:120,
-        valueField:'value',
-        displayField:'text'
+        width:120
     });
     $('#combotree').combotree({
         url:'${ctx}/sys/dictionary!combotree.action?dictionaryTypeCode=bug',
@@ -21,8 +19,7 @@ $(function() {
         //editable:false,//是否可编辑
         //cascadeCheck:false,
         width:120,
-        valueField:'id',
-        displayField:'text'
+        valueField:'id'
     });
     $('#combotree').combotree('setValues',['bug001']);
 
@@ -31,6 +28,8 @@ $(function() {
 </head>
 <body>
     bug类型combobox： <input id="combobox" name="combobox" /> <br>
-    bug类型combotree： <input id="combotree" name="combotree" />
+    bug类型combotree： <input id="combotree" name="combotree" /> <br>
+
+ 标签方式：<e:dictionary  code="bug" type="combotree" selectType="select"></e:dictionary>
 </body>
 </html>

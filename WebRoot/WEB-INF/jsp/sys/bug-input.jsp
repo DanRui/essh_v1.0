@@ -3,7 +3,7 @@
 <script type="text/javascript">
 var content_kindeditor;
 $(function() {
-	loadBugType();
+    loadColor();
 	window.setTimeout(function() {
 		content_kindeditor = KindEditor.create('#content_kindeditor', {
 			width : '96%',
@@ -21,35 +21,46 @@ $(function() {
 	}, 1);
 
 });
-
-//加载bug类型
-function loadBugType(){
-	$('#type').combobox({
-        url:'${ctx}/sys/dictionary!combobox.action?dictionaryTypeCode=bug&selectType=select',
-	    multiple:false,//是否可多选
-	    editable:false,//是否可编辑
-	    width:120,
-        valueField:'value',
-        displayField:'text'
-	});
+//加载颜色
+function loadColor(){
+    $('#color').combobox({
+        url:'${ctx}/js/json/color.json',
+        multiple:false,//是否可多选
+        editable:false,//是否可编辑
+        width:60,
+        value:'black',//默认值 黑色：black
+        formatter: function(row){
+            var opts = $(this).combobox('options');
+            var html = '<span style="color:' + row[opts.valueField]+
+                    '">' + row[opts.textField] + '</span>';
+            return html;
+        },
+        onSelect:function(record){
+             $("#title").css({'color':record.value});
+        } ,
+        onLoadSuccess:function(){
+            $("#title").css({'color':$(this).combobox('getValue')});
+        }
+    });
 }
 </script>
 <div>
-	<form id="bug_form" method="post" novalidate>
+    <form id="bug_form" method="post" novalidate>
 	    <input type="hidden"  name="id"/>
 	    <!-- 用户版本控制字段 version -->
         <input type="hidden" id="version" name="version"/>
         <div>
-			<label>bug类型:</label>
-		    <input id="type" name="type" type="text" class="easyui-combobox"  data-options="required:true">
+			<label>类型:</label>
+            <e:dictionary id="type" code="bug" type="combobox" name="type" selectType="select" validType="'comboboxRequired[\\'#type\\']'"></e:dictionary>
 		</div>
 		<div>
-			<label>bug标题:</label>
-		    <input name="title" type="text" class="easyui-validatebox"
-				maxLength="100" data-options="required:true,missingMessage:'请输入bug标题.',validType:['minLength[1]','legalInput']">
+			<label>标题:</label>
+		    <input id="title" name="title" type="text" class="easyui-validatebox"
+				maxLength="100" data-options="required:true,missingMessage:'请输入标题.',validType:['minLength[1]','legalInput']">
+            <input id="color" name="color" type="text" class="easyui-combobox" >
 		</div>
 		<div>
-			<label >bug描述:</label>
+			<label >内容:</label>
 			<textarea id="content_kindeditor" name="content" ></textarea>
 		</div>
 	</form>

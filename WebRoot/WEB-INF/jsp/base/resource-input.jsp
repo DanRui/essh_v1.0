@@ -15,7 +15,6 @@
 		    editable:false,//是否可编辑
 		    width:120,
 	        valueField:'id',
-	        displayField:'text',
 	        onHidePanel:function(){
 	        	//防止自关联
 	        	if($('#id').val() && $(this).combotree('getValue') == $('#id').val()){
@@ -45,8 +44,6 @@
 		    multiple:false,//是否可多选
 		    editable:false,//是否可编辑
 		    width:120,
-	        valueField:'value',
-	        displayField:'text',
 	        formatter:function(row){    
 	        	return $.formatString('<span class="tree-icon tree-file {0}"></span>{1}', row.value, row.text);
 	        }
@@ -59,9 +56,7 @@
             multiple:false,//是否可多选
             editable:false,//是否可编辑
             width:120,
-            value:'0',//默认值 ‘0’即菜单
-            valueField:'value',
-            displayField:'text'
+            value:'0'//默认值 ‘0’即菜单
         });
     }
 
