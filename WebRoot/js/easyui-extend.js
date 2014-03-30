@@ -78,7 +78,6 @@ eu.addTab = function(tabs,title,url,closeAble,iconCls,tools){
 		    iframe:{src:url}      
 		});    
 	}else {
-        tabs.tabs('setTabTitle',{tab:tabs.tabs("getTab",title),title:"<span style='color:red'>"+title+"</span>"});
 		tabs.tabs('select', title);
     }
 }
