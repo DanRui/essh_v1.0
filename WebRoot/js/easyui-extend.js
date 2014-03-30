@@ -78,6 +78,7 @@ eu.addTab = function(tabs,title,url,closeAble,iconCls,tools){
 		    iframe:{src:url}      
 		});    
 	}else {
+        tabs.tabs('setTabTitle',{tab:tabs.tabs("getTab",title),title:"<span style='color:red'>"+title+"</span>"});
 		tabs.tabs('select', title);
     }
 }
@@ -607,6 +608,11 @@ $.extend($.fn.datagrid.methods, {
         }
         return jq;
     },
+    /**
+     * 设置列是否可以移动
+     * @param jq
+     * @returns {*}
+     */
     columnMoving: function(jq){
         return jq.each(function(){
             var target = this;
@@ -690,6 +696,38 @@ $.extend($.fn.datagrid.methods, {
                     }
                     columns[0] = newcc;
                 }
+            }
+        });
+    },
+    /**
+     *
+     * 使用：在onLoadSuccess中 调用$("#dg").datagrid("fixRownumber");
+     * @param jq
+     * @returns {*}
+     */
+    fixRownumber : function (jq) {
+        return jq.each(function () {
+            var panel = $(this).datagrid("getPanel");
+            //获取最后一行的number容器,并拷贝一份
+            var clone = $(".datagrid-cell-rownumber", panel).last().clone();
+            //由于在某些浏览器里面,是不支持获取隐藏元素的宽度,所以取巧一下
+            clone.css({
+                "position" : "absolute",
+                left : -1000
+            }).appendTo("body");
+            var width = clone.width("auto").width();
+            //默认宽度是25,所以只有大于25的时候才进行fix
+            if (width > 25) {
+                //多加5个像素,保持一点边距
+                $(".datagrid-header-rownumber,.datagrid-cell-rownumber", panel).width(width + 5);
+                //修改了宽度之后,需要对容器进行重新计算,所以调用resize
+                $(this).datagrid("resize");
+                //一些清理工作
+                clone.remove();
+                clone = null;
+            } else {
+                //还原成默认状态
+                $(".datagrid-header-rownumber,.datagrid-cell-rownumber", panel).removeAttr("style");
             }
         });
     }
@@ -1294,7 +1332,92 @@ $.extend($.fn.datagrid.defaults.editors, {
 	}
 });
 
-
+/**
+ * 重写datagrid默认view的render
+ */
+$.extend($.fn.datagrid.defaults.view, {
+    render : function (target, container, frozen) {
+        var state = $.data(target, "datagrid");
+        var opts = state.options;
+        var rows = state.data.rows;
+        var fields = $(target).datagrid("getColumnFields", frozen);
+        if (frozen) {
+            if (!(opts.rownumbers || (opts.frozenColumns && opts.frozenColumns.length))) {
+                return;
+            }
+        }
+        var table = ["<table class=\"datagrid-btable\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody>"];
+        for (var i = 0; i < rows.length; i++) {
+            var cls = (i % 2 && opts.striped) ? "class=\"datagrid-row datagrid-row-alt\"" : "class=\"datagrid-row\"";
+            var styleValue = opts.rowStyler ? opts.rowStyler.call(target, i, rows[i]) : "";
+            var style = styleValue ? "style=\"" + styleValue + "\"" : "";
+            var rowId = state.rowIdPrefix + "-" + (frozen ? 1 : 2) + "-" + i;
+            table.push("<tr id=\"" + rowId + "\" datagrid-row-index=\"" + i + "\" " + cls + " " + style + ">");
+            table.push(this.renderRow.call(this, target, fields, frozen, i, rows[i]));
+            table.push("</tr>");
+        }
+        table.push("</tbody></table>");
+        $(container).html(table.join(""));
+        //增加此句以实现,formatter里面可以返回easyui的组件，以便实例化。例如：formatter:function(){ return "<a href='javascript:void(0)' class='easyui-linkbutton'>按钮</a>" }}
+        $.parser.parse(container);
+    },
+    renderRow : function (target, fields, frozen, rowIndex, rowData) {
+        var opts = $.data(target, "datagrid").options;
+        var cc = [];
+        if (frozen && opts.rownumbers) {
+            var rownumber = rowIndex + 1;
+            if (opts.pagination) {
+                rownumber += (opts.pageNumber - 1) * opts.pageSize;
+            }
+            cc.push("<td class=\"datagrid-td-rownumber\"><div class=\"datagrid-cell-rownumber\">" + rownumber + "</div></td>");
+        }
+        for (var i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            var col = $(target).datagrid("getColumnOption", field);
+            if (col) {
+                //修改默认的value取值，改了此句之后field就可以用关联对象了。如：people.name
+                var value = jQuery.proxy(function(){try{return eval('this.'+field);}catch(e){return "";}},rowData)();
+                var styleValue = col.styler ? (col.styler(value, rowData, rowIndex) || "") : "";
+                var style = col.hidden ? "style=\"display:none;" + styleValue + "\"" : (styleValue ? "style=\"" + styleValue + "\"" : "");
+                cc.push("<td field=\"" + field + "\" " + style + ">");
+                if (col.checkbox) {
+                    var style = "";
+                } else {
+                    var style = styleValue;
+                    if (col.align) {
+                        style += ";text-align:" + col.align + ";";
+                    }
+                    if (!opts.nowrap) {
+                        style += ";white-space:normal;height:auto;";
+                    } else {
+                        if (opts.autoRowHeight) {
+                            style += ";height:auto;";
+                        }
+                    }
+                }
+                cc.push("<div style=\"" + style + "\" ");
+                if (col.checkbox) {
+                    cc.push("class=\"datagrid-cell-check ");
+                } else {
+                    cc.push("class=\"datagrid-cell " + col.cellClass);
+                }
+                cc.push("\">");
+                if (col.checkbox) {
+                    cc.push("<input type=\"checkbox\" name=\"" + field + "\" value=\"" + (value != undefined ? value : "") + "\"/>");
+                } else {
+                    if (col.formatter) {
+                        cc.push(col.formatter(value, rowData, rowIndex));
+                    } else {
+                        cc.push(value);
+                    }
+                }
+                cc.push("</div>");
+                cc.push("</td>");
+            }
+        }
+        return cc.join("");
+    }
+});
 
 /**
  * @requires jQuery,EasyUI
@@ -1600,6 +1723,11 @@ $.extend($.fn.layout.methods, {
             }
         });
     },
+    /**
+     * 设置center全屏
+     * @param jq
+     * @returns {*}
+     */
     fullCenter : function (jq) {
         return jq.each(function () {
             var layout = $(this);
@@ -1612,6 +1740,11 @@ $.extend($.fn.layout.methods, {
             });
         });
     },
+    /**
+     * 取消center全屏
+     * @param jq
+     * @returns {*}
+     */
     unFullCenter : function (jq) {
         return jq.each(function () {
             var center = $(this).layout('panel', 'center');
@@ -1621,6 +1754,7 @@ $.extend($.fn.layout.methods, {
         });
     }
 });
+
 
 /**
  * @requires jQuery
