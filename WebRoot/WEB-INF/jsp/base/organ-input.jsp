@@ -2,6 +2,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
     var organType_combobox;
+    var organTypeUrl = '${ctx}/base/organ!organTypeCombobox.action?selectType=select';
     $(function() {
         loadParent();
         loadType();
@@ -36,7 +37,6 @@
     }
 
     //加载机构类型
-    var organTypeUrl = '${ctx}/base/organ!organTypeCombobox.action?selectType=select';
     function loadType(){
         organType_combobox = $('#type').combobox({
             url:organTypeUrl,
@@ -54,7 +54,7 @@
         <input type="hidden" id="version" name="version" />
         <div>
             <label>上级机构:</label>
-            <input id="_parentId" name="_parentId" class="easyui-combotree" />
+            <input id="_parentId" name="_parentId" />
         </div>
         <div>
             <label>机构类型:</label>
