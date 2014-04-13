@@ -44,9 +44,9 @@ $(function() {
             	  var url = $.formatString('${ctx}/sys/bug!view.action?id={0}',rowData.id);
          	      var operaterHtml = "<a class='easyui-linkbutton' iconCls='icon-add'  " +
                           "onclick='view(\""+rowData.title+"\",\""+url+"\")' >查看</a>"
-                  +"<a class='easyui-linkbutton' iconCls='icon-edit'  href='#' " +
+                  +"&nbsp;<a class='easyui-linkbutton' iconCls='icon-edit'  href='#' " +
                           "onclick='edit("+rowIndex+");' >编辑</a>"
-                  +"<a class='easyui-linkbutton' iconCls='icon-remove'  href='#' " +
+                  +"&nbsp;<a class='easyui-linkbutton' iconCls='icon-remove'  href='#' " +
                   "onclick='del("+rowIndex+");' >删除</a>";
          	      return operaterHtml;
               }}
@@ -306,8 +306,8 @@ $(function() {
 	function importExcel(){
 		bug_import_dialog = $('<div/>').dialog({//基于中心面板
 			title:'Excel导入',
+            top:20,
 			width : 500,
-			height : 360,
 			modal : true,
 			maximizable:true,
 			href : '${ctx}/sys/bug-import.action',
@@ -338,7 +338,7 @@ $(function() {
 <iframe id="bug_temp_iframe" style="display: none;"></iframe>
 
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
-    <div data-options="region:'north',title:'过滤条件',collapsed:true,split:false,border:false"
+    <div data-options="region:'north',title:'过滤条件',collapsed:false,split:false,border:false"
          style="padding: 0px; height: 56px;width:100%; overflow-y: hidden;">
         <form id="bug_search_form" style="padding: 0px;">
             类型:<input type="text" id="filter_EQS_type" name="filter_EQS_type" />

@@ -235,8 +235,8 @@ function showDialog(row){
     //弹出对话窗口
     user_dialog = $('<div/>').dialog({
         title:'用户详细信息',
+        top:20,
         width : 500,
-        height : 360,
         modal : true,
         maximizable:true,
         href : inputUrl,
@@ -357,8 +357,8 @@ function editPassword(){
 
         user_password_dialog = $('<div/>').dialog({
             title:'修改用户密码',
-            width : 460,
-            height : 200,
+            top:20,
+            width : 500,
             modal : true,
             maximizable:true,
             href : '${ctx}/base/user!password.action',
@@ -447,8 +447,8 @@ function editUserRole(){
         //弹出对话窗口
         user_role_dialog = $('<div/>').dialog({
             title:'用户角色信息',
-            width : 400,
-            height : 200,
+            top:20,
+            width : 500,
             modal : true,
             maximizable:true,
             href : inputUrl,
@@ -532,8 +532,8 @@ function editUserResource(){
         //弹出对话窗口
         user_resource_dialog = $('<div/>').dialog({
             title:'用户资源信息',
+            top:20,
             width : 500,
-            height : 200,
             modal : true,
             maximizable:true,
             href : '${ctx}/base/user!resource.action',
@@ -617,8 +617,8 @@ function editUserOrgan(){
         //弹出对话窗口
         user_organ_dialog = $('<div/>').dialog({
             title:'用户机构信息',
+            top:20,
             width : 500,
-            height : 200,
             modal : true,
             maximizable:true,
             href : inputUrl,
@@ -715,7 +715,7 @@ function search(){
                 <table id="user_datagrid" ></table>
             </div>
 
-            <div data-options="region:'north',title:'过滤条件',split:false,collapsed:true,border:false"
+            <div data-options="region:'north',title:'过滤条件',split:false,collapsed:false,border:false"
                  style="width: 100%;height:56px; ">
                 <form id="user_search_form" style="padding: 0px;">
                     登录名或姓名:<input type="text" id="loginNameOrName" name="loginNameOrName" placeholder="请输入登录名或姓名..." maxLength="25" style="width: 160px"></input>

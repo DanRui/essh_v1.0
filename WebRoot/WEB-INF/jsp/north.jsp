@@ -93,7 +93,11 @@ function logout() {
 }
     //切换到桌面版
     function toApp(){
-        window.location.href = '${ctx}/login!index.action?theme=app';
+        var themeType_index = "app";
+        $.cookie('themeType', themeType_index, {
+            expires : 7
+        });
+        window.location.href = '${ctx}/login!index.action?theme='+themeType_index;
     }
 </script>
 <div style="background-image: url('${ctx}/img/top_bg.png'); background-repeat: repeat-x;">

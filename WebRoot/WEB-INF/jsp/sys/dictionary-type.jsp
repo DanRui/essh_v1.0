@@ -133,8 +133,8 @@ $(function() {
         //弹出对话窗口
         dictionaryType_dialog = $('<div/>').dialog({
             title:'字典类型详细信息',
+            top:20,
             width : 500,
-            height : 360,
             modal : true,
             maximizable:true,
             href : inputUrl,

@@ -6,6 +6,10 @@
     $(function() {
         loadParent();
         loadType();
+        if("${model.id}"==""){  //新增
+            setSortValue();
+            $("input[name=status]:eq(0)").attr("checked",'checked');//状态 初始化值
+        }
     });
     //加载父级机构
     function loadParent(){

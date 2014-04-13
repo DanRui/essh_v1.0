@@ -7,5 +7,5 @@ package com.eryansky.common.utils.browser;
  * @version 1.0
  */
 public enum BrowserType {
-	IE10,IE9,IE8,IE7,IE6,Firefox,Safari,Chrome,Opera,Camino,Gecko
+	IE11,IE10,IE9,IE8,IE7,IE6,Firefox,Safari,Chrome,Opera,Camino,Gecko
 }

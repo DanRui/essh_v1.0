@@ -213,15 +213,6 @@ $.jsonToString = function(o) {
 
 
 /**
- * 
- * 判断浏览器是否是IE并且版本小于8
- * 
- * @returns true/false
- */
-$.isLessThanIe8 = function() {
-	return ($.browser.msie && $.browser.version < 8);
-};
-/**
  * 获得URL参数
  * 
  * @returns 对应名称的值

@@ -134,8 +134,8 @@ $(function() {
 			//弹出对话窗口
 			role_dialog = $('<div/>').dialog({
 				title:'角色详细信息',
+                top:20,
 				width : 500,
-				height : 360,
 				modal : true,
 				maximizable:true,
 				href : inputUrl,
@@ -230,8 +230,8 @@ $(function() {
                 //弹出对话窗口
                 role_resource_dialog = $('<div/>').dialog({
                     title:'角色资源信息',
+                    top:20,
                     width : 500,
-                    height : 200,
                     modal : true,
                     maximizable:true,
                     href : '${ctx}/base/role!resource.action',
@@ -307,8 +307,8 @@ $(function() {
                 //弹出对话窗口
                 role_user_dialog = $('<div/>').dialog({
                     title:'角色用户信息',
+                    top:20,
                     width : 500,
-                    height : 200,
                     modal : true,
                     maximizable:true,
                     href : userUrl,
@@ -342,7 +342,6 @@ $(function() {
 		//删除
 		function del(){
 			var rows = role_datagrid.datagrid('getSelections');
-			
 			if(rows.length >0){
 				$.messager.confirm('确认提示！','您确定要删除选中的所有行？',function(r){
 					if (r){
@@ -382,7 +381,7 @@ $(function() {
 </div>
 
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
-    <div data-options="region:'north',title:'过滤条件',collapsed:true,split:false,border:false"
+    <div data-options="region:'north',title:'过滤条件',collapsed:false,split:false,border:false"
          style="padding: 0px; height: 56px;width:100%; overflow-y: hidden;">
         <form id="role_search_form" style="padding: 2px;">
             角色名称:<input type="text" name="filter_LIKES_name" placeholder="请输入角色名称..."

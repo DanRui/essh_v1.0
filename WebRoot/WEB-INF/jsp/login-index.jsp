@@ -5,6 +5,7 @@
 <head>
 <title>后台管理主界面</title>
 <%@ include file="/common/meta.jsp"%>
+<script type="text/javascript" src="${ctx}/js/session-keep.js" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
         var indexLayout;
         $(function(){

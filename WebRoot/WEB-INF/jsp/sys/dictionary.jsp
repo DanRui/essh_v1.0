@@ -203,7 +203,6 @@ $(function() {
 					$(this).datagrid('unselectAll');
 					return;
 				}
-                console.log(rowData);
 				$.post('${ctx}/sys/dictionary!save.action',rowData,
 						function(data) {
 					$.messager.progress('close');
@@ -386,8 +385,9 @@ $(function() {
 </script>
 <div class="easyui-layout" fit="true" style="margin: 0px;border: 0px;overflow: hidden;width:100%;height:100%;">
 
-    <div data-options="region:'north',title:'过滤条件',collapsed:true,split:false,border:false"
+    <div data-options="region:'north',title:'过滤条件',collapsed:false,split:false,border:false"
          style="padding: 0px; height: 56px;width:100%; overflow-y: hidden;">
+        <span style="display: none;">&nbsp;</span><%--兼容IE8--%>
         <form id="dictionary_search_form" style="padding: 0px;">
             字典分组:<select id="filter_EQS_dictionaryType__code" name="filter_EQS_dictionaryType__code" class="easyui-combobox" ></select>
             名称或编码: <input type="text" id="filter_LIKES_name_OR_code" name="filter_LIKES_name_OR_code" placeholder="请输入名称或编码..."  maxLength="25" style="width: 160px"></input>

@@ -16,7 +16,6 @@ $(function() {
         fit:true,
         fitColumns:false,//自适应列宽
         striped:true,//显示条纹
-        singleSelect:false,//单选模式
         rownumbers:true,//显示行数
         nowrap : false,
         border : false,
@@ -75,15 +74,6 @@ $(function() {
 
 });
 
-//设置排序默认值
-function setSortValue() {
-    $.get('${ctx}/base/organ!maxSort.action', function(data) {
-        if (data.code == 1) {
-            $('#orderNo').numberspinner('setValue',data.obj+1);
-        }
-    }, 'json');
-}
-
 function formInit(){
     organ_form = $('#organ_form').form({
         url: '${ctx}/base/organ!save.action',
@@ -133,8 +123,8 @@ function showDialog(row){
     //弹出对话窗口
     organ_dialog = $('<div/>').dialog({
         title:'机构详细信息',
+        top:20,
         width : 500,
-        height : 360,
         modal : true,
         maximizable:true,
         href : inputUrl,
@@ -159,8 +149,6 @@ function showDialog(row){
             if(row){
                 organ_form.form('load', row);
             } else{
-                setSortValue();
-                $("input[name=status]:eq(0)").attr("checked",'checked');//状态 初始化值
                 var selectedNode = organ_treegrid.treegrid('getSelected');
                 if(selectedNode){
                     var initFormData = {'_parentId':[selectedNode.id],'type':selectedNode.type};
@@ -172,23 +160,15 @@ function showDialog(row){
 
 }
 
+
 //编辑
-function edit(row){
-    if(row != undefined){
-        showDialog(row);
-        return;
+function edit(row) {
+    if (row == undefined) {
+        row = organ_treegrid.treegrid('getSelected');
     }
-    //选中的所有行
-    var rows = organ_treegrid.treegrid('getSelections');
-    //选中的行（第一次选择的行）
-    var row = organ_treegrid.treegrid('getSelected');
-    if (row){
-        if(rows.length>1){
-            row = rows[rows.length-1];
-            eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
-        }
+    if (row != undefined) {
         showDialog(row);
-    }else{
+    } else {
         eu.showMsg("请选择要操作的对象！");
     }
 }
@@ -223,14 +203,9 @@ function initOrganUserForm(){
 }
 //修改机构用户
 function editOrganUser(){
-    //选中的所有行
-    var rows = organ_treegrid.treegrid('getSelections');
     //选中的行（第一条）
     var row = organ_treegrid.treegrid('getSelected');
     if (row){
-        if(rows.length>1){
-            eu.showMsg("您选择了多个操作对象，默认操作最后一次被选中的记录！");
-        }
         var userUrl = "${ctx}/base/organ!user.action";
         if(row != undefined && row.id){
             userUrl = userUrl+"?id="+row.id;
@@ -238,8 +213,8 @@ function editOrganUser(){
         //弹出对话窗口
         organ_user_dialog = $('<div/>').dialog({
             title:'机构用户信息',
+            top:20,
             width : 500,
-            height : 200,
             modal : true,
             maximizable:true,
             href : userUrl,
@@ -271,18 +246,17 @@ function editOrganUser(){
 }
 
 //删除
-function del(){
-    var rows = organ_treegrid.treegrid('getSelections');
-
-    if(rows.length >0){
-        $.messager.confirm('确认提示！','您确定要删除选中的所有行(如果存在子节点，子节点也一起会被删除)？',function(r){
+function del(rowIndex){
+    var row;
+    if (rowIndex == undefined) {
+        row = organ_treegrid.treegrid('getSelected');
+    }
+    if (row != undefined) {
+        $.messager.confirm('确认提示！','您确定要删除(如果存在子节点，子节点也一起会被删除)？',function(r){
             if (r){
-                var ids = new Object();
-                for(var i=0;i<rows.length;i++){
-                    ids[i] = rows[i].id;
-                }
-                $.post('${ctx}/base/organ!remove.action',{ids:ids},function(data){
+                $.post('${ctx}/base/organ!delete.action',{id:row.id},function(data){
                     if (data.code==1){
+                        organ_treegrid.treegrid('unselectAll');//取消选择 1.3.6bug
                         organ_treegrid.treegrid('load');	// reload the user data
                         eu.showMsg(data.msg);//操作结果提示
                     } else {
@@ -292,7 +266,7 @@ function del(){
 
             }
         });
-    }else{
+    } else {
         eu.showMsg("请选择要操作的对象！");
     }
 }

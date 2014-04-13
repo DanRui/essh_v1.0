@@ -5,6 +5,10 @@
 		loadParent();
 		loadIco();
         loadType();
+        if("${model.id}"==""){  //新增
+            setSortValue();
+            $("input[name=status]:eq(0)").attr("checked",'checked');//状态 初始化值
+        }
 	});
 
 	//加载父级资源
@@ -59,7 +63,14 @@
             value:'0'//默认值 ‘0’即菜单
         });
     }
-
+    //设置排序默认值
+    function setSortValue() {
+        $.get('${ctx}/base/resource!maxSort.action', function(data) {
+            if (data.code == 1) {
+                $('#orderNo').numberspinner('setValue',data.obj+1);
+            }
+        }, 'json');
+    }
 </script>
 <div>
     <form id="resource_form" method="post">

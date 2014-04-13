@@ -142,8 +142,8 @@
         //弹出对话窗口
         log_keepTime_dialog = $('<div/>').dialog({
             title:'设置日志保留时间',
+            top:20,
             width : 300,
-            height : 140,
             modal : true,
             href : dialogUrl,
             buttons : [ {
@@ -224,7 +224,7 @@
         <div onclick="del()" data-options="iconCls:'icon-remove'">删除</div>
     </div>
 
-    <div data-options="region:'north',title:'过滤条件',collapsed:true,split:false,border:false"
+    <div data-options="region:'north',title:'过滤条件',collapsed:false,split:false,border:false"
          style="padding: 0px; height: 56px;width:100%; overflow-y: hidden;">
         <form id="log_search_form" style="padding: 0px;">
             日志类型：<input id="filter_EQI_type" name="filter_EQI_type" class="easyui-combobox"/>

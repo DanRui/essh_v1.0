@@ -110,7 +110,7 @@ $(function () {
 function add() {
     if (editRow != undefined) {
         //eu.showMsg("请先保存正在编辑的数据！");
-            ${entityInstance}_datagrid.datagrid('endEdit', editRow);
+        ${entityInstance}_datagrid.datagrid('endEdit', editRow);
     } else {
         cancelSelect();
         var row = {id: ''};

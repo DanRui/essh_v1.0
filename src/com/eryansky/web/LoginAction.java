@@ -1,27 +1,25 @@
 package com.eryansky.web;
 
 import com.eryansky.common.model.Menu;
-import com.eryansky.core.security.SecurityConstants;
-import com.eryansky.core.security.SessionInfo;
+import com.eryansky.common.model.Result;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.Page;
-import com.eryansky.entity.base.Resource;
-import com.eryansky.entity.base.state.ResourceType;
-import com.eryansky.service.base.ResourceManager;
-import com.eryansky.core.security.SecurityUtils;
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.Validate;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.eryansky.common.model.Result;
-import com.eryansky.common.utils.SysConstants;
+import com.eryansky.common.orm.entity.StatusState;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.utils.encode.Encrypt;
 import com.eryansky.common.web.struts2.SimpleActionSupport;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
+import com.eryansky.core.security.SecurityConstants;
+import com.eryansky.core.security.SecurityUtils;
+import com.eryansky.core.security.SessionInfo;
+import com.eryansky.entity.base.Resource;
 import com.eryansky.entity.base.User;
-import com.eryansky.common.orm.entity.StatusState;
+import com.eryansky.entity.base.state.ResourceType;
+import com.eryansky.service.base.ResourceManager;
 import com.eryansky.service.base.UserManager;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import java.util.Iterator;
@@ -124,7 +122,7 @@ public class LoginAction
             logger.info("用户{}登录系统,IP:{}.", user.getLoginName(),Struts2Utils.getIp());
 
             //设置调整URL 如果session中包含未被授权的URL 则跳转到该页面
-            String resultUrl = Struts2Utils.getRequest().getContextPath()+"/login!index.action";
+            String resultUrl = Struts2Utils.getRequest().getContextPath()+"/login!index.action?theme="+theme;
             Object unAuthorityUrl = Struts2Utils.getSession().getAttribute(SecurityConstants.SESSION_UNAUTHORITY_URL);
             if(unAuthorityUrl != null){
                 resultUrl = unAuthorityUrl.toString();
@@ -297,15 +295,18 @@ public class LoginAction
     public String logout() {
         try {
             SessionInfo sessionInfo = SecurityUtils.getCurrentSessionInfo();
-            // 退出时清空session中的内容
-            String sessionId = Struts2Utils.getSession().getId();
-            //由监听器更新在线用户列表
-            SecurityUtils.removeUserFromSession(sessionId,false);
-            logger.info("用户{}退出系统.", sessionInfo.getLoginName());
+            if (sessionInfo != null) {
+                // 退出时清空session中的内容
+                String sessionId = Struts2Utils.getSession().getId();
+                //由监听器更新在线用户列表
+                SecurityUtils.removeUserFromSession(sessionId, false);
+                logger.info("用户{}退出系统.", sessionInfo.getLoginName());
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return SUCCESS;
+        return "login";
     }
 
     /**
@@ -321,6 +322,19 @@ public class LoginAction
             return "index";
         }
 //        return "app";
+    }
+
+    /**
+     * 异步方式返回session信息
+     */
+    public void sessionInfo(){
+        Result result = Result.successResult();
+        SessionInfo sessionInfo = SecurityUtils.getCurrentSessionInfo();
+        result.setObj(sessionInfo);
+        if(logger.isDebugEnabled()){
+            logger.debug(result.toString());
+        }
+        Struts2Utils.renderJson(result);
     }
     
     /**
