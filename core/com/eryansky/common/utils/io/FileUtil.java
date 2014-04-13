@@ -1,18 +1,11 @@
 package com.eryansky.common.utils.io;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URLEncoder;
-import java.util.UUID;
-
+import com.eryansky.common.exception.ServiceException;
 import org.apache.commons.codec.binary.Base64;
 
-import com.eryansky.common.exception.ServiceException;
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.UUID;
 
 /**
  * 文件工具类.
@@ -114,7 +107,7 @@ public class FileUtil {
 	/**
 	 * 目录不存在的话创建目录
 	 * 
-	 * @param Directorypath
+	 * @param dir
 	 */
 	public static String checkSaveDir(String dir) {
 
@@ -148,7 +141,7 @@ public class FileUtil {
 	/**
 	 * 删除文件夹
 	 * 
-	 * @param files
+	 * @param file
 	 */
 	public static void deleteDirectory(File file) {
 		if (file.exists()) { // 判断文件是否存在
