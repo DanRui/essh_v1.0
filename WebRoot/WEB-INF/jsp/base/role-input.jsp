@@ -19,7 +19,8 @@
         </div>
         <div>
             <label >描述:</label>
-            <textarea maxLength="255" name="remark"></textarea>
+            <textarea maxLength="255" name="remark"
+                      style="position: relative;resize: none;height: 75px;width: 350px;"></textarea>
         </div>
     </form>
 </div>

@@ -9,7 +9,6 @@ import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.entity.StatusState;
 import com.eryansky.common.orm.hibernate.EntityManager;
-import com.eryansky.common.orm.hibernate.HibernateWebUtils;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.utils.collections.Collections3;
 import com.eryansky.common.utils.mapper.JsonMapper;
@@ -52,6 +51,10 @@ public class OrganAction extends StrutsAction<Organ> {
      * 机构名称或编码
      */
     private String nameOrCode;
+    /**
+     * 上级机构类型
+     */
+    private Integer parentOrganType;
     @Autowired
     private OrganManager organManager;
     @Autowired
@@ -123,6 +126,13 @@ public class OrganAction extends StrutsAction<Organ> {
         return null;
     }
 
+    @Override
+    public String input() throws Exception {
+        if(parentOrganType == null && model.getParentOrgan() != null){
+            parentOrganType = model.getParentOrgan().getType();
+        }
+        return super.input();
+    }
 
     /**
      * 保存.
@@ -377,5 +387,13 @@ public class OrganAction extends StrutsAction<Organ> {
 
     public void setNameOrCode(String nameOrCode) {
         this.nameOrCode = nameOrCode;
+    }
+
+    public Integer getParentOrganType() {
+        return parentOrganType;
+    }
+
+    public void setParentOrganType(Integer parentOrganType) {
+        this.parentOrganType = parentOrganType;
     }
 }

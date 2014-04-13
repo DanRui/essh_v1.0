@@ -2,6 +2,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
     var organType_combobox;
+    var $_parent_combotree;
     var organTypeUrl = '${ctx}/base/organ!organTypeCombobox.action?selectType=select';
     $(function() {
         loadParent();
@@ -13,7 +14,7 @@
     });
     //加载父级机构
     function loadParent(){
-        $('#_parentId').combotree({
+        $_parent_combotree = $('#_parentId').combotree({
             url:'${ctx}/base/organ!parentOrgan.action?selectType=select',
             multiple:false,//是否可多选
             editable:false,//是否可编辑
@@ -43,12 +44,21 @@
     //加载机构类型
     function loadType(){
         organType_combobox = $('#type').combobox({
-            url:organTypeUrl,
+            url:organTypeUrl+"&parentOrganType=${parentOrganType}",
             multiple:false,//是否可多选
             editable:false,//是否可编辑
             width:120,
             validType:['comboboxRequired[\'#type\']']
         });
+    }
+
+    //设置排序默认值
+    function setSortValue() {
+        $.get('${ctx}/base/organ!maxSort.action', function(data) {
+            if (data.code == 1) {
+                $('#orderNo').numberspinner('setValue',data.obj+1);
+            }
+        }, 'json');
     }
 </script>
 <div>

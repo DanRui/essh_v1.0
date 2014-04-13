@@ -118,6 +118,11 @@ function showDialog(row){
     var inputUrl = "${ctx}/base/organ!input.action";
     if(row != undefined && row.id){
         inputUrl = inputUrl+"?id="+row.id;
+    }else{
+        var selectedNode = organ_treegrid.treegrid('getSelected');
+        if(selectedNode){
+            inputUrl +="?parentOrganType="+selectedNode.type;
+        }
     }
 
     //弹出对话窗口
