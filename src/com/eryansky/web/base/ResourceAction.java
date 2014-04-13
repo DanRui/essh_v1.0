@@ -1,25 +1,24 @@
 package com.eryansky.web.base;
 
-import java.util.List;
-
+import com.eryansky.common.exception.ActionException;
 import com.eryansky.common.model.Combobox;
 import com.eryansky.common.model.Datagrid;
-import com.eryansky.common.orm.PropertyFilter;
-import com.eryansky.entity.base.Resource;
-import com.eryansky.entity.base.state.ResourceType;
-import org.apache.commons.collections.ListUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.google.common.collect.Lists;
-import com.eryansky.common.exception.ActionException;
 import com.eryansky.common.model.Result;
 import com.eryansky.common.model.TreeNode;
+import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.hibernate.EntityManager;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
+import com.eryansky.entity.base.Resource;
+import com.eryansky.entity.base.state.ResourceType;
 import com.eryansky.service.base.ResourceManager;
 import com.eryansky.utils.SelectType;
+import com.google.common.collect.Lists;
+import org.apache.commons.collections.ListUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * 资源权限Resource管理 Action层.
@@ -30,6 +29,11 @@ import com.eryansky.utils.SelectType;
 @SuppressWarnings("serial")
 public class ResourceAction extends StrutsAction<Resource> {
 
+    /**
+     * 上级资源类型
+     */
+    private Integer parentType;
+
 	@Autowired
 	private ResourceManager resourceManager;
 
@@ -37,6 +41,14 @@ public class ResourceAction extends StrutsAction<Resource> {
 	public EntityManager<Resource, Long> getEntityManager() {
 		return resourceManager;
 	}
+
+    @Override
+    public String input() throws Exception {
+        if(parentType == null && model.getParentResource() != null){
+            parentType = model.getParentResource().getType();
+        }
+        return super.input();
+    }
 
     public String treegrid() throws Exception {
         try {
@@ -140,13 +152,33 @@ public class ResourceAction extends StrutsAction<Resource> {
                 }
             }
 
-            ResourceType[] rss = ResourceType.values();
-            for(int i=0;i<rss.length;i++){
-                Combobox combobox = new Combobox();
-                combobox.setValue(rss[i].getValue().toString());
-                combobox.setText(rss[i].getDescription());
-                cList.add(combobox);
+            ResourceType parentResourceType = ResourceType.getResourceType(parentType);
+            if(parentResourceType !=null){
+                 if(parentResourceType.equals(ResourceType.menu)){
+                     ResourceType[] rss = ResourceType.values();
+                     for(int i=0;i<rss.length;i++){
+                         Combobox combobox = new Combobox();
+                         combobox.setValue(rss[i].getValue().toString());
+                         combobox.setText(rss[i].getDescription());
+                         cList.add(combobox);
+                     }
+                 }else if(parentResourceType.equals(ResourceType.function)){
+                     Combobox combobox = new Combobox();
+                     combobox.setValue(ResourceType.function.getValue().toString());
+                     combobox.setText(ResourceType.function.getDescription());
+                     cList.add(combobox);
+                 }
+            }else{
+                ResourceType[] rss = ResourceType.values();
+                for(int i=0;i<rss.length;i++){
+                    Combobox combobox = new Combobox();
+                    combobox.setValue(rss[i].getValue().toString());
+                    combobox.setText(rss[i].getDescription());
+                    cList.add(combobox);
+                }
             }
+
+
             Struts2Utils.renderJson(cList);
         } catch (Exception e) {
             throw e;
@@ -195,5 +227,11 @@ public class ResourceAction extends StrutsAction<Resource> {
 		}
 	}
 
-	
+    public Integer getParentType() {
+        return parentType;
+    }
+
+    public void setParentType(Integer parentType) {
+        this.parentType = parentType;
+    }
 }

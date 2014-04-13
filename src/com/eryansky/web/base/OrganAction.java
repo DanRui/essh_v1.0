@@ -288,8 +288,6 @@ public class OrganAction extends StrutsAction<Organ> {
     public void organTypeCombobox() throws Exception {
         List<Combobox> cList = Lists.newArrayList();
         try {
-            String parentOrganType = Struts2Utils.getParameter("parentOrganType"); //上级节点类型
-
             //为combobox添加  "---全部---"、"---请选择---"
             if(!StringUtils.isBlank(selectType)){
                 SelectType s = SelectType.getSelectTypeValue(selectType);
@@ -299,14 +297,7 @@ public class OrganAction extends StrutsAction<Organ> {
                 }
             }
 
-            Integer pOrganType = null;
-            if(StringUtils.isNotBlank(parentOrganType)){
-                pOrganType = Integer.valueOf(parentOrganType);
-            }
-            OrganType _enumParentType = null;
-            if(pOrganType !=null){
-                _enumParentType = OrganType.getOrganType(pOrganType);
-            }
+            OrganType _enumParentType = OrganType.getOrganType(parentOrganType);
             if(_enumParentType != null){
                 if(_enumParentType.equals(OrganType.organ)){
                     OrganType[] rss = OrganType.values();

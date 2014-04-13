@@ -8,7 +8,7 @@
 	function loadUserRole() {
 	    $('#user_role_form-roleIds').combobox({
 	        multiple: true,
-	        width: 200,
+	        width: 260,
 	        editable:false,
 	        url: '${ctx}/base/role!combobox.action'
 	    });
@@ -19,7 +19,7 @@
 		<input type="hidden" name="id" /><br>
 		<div >
 			<label >关联角色:</label>
-			<input id="user_role_form-roleIds" name="roleIds" class="easyui-combobox" /> 
+			<input id="user_role_form-roleIds" name="roleIds" />
 		</div>
 	</form>
 </div>

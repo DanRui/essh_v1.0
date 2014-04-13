@@ -1,6 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <%@ include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
+    var $type_combobox;
+    var typeUrl = "${ctx}/base/resource!resourceTypeCombobox.action";
 	$(function() {
 		loadParent();
 		loadIco();
@@ -32,10 +34,8 @@
             onSelect:function(node){
                 //上级资源类型 菜单：0 功能：1  限制:如果上级是功能则下级只能是功能
                 var parentType = node.attributes.type;
-                if(parentType != undefined && parentType ==1){
-                    $('#type').combobox('setValue',1).combobox('readonly',true);
-                }else{
-                    $('#type').combobox('readonly',false);
+                if(parentType != undefined ){
+                    $type_combobox.combobox('reload',typeUrl+"?parentType="+parentType);
                 }
             }
 
@@ -55,8 +55,8 @@
 	}
     //加载资源类型
     function loadType(){
-        $('#type').combobox({
-            url:'${ctx}/base/resource!resourceTypeCombobox.action',
+        $type_combobox = $('#type').combobox({
+            url:typeUrl+'?parentType=${parentType}',
             multiple:false,//是否可多选
             editable:false,//是否可编辑
             width:120,

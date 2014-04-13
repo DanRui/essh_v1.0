@@ -113,6 +113,11 @@ function showDialog(row){
     var inputUrl = "${ctx}/base/resource!input.action";
     if(row != undefined && row.id){
         inputUrl = inputUrl+"?id="+row.id;
+    }else{
+        var selectedNode = resource_treegrid.treegrid('getSelected');
+        if(selectedNode){
+            inputUrl +="?parentType="+selectedNode.type;
+        }
     }
 
     //弹出对话窗口

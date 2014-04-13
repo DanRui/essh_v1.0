@@ -34,7 +34,7 @@
                 //上级机构类型 机构：0 部门：1  小组：2
                 var parentType = node.attributes.type;
                 if(parentType != undefined){
-                    organType_combobox.combobox('reload',organTypeUrl+"&parentOrganType="+node.attributes.type);
+                    organType_combobox.combobox('reload',organTypeUrl+"&parentOrganType="+parentType);
                 }
             }
 

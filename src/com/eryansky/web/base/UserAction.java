@@ -103,6 +103,24 @@ public class UserAction extends StrutsAction<User> {
     }
 
     /**
+     * 用户combogrid所有
+     * @return
+     * @throws Exception
+     */
+    public String combogridAll() throws Exception {
+        try {
+            List<PropertyFilter> filters = Lists.newArrayList();
+            filters.add(new PropertyFilter("EQI_status",StatusState.normal.getValue().toString()));
+            List<User> users = userManager.find(filters,"id","asc");
+            Datagrid<User> dg = new Datagrid<User>(users.size(), users);
+            Struts2Utils.renderJson(dg);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
+
+    /**
      * combogrid
      * @return
      * @throws Exception

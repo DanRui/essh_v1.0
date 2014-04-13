@@ -304,9 +304,9 @@ public class LoginAction
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
-        return "login";
+        return LOGIN;
     }
 
     /**
