@@ -42,21 +42,21 @@ $(function() {
             {field:'statusDesc',title:'状态',align:'center',width:60}
         ]],
         toolbar:[{
-                text:'新增',
-                iconCls:'icon-add',
-                handler:function(){showDialog()}
-            },'-',{
-                text:'编辑',
-                iconCls:'icon-edit',
-                handler:function(){edit()}
-            },'-',{
-                text:'删除',
-                iconCls:'icon-remove',
-                handler:function(){del()}
-            },'-',{
-                text:'设置用户',
-                iconCls:'icon-edit',
-                handler:function(){editOrganUser()}
+            text:'新增',
+            iconCls:'icon-add',
+            handler:function(){showDialog()}
+        },'-',{
+            text:'编辑',
+            iconCls:'icon-edit',
+            handler:function(){edit()}
+        },'-',{
+            text:'删除',
+            iconCls:'icon-remove',
+            handler:function(){del()}
+        },'-',{
+            text:'设置用户',
+            iconCls:'icon-edit',
+            handler:function(){editOrganUser()}
         }],
         onContextMenu : function(e, row) {
             e.preventDefault();

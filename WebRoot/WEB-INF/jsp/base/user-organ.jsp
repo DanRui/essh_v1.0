@@ -1,7 +1,6 @@
 <%@ page language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <%@ include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-    var organs_combogrid;
     var organs_combotree;
     $(function() {
         loadOrgan();

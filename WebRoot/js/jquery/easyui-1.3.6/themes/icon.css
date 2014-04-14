@@ -90,13 +90,34 @@
 .icon-mini-exit_full_screen{
     background:url('icons/mini_exit_full_screen.png') no-repeat center center;
 }
-
 .icon-full_screen{
     background:url('icons/full_screen.png') no-repeat center center;
 }
 .icon-exit_full_screen{
     background:url('icons/exit_full_screen.png') no-repeat center center;
 }
+.icon-mini-cancel{
+    background:url('icons/mini_cancel.png') no-repeat center center;
+}
+
+.ext-icon-cross {	background: url('icons/extjs_icons/arrow/cross.png') no-repeat ; }
+.ext-icon-zoom {	background: url('icons/extjs_icons/zoom/zoom.png') no-repeat ; }
+.ext-icon-zoom_in {	background: url('icons/extjs_icons/zoom/zoom_in.png') no-repeat ; }
+.ext-icon-zoom_out {	background: url('icons/extjs_icons/zoom/zoom_out.png') no-repeat ; }
+
+.icon-work{
+    background:url('icons/work.png') no-repeat center center;
+}
+.icon-meeting{
+    background:url('icons/meeting.png') no-repeat center center;
+}
+.icon-trip{
+    background:url('icons/trip.png') no-repeat center center;
+}
+.icon-leave{
+    background:url('icons/leave.png') no-repeat center center;
+}
+
 .icon-next{
     background:url('icons/next.png') no-repeat center center;
 }

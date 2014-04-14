@@ -72,6 +72,19 @@ public class Log extends BaseEntity implements Serializable {
     }
 
     /**
+     * 日志类类型 View
+     */
+    @Transient
+    public String getTypeView() {
+        LogType s = LogType.getLogType(type);
+        String str = "";
+        if(s != null){
+            str =  s.getDescription();
+        }
+        return str;
+    }
+
+    /**
      * 登录名
      *
      * @return
@@ -139,18 +152,5 @@ public class Log extends BaseEntity implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    /**
-     * 资源类型描述
-     */
-    @Transient
-    public String getTypeView() {
-        LogType l = LogType.getLogType(type);
-        String str = "";
-        if(l != null){
-            str = l.getDescription();
-        }
-        return str;
     }
 }

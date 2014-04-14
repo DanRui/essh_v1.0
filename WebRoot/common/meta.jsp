@@ -5,15 +5,15 @@
     BrowserType browserType = BrowserUtils.getBrowserType(request);
 //    String browser =  BrowserUtils.checkBrowse(request);
 //    boolean isIE = BrowserUtils.isIE(request);
-    if (browserType != null
-            && browserType.equals(BrowserType.IE11)) {  //降级到IE10
-        out.println("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=10;chrome=1\" /> ");
-    } else {
-        out.println("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=EDGE;chrome=1\" /> ");
-    }
+//    if (browserType != null
+//            && browserType.equals(BrowserType.IE11)) {  //降级到IE10
+//        out.println("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=10;chrome=1\" /> ");
+//    } else {
+//        out.println("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=EDGE;chrome=1\" /> ");
+//    }
 %>
 <c:set var="ev" value="1.3.6" />
-<%--<meta http-equiv="X-UA-Compatible" content="IE=EDGE;chrome=1" />   --%>
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE;chrome=1" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta http-equiv="Cache-Control" content="no-store"/>
 <meta http-equiv="Pragma" content="no-cache"/>

@@ -53,12 +53,16 @@
             });
             $autoLogin.click(function(){
                 var checked = $(this).prop('checked');
-                $.cookie('autoLogin', checked, {
-                    expires : 7
-                });
                 if(checked){
+                    $.cookie('autoLogin', checked, {
+                        expires : 7
+                    });
                     $rememberPassword.prop('checked',checked);
                     $.cookie('rememberPassword', checked, {
+                        expires : 7
+                    });
+                }else{
+                    $.cookie('autoLogin', "", {
                         expires : 7
                     });
                 }
