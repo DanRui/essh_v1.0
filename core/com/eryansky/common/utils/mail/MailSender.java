@@ -1,24 +1,18 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.utils.mail;
 
-import java.io.File;
-import java.util.Date;
+import com.eryansky.common.utils.mail.model.MailSenderModel;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-import javax.mail.Address;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
-
-import com.eryansky.common.utils.mail.model.MailSenderModel;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.io.File;
+import java.util.Date;
 
 /**
  * 简单邮件发送器. <br>

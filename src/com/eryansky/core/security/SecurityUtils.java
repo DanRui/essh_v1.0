@@ -1,24 +1,28 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.core.security;
+
+import com.eryansky.common.exception.SystemException;
+import com.eryansky.common.model.Datagrid;
+import com.eryansky.common.spring.SpringContextHolder;
+import com.eryansky.common.utils.StringUtils;
+import com.eryansky.common.web.struts2.utils.Struts2Utils;
+import com.eryansky.core.aop.SecurityLogAspect;
+import com.eryansky.entity.base.Role;
+import com.eryansky.entity.base.User;
+import com.eryansky.service.base.ResourceManager;
+import com.eryansky.service.base.UserManager;
+import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-
-import com.eryansky.common.exception.SystemException;
-import com.eryansky.common.spring.SpringContextHolder;
-import com.eryansky.core.aop.SecurityLogAspect;
-import com.eryansky.entity.base.Role;
-import com.eryansky.service.base.ResourceManager;
-import com.eryansky.service.base.UserManager;
-import com.eryansky.entity.base.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.eryansky.common.model.Datagrid;
-import com.eryansky.common.utils.StringUtils;
-import com.eryansky.common.web.struts2.utils.Struts2Utils;
-import com.google.common.collect.Lists;
 
 /**
  * 系统使用的特殊工具类 简化代码编写.

@@ -1,8 +1,13 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.orm;
 
-import java.text.MessageFormat;
-
 import com.eryansky.common.utils.SysConstants;
+
+import java.text.MessageFormat;
 /**
  * 分页SQL工具类.
  * <br>支持MySQL、Oracle、Postgresql分页查询.

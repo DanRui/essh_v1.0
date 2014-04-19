@@ -1,34 +1,23 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.excel;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import com.eryansky.common.excel.annotation.Excel;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-
-import com.eryansky.common.excel.annotation.Excel;
+import java.util.*;
 
 public final class ExcelUtil {
 
@@ -179,7 +168,7 @@ public final class ExcelUtil {
 	 *            生成的Excel文件路径+名称
 	 * @param headList
 	 *            Excel文件Head标题集合
-	 * @param field_list
+	 * @param fieldList
 	 *            Excel文件Field标题集合
 	 * @param dataList
 	 *            Excel文件数据内容部分
@@ -241,7 +230,7 @@ public final class ExcelUtil {
 	 *            生成的Excel文件路径+名称
 	 * @param headList
 	 *            Excel文件Head标题集合
-	 * @param field_list
+	 * @param fieldList
 	 *            Excel文件Field标题集合
 	 * @param dataList
 	 *            Excel文件数据内容部分
@@ -299,11 +288,9 @@ public final class ExcelUtil {
 	}
 
 	/**
-	 * @param excel_name
-	 *            生成的Excel文件路径+名称
 	 * @param headList
 	 *            Excel文件Head标题集合
-	 * @param field_list
+	 * @param fieldList
 	 *            Excel文件Field标题集合
 	 * @param dataList
 	 *            Excel文件数据内容部分
@@ -522,7 +509,7 @@ public final class ExcelUtil {
 	/**
 	 * 读取 Excel文件内容
 	 * 
-	 * @param excel_name
+	 * @param inputstream
 	 * @return
 	 * @throws Exception
 	 */

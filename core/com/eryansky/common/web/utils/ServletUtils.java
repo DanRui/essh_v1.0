@@ -1,5 +1,18 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.web.utils;
 
+import com.eryansky.common.utils.browser.BrowserUtils;
+import com.eryansky.common.utils.encode.EncodeUtils;
+import com.eryansky.common.utils.mapper.JsonMapper;
+import org.springframework.util.Assert;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -7,17 +20,6 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.util.Assert;
-import org.springframework.web.util.WebUtils;
-
-import com.eryansky.common.utils.browser.BrowserUtils;
-import com.eryansky.common.utils.encode.EncodeUtils;
-import com.eryansky.common.utils.mapper.JsonMapper;
 
 /**
  * Http与Servlet工具类.

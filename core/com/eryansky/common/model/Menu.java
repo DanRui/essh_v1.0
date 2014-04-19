@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.model;
 
 import com.google.common.collect.Lists;
@@ -49,8 +54,9 @@ public class Menu implements Serializable {
 	 * @param childMenu
 	 *            子节点
 	 */
-	public void addChild(Menu childMenu) {
+	public Menu addChild(Menu childMenu) {
 		this.children.add(childMenu);
+        return this;
 	}
 
 	/**

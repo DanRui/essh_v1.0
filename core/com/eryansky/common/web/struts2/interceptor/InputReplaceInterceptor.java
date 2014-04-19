@@ -1,25 +1,21 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.web.struts2.interceptor;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.utils.SysConstants;
-import com.eryansky.common.utils.encode.EncodeUtils;
-import com.eryansky.common.web.filter.HttpCharacterResponseWrapper;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.DefaultActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * 表单输入特殊字符Html转译、敏感词汇转译 .

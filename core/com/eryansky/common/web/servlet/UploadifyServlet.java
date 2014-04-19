@@ -1,27 +1,26 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.web.servlet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import com.eryansky.common.utils.SysConstants;
+import com.eryansky.common.web.utils.ServletUtils;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.springframework.util.FileCopyUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import org.springframework.util.FileCopyUtils;
-
-import com.eryansky.common.utils.SysConstants;
-import com.eryansky.common.web.utils.ServletUtils;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
  
 /**
  * Uploadify文件上传.

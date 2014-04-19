@@ -1,8 +1,13 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.model;
 
-import java.io.Serializable;
-
 import com.eryansky.common.utils.mapper.JsonMapper;
+
+import java.io.Serializable;
 
 /**
  * Ajax请求Json响应结果模型.

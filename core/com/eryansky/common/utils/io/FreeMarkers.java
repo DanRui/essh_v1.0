@@ -1,16 +1,20 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.utils.io;
+
+import com.eryansky.common.utils.Exceptions;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Map;
-
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-
-import com.eryansky.common.utils.Exceptions;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 /**
  * FreeMarker工具类.
  * @author 尔演&Eryan eryanwcp@gmail.com

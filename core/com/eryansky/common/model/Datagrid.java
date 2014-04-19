@@ -1,12 +1,16 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.model;
+
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.google.common.collect.Lists;
 
 /**
  * easyui分页组件datagrid、combogrid数据模型.

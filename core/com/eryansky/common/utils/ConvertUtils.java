@@ -1,15 +1,19 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.utils;
+
+import com.eryansky.common.utils.reflection.ReflectionUtils;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils.converters.DateConverter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.beanutils.converters.DateConverter;
-import org.apache.commons.lang3.StringUtils;
-
-import com.eryansky.common.utils.reflection.ReflectionUtils;
 /**
  * 转换工具类.
  * @author 尔演&Eryan eryanwcp@gmail.com
@@ -87,7 +91,7 @@ public class ConvertUtils  extends org.apache.commons.beanutils.ConvertUtils{
 	/**
 	 * 转换字符串数组到相应类型.
 	 * 
-	 * @param value 待转换的字符串.
+	 * @param values 待转换的字符串.
 	 * @param toType 转换目标类型.
 	 */
 	public static Object convertToObject(String[] values,Class<?> toType) {

@@ -1,9 +1,13 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.utils.encode;
-
-import java.security.Key;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 /**
  * DES对称加密/解密工具类.
  * <br>加密加密字符串采用DEFAULT_CHARSET编码（UTF-8）.

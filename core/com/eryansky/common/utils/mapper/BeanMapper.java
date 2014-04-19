@@ -1,11 +1,15 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.utils.mapper;
+
+import com.google.common.collect.Lists;
+import org.dozer.DozerBeanMapper;
 
 import java.util.Collection;
 import java.util.List;
-
-import org.dozer.DozerBeanMapper;
-
-import com.google.common.collect.Lists;
 
 /**
  * 简单封装Dozer, 实现深度转换Bean<->Bean的Mapper.实现:

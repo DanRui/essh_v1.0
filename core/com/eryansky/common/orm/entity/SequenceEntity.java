@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.orm.entity;
 
 import javax.persistence.*;
@@ -9,8 +14,6 @@ import javax.persistence.*;
  * 子类只需要在类头上加 @SequenceGenerator(name="seq", sequenceName="你的sequence名字")
  * @author 尔演&Eryan eryanwcp@gmail.com
  * @date 2013-6-5 上午8:50:33 
- * @version 1.0
- * @param <PK>
  */
 @MappedSuperclass
 public abstract class SequenceEntity extends AbstractEntity<Long> {

@@ -1,9 +1,14 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.model;
 
-import java.io.Serializable;
-import javax.persistence.MappedSuperclass;
-
 import com.eryansky.common.orm.entity.BaseEntity;
+
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
  * 用户抽象类.

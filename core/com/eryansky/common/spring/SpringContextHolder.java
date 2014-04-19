@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.spring;
 
 import org.slf4j.Logger;
@@ -8,8 +13,7 @@ import org.springframework.context.ApplicationContextAware;
 
 /**
  * 以静态变量保存Spring ApplicationContext, 可在任何代码任何地方任何时候取出ApplicaitonContext.
- * 
- * 
+ *
  */
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 

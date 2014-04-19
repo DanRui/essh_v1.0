@@ -1,10 +1,16 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.web.filter.gzip;
 
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
 import com.eryansky.common.web.utils.WebUtils;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * GZIP拦截器.

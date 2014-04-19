@@ -1,13 +1,17 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.model;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.google.common.collect.Lists;
 
 /**
  * easyui树形节点TreeNode模型.
@@ -139,8 +143,9 @@ public class TreeNode implements Serializable {
 	 * @param childNode
 	 *            子节点
 	 */
-	public void addChild(TreeNode childNode) {
+	public TreeNode addChild(TreeNode childNode) {
 		this.children.add(childNode);
+        return this;
 	}
 
 	/**

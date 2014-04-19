@@ -1,10 +1,15 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.common.web.struts2.converter;
-
-import java.text.DecimalFormat;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.util.StrutsTypeConverter;
+
+import java.text.DecimalFormat;
+import java.util.Map;
 
 /**
  * 浮点数转换.
