@@ -20,8 +20,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * User: 尔演&Eryan eryanwcp@gmail.com
- * Date: 13-12-8 下午5:13
+ * @author : 尔演&Eryan eryanwcp@gmail.com
+ * @date: 2013-12-8 下午5:13
  */
 @Service
 public class LogManager extends

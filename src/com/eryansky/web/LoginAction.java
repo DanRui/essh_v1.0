@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.web;
 
 import com.eryansky.common.model.Menu;
@@ -27,8 +32,8 @@ import java.util.List;
 
 /**
  * 系统登录.
- * Author 尔演&Eryan eryanwcp@gmail.com
- * Date 2013-3-21 上午12:18:54
+ * @author 尔演&Eryan eryanwcp@gmail.com
+ * @date 2013-3-21 上午12:18:54
  *
  */
 @SuppressWarnings("serial")

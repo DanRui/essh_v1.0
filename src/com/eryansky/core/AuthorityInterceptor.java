@@ -1,15 +1,19 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.core;
 
-import com.eryansky.core.security.SecurityConstants;
-import com.eryansky.core.security.SessionInfo;
 import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
-import com.eryansky.service.base.ResourceManager;
+import com.eryansky.core.security.SecurityConstants;
 import com.eryansky.core.security.SecurityUtils;
+import com.eryansky.core.security.SessionInfo;
+import com.eryansky.service.base.ResourceManager;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.eryansky.common.utils.SysConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

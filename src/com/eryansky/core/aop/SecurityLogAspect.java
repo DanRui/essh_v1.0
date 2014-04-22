@@ -1,12 +1,11 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.core.aop;
 
-import java.util.Date;
-
-import com.eryansky.common.exception.DaoException;
-import com.eryansky.common.exception.ServiceException;
-import com.eryansky.common.exception.SystemException;
 import com.eryansky.common.orm.hibernate.DefaultEntityManager;
-import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.core.security.SecurityType;
 import com.eryansky.core.security.SecurityUtils;
 import com.eryansky.core.security.SessionInfo;
@@ -19,6 +18,8 @@ import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
 
 /**
  * 使用AspectJ实现登录登出日志AOP

@@ -16,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * 系统操作日志Entity
- * User: 尔演&Eryan eryanwcp@gmail.com
- * Date: 13-11-27 下午9:18
+ * @author : 尔演&Eryan eryanwcp@gmail.com
+ * @date: 13-11-27 下午9:18
  */
 @Entity
 @Table(name = "T_SYS_LOG")

@@ -1,9 +1,12 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.core.aop;
 
 import com.eryansky.common.orm.hibernate.DefaultEntityManager;
-import com.eryansky.common.orm.hibernate.HibernateDao;
 import com.eryansky.common.utils.StringUtils;
-import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.core.security.SecurityConstants;
 import com.eryansky.core.security.SecurityUtils;
 import com.eryansky.core.security.SessionInfo;
@@ -17,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
-import java.net.InetAddress;
 import java.util.Date;
 
 /**

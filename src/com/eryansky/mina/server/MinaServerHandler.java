@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.mina.server;
 
 import org.apache.mina.core.buffer.IoBuffer;
@@ -13,7 +18,7 @@ import java.net.InetSocketAddress;
 /**
  * mina服务端的的事件处理类
  *
- * @author yan
+ * @author 尔演&Eryan eryanwcp@gmail.com
  */
 public class MinaServerHandler extends IoHandlerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(MinaServerHandler.class);

@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.core.task;
 
 import com.eryansky.service.sys.LogManager;
@@ -10,8 +15,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * 日志管理任务调度
- * User: 尔演&Eryan eryanwcp@gmail.com
- * Date: 13-12-28 下午6:06
+ * @author : 尔演&Eryan eryanwcp@gmail.com
+ * @date: 13-12-28 下午6:06
  */
 @Component
 public class LogJobController {

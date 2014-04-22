@@ -1,11 +1,9 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.service;
-
-import java.util.Iterator;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import com.eryansky.common.exception.DaoException;
 import com.eryansky.common.exception.ServiceException;
@@ -13,6 +11,12 @@ import com.eryansky.common.exception.SystemException;
 import com.eryansky.common.orm.hibernate.DefaultEntityManager;
 import com.eryansky.common.orm.jdbc.JdbcDao;
 import com.google.common.collect.Maps;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Service层实现类. <br>

@@ -1,43 +1,44 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.web.base;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.transaction.SystemException;
 
 import com.eryansky.common.model.Combobox;
 import com.eryansky.common.model.Datagrid;
+import com.eryansky.common.model.Result;
 import com.eryansky.common.model.TreeNode;
 import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.entity.StatusState;
-import com.eryansky.common.orm.hibernate.HibernateWebUtils;
+import com.eryansky.common.orm.hibernate.EntityManager;
+import com.eryansky.common.utils.StringUtils;
 import com.eryansky.common.utils.collections.Collections3;
+import com.eryansky.common.utils.encode.Encrypt;
 import com.eryansky.common.utils.mapper.JsonMapper;
+import com.eryansky.common.web.struts2.StrutsAction;
+import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.base.Organ;
 import com.eryansky.entity.base.Resource;
+import com.eryansky.entity.base.Role;
+import com.eryansky.entity.base.User;
 import com.eryansky.entity.base.state.SexType;
 import com.eryansky.service.base.OrganManager;
 import com.eryansky.service.base.ResourceManager;
+import com.eryansky.service.base.RoleManager;
+import com.eryansky.service.base.UserManager;
 import com.eryansky.utils.AppConstants;
 import com.eryansky.utils.SelectType;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.eryansky.common.model.Result;
-import com.eryansky.common.orm.hibernate.EntityManager;
-import com.eryansky.common.utils.StringUtils;
-import com.eryansky.common.utils.encode.Encrypt;
-import com.eryansky.common.web.struts2.StrutsAction;
-import com.eryansky.common.web.struts2.utils.Struts2Utils;
-import com.eryansky.entity.base.Role;
-import com.eryansky.entity.base.User;
-import com.eryansky.service.base.RoleManager;
-import com.eryansky.service.base.UserManager;
-import com.google.common.collect.Lists;
+import javax.transaction.SystemException;
+import java.util.List;
 
 /**
  * 用户User管理 Action层.

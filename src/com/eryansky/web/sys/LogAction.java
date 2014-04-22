@@ -3,6 +3,11 @@
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); 
  */
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.web.sys;
 
 import com.eryansky.common.exception.ActionException;
@@ -19,14 +24,13 @@ import com.eryansky.utils.AppConstants;
 import com.eryansky.utils.SelectType;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 /**
- * User: 尔演&Eryan eryanwcp@gmail.com
- * Date: 13-12-8 下午5:13
+ * @author 尔演&Eryan eryanwcp@gmail.com
+ * @date  2013-12-8 下午5:13
  */
 public class LogAction
         extends StrutsAction<Log> {

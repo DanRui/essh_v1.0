@@ -1,12 +1,16 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.listener;
 
-import javax.servlet.http.HttpSessionEvent;
-
+import com.eryansky.common.web.listener.DefaultSystemInitListener;
 import com.eryansky.core.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.eryansky.common.web.listener.DefaultSystemInitListener;
+import javax.servlet.http.HttpSessionEvent;
 
 /**
  * 系统初始化监听 继承默认系统启动监听器.

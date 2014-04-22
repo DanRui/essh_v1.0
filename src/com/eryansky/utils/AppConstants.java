@@ -1,10 +1,11 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.utils;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.eryansky.common.utils.io.PropertiesLoader;
-import com.eryansky.core.security.SessionInfo;
 
 /**
  * 系统使用的静态变量.

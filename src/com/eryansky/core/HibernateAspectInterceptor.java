@@ -1,13 +1,18 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.core;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import com.eryansky.core.security.SessionInfo;
 import com.eryansky.core.security.SecurityUtils;
+import com.eryansky.core.security.SessionInfo;
 import org.apache.log4j.Logger;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Hibernate拦截器 实现修改人自动注入.

@@ -1,27 +1,25 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.web.sys;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.google.common.collect.Lists;
 import com.eryansky.common.model.Combobox;
 import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.Result;
-import com.eryansky.common.orm.Page;
 import com.eryansky.common.orm.PropertyFilter;
 import com.eryansky.common.orm.hibernate.EntityManager;
-import com.eryansky.common.orm.hibernate.HibernateWebUtils;
 import com.eryansky.common.web.struts2.StrutsAction;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.eryansky.entity.sys.DictionaryType;
 import com.eryansky.service.sys.DictionaryTypeManager;
 import com.eryansky.utils.SelectType;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * 数据字典类型DictionaryType管理 Action层.

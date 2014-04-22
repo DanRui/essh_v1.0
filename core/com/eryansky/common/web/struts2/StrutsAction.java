@@ -5,8 +5,6 @@
  */
 package com.eryansky.common.web.struts2;
 
-import java.util.List;
-
 import com.eryansky.common.exception.ActionException;
 import com.eryansky.common.model.Datagrid;
 import com.eryansky.common.model.Result;
@@ -19,6 +17,8 @@ import com.eryansky.common.utils.reflection.ReflectionUtils;
 import com.eryansky.common.web.struts2.utils.Struts2Utils;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
+
+import java.util.List;
 
 /**
  * Struts2中典型CRUD Action的抽象基类.
@@ -96,7 +96,7 @@ public abstract class StrutsAction<T> extends SimpleActionSupport implements
 	 */
 	public String save() throws Exception {
 		try {
-			getEntityManager().saveOrUpdate(model);
+			getEntityManager().saveEntity(model);
 			Struts2Utils.renderText(Result.successResult());
 		} catch (Exception e) {
 			throw e;

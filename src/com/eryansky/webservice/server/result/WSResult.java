@@ -1,9 +1,14 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.webservice.server.result;
-
-import javax.xml.bind.annotation.XmlType;
 
 import com.eryansky.common.utils.reflection.ReflectionUtils;
 import com.eryansky.webservice.server.WsConstants;
+
+import javax.xml.bind.annotation.XmlType;
 
 
 /**

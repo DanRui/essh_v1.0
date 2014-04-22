@@ -1,19 +1,22 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.entity.sys;
 
 
 import com.eryansky.common.orm.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * 服务器系统信息
- * User: 尔演&Eryan eryanwcp@gmail.com
- * Date: 13-11-27 下午9:18
+ * @author : 尔演&Eryan eryanwcp@gmail.com
+ * @date: 2013-11-27 下午9:18
  */
 //@Entity
 //@Table(name = "T_SYS_SERVERINFO")

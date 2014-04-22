@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.core.tag;
 
 
@@ -5,7 +10,6 @@ import com.eryansky.core.security.SecurityUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.io.IOException;
 
 
 /**

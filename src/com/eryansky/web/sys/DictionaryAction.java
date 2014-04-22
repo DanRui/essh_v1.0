@@ -1,9 +1,9 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.web.sys;
-
-import java.util.List;
-
-import org.apache.commons.collections.ListUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.eryansky.common.exception.ActionException;
 import com.eryansky.common.model.Combobox;
@@ -18,6 +18,10 @@ import com.eryansky.service.sys.DictionaryManager;
 import com.eryansky.service.sys.DictionaryTypeManager;
 import com.eryansky.utils.SelectType;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections.ListUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * 数据字典Dictionary管理 Action层.

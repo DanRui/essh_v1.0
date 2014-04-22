@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.utils;
 
 import com.eryansky.common.utils.mapper.JsonMapper;
@@ -11,8 +16,8 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * User: 尔演&Eryan eryanwcp@gmail.com
- * Date: 13-11-27 下午9:01
+ * @author: 尔演&Eryan eryanwcp@gmail.com
+ * @date: 2013-11-27 下午9:01
  */
 public class SigarUtil {
 

@@ -1,6 +1,9 @@
+/**
+ *  Copyright (c) 2012-2014 http://www.eryansky.com
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.eryansky.core.security;
-
-import com.eryansky.common.utils.io.PropertiesLoader;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
