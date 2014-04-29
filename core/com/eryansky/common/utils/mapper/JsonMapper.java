@@ -126,7 +126,9 @@ public class JsonMapper {
                             AnnotationUtils.getValue(
                                     AnnotationUtils.findAnnotation(object.getClass(), JsonFilter.class))
                                     .toString(), SimpleBeanPropertyFilter
-                            .serializeAllExcept(properties2Exclude)))
+                                    .serializeAllExcept(properties2Exclude)
+                    )
+            )
                     .writeValueAsString(object);
         } catch (JsonProcessingException e) {
             logger.warn("write to json string error:" + object, e);
