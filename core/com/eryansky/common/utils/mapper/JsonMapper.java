@@ -5,23 +5,24 @@
  */
 package com.eryansky.common.utils.mapper;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotationUtils;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 /**
  * 简单封装Jackson，实现JSON String<->Java Object的Mapper.
@@ -46,6 +47,9 @@ public class JsonMapper {
         if (include != null) {
             mapper.setSerializationInclusion(include);
         }
+        // 设置默认日期格式
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        mapper.setFilters(new SimpleFilterProvider().setFailOnUnknownId(false));
         //设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 	}
@@ -86,6 +90,51 @@ public class JsonMapper {
     public String toJsonP(String functionName, Object object) {
         return toJson(new JSONPObject(functionName, object));
     }
+
+    /**
+     * 将对象转换成json字符串格式
+     *
+     * @param object     需要转换的对象(注意，需要在要转换的对象中定义JsonFilter注解)
+     * @param properties 需要转换的属性
+     */
+    public String toJson(Object object, String[] properties) {
+        try {
+            return mapper.writer(
+                    new SimpleFilterProvider().addFilter(
+                            AnnotationUtils.getValue(
+                                    AnnotationUtils.findAnnotation(object.getClass(), JsonFilter.class))
+                                    .toString(), SimpleBeanPropertyFilter
+                            .filterOutAllExcept(properties)))
+                    .writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            logger.warn("write to json string error:" + object, e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 将对象转换成json字符串格式
+     *
+     * @param object             需要转换的对象(注意，需要在要转换的对象中定义JsonFilter注解)
+     * @param properties2Exclude 需要排除的属性
+     */
+    public String toJsonWithExcludeProperties(Object object, String[] properties2Exclude)  {
+        try {
+            return mapper.writer(
+                    new SimpleFilterProvider().addFilter(
+                            AnnotationUtils.getValue(
+                                    AnnotationUtils.findAnnotation(object.getClass(), JsonFilter.class))
+                                    .toString(), SimpleBeanPropertyFilter
+                            .serializeAllExcept(properties2Exclude)))
+                    .writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            logger.warn("write to json string error:" + object, e);
+            return null;
+        }
+
+    }
+
 
 	/**
 	 * 如果JSON字符串为Null或"null"字符串,返回Null.
