@@ -55,6 +55,26 @@ public class ResourceAction extends StrutsAction<Resource> {
         return super.input();
     }
 
+    /**
+     * 删除.
+     */
+    @Override
+    public String delete() throws Exception {
+        Result result;
+        try {
+            List<Long> ids = Lists.newArrayList();
+            ids.add(super.id);
+            resourceManager.deleteByIds(ids);
+            result = Result.successResult();
+            logger.debug(result.toString());
+            Struts2Utils.renderJson(result);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
+
+
     public String treegrid() throws Exception {
         try {
             List<PropertyFilter> filters = Lists.newArrayList();

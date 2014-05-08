@@ -59,7 +59,7 @@ public class RoleAction extends StrutsAction<Role> {
      * 删除.
      */
 	@Override
-	public String delete() throws Exception {
+	public String remove() throws Exception {
 		Result result;
 		try {
 			roleManager.deleteByIds(ids);

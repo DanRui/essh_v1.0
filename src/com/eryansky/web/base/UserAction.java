@@ -168,6 +168,24 @@ public class UserAction extends StrutsAction<User> {
     }
 
     /**
+     * 删除.
+     */
+    @Override
+    public String remove() throws Exception {
+        Result result;
+        try {
+            userManager.deleteByIds(ids);
+            result = Result.successResult();
+            logger.debug(result.toString());
+            Struts2Utils.renderJson(result);
+        } catch (Exception e) {
+            throw e;
+        }
+        return null;
+    }
+
+
+    /**
 	 * 保存.
 	 */
 	@Override
