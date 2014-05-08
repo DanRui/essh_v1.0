@@ -31,16 +31,15 @@ public class JspGenerate implements Generate {
 		// context.put("daoPackage", Resources.getPackage(JavaFileType.DAO));
 		String entityName = table.getEntityName();
 		String entityInstance=table.getEntityName().substring(0,1).toLowerCase()+table.getEntityName().substring(1);
-		String moudle = entityInstance;
 		context.put("entityName", entityName);
 		context.put("entityInstance", entityInstance);
 		context.put("columns", table.getColumns());
-		context.put("moudle", moudle);
+		context.put("module", Resources.MODULE);
 		context.put("requestMapping", Resources.REQUEST_MAPPING);
 
 		StringWriter writer = new StringWriter();
 		t.merge(context, writer);
-		FileUtil.create(Resources.JSP_STORE_PATH +"/"+Resources.REQUEST_MAPPING+ "/" + moudle,entityInstance + jspFileType.getFileNameExtension(), writer.toString());
+		FileUtil.create(Resources.JSP_STORE_PATH +"/"+Resources.REQUEST_MAPPING,entityInstance + jspFileType.getFileNameExtension(), writer.toString());
 	}
 	
 	@Override

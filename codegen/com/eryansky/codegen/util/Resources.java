@@ -7,7 +7,7 @@ public class Resources {
 
 	/************ 数据库配置 ************/
 	public static final String DRIVER = "org.gjt.mm.mysql.Driver";
-	public static final String URL = "jdbc:mysql://localhost/essh?useUnicode=true&characterEncoding=UTF-8"; // 数据库访问串
+	public static final String URL = "jdbc:mysql://localhost/essh_v2.0?useUnicode=true&characterEncoding=UTF-8"; // 数据库访问串
 	public static final String USERNAME = "root";
 	public static final String PASSWORD = "root";
 
@@ -49,18 +49,19 @@ public class Resources {
 
 
 
-	public static final String BASE_PACKAGE = "com.eryansky";
-	public static final String ENTITY_PACKAGE = "com.eryansky.entity"+"."+MODULE;
-	public static final String SERVICE_PACKAGE = "com.eryansky.service"+"."+MODULE;
-	public static final String CONTROLLER_PACKAGE = "com.eryansky.web"+"."+MODULE;
+    public static final String BASE_PACKAGE = "com.eryansky";
+    public static final String ENTITY_PACKAGE = BASE_PACKAGE+".entity"+"."+MODULE;
+    public static final String SERVICE_PACKAGE = BASE_PACKAGE+".service"+"."+MODULE;
+    public static final String CONTROLLER_PACKAGE = BASE_PACKAGE+".web"+"."+MODULE;
+
 
 	/************ controller访问地址 : request_mapping/moudle ****************/
 	public static final String REQUEST_MAPPING = "jsp/"+MODULE;
 
 	/************ JSP文件存储地址 ****************/
-	public static final String JSP_STORE_PATH =  "C:\\Users\\Administrator\\Desktop\\code_genner\\view\\";
-	/************ 生成JAVA文件的根目录，系统根据package声明进行目录创建 **********/
-	public static final String JAVA_STROE_PATH = "C:\\Users\\Administrator\\Desktop\\code_genner\\java\\";
+    public static final String JSP_STORE_PATH =  "D:\\Users\\ChunPing.eryan\\Desktop\\code_genner\\views\\";
+    /************ 生成JAVA文件的根目录，系统根据package声明进行目录创建 **********/
+    public static final String JAVA_STROE_PATH = "D:\\Users\\ChunPing.eryan\\Desktop\\code_genner\\java\\";
 
 	public static String getClazzNameByTableName(String tableName) {
 		return null;

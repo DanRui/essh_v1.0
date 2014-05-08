@@ -36,7 +36,7 @@ public class JavaGenerate implements Generate {
 		context.put("tableName", table.getTableName());
 		context.put("columns", table.getColumns());
 		context.put("requestMapping", Resources.REQUEST_MAPPING);
-		context.put("moudle", entityInstance);//模块名
+		context.put("module", entityInstance);//模块名
 		/* now render the template into a StringWriter */
 		StringWriter writer = new StringWriter();
 		t.merge(context, writer);
