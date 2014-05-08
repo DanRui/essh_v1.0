@@ -100,8 +100,9 @@ public class Result implements Serializable {
 	 * @param code
 	 *            结果状态码
 	 */
-	public void setCode(int code) {
+	public Result setCode(int code) {
 		this.code = code;
+        return this;
 	}
 
 	/**
@@ -117,8 +118,9 @@ public class Result implements Serializable {
 	 * @param msg
 	 *            响应结果描述
 	 */
-	public void setMsg(String msg) {
+	public Result setMsg(String msg) {
 		this.msg = msg;
+        return this;
 	}
 
 	/**
@@ -134,8 +136,9 @@ public class Result implements Serializable {
 	 * @param obj
 	 *            其它数据信息（比如跳转地址）
 	 */
-	public void setObj(Object obj) {
+	public Result setObj(Object obj) {
 		this.obj = obj;
+        return this;
 	}
 
 	@SuppressWarnings("static-access")
