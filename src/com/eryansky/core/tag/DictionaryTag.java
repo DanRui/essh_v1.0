@@ -112,7 +112,7 @@ public class DictionaryTag extends TagSupport {
             buffer.append(" name=\"" + this.name + "\" ");
         }
 
-        buffer.append(" data-options=\"url:'").append(contextPath).append("/sys/dictionary/")
+        buffer.append(" data-options=\"url:'").append(contextPath).append("/sys/dictionary!")
                 .append(method)
                 .append(".action?dictionaryTypeCode=")
                 .append(this.code);
