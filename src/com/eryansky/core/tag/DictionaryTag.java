@@ -5,6 +5,8 @@
  */
 package com.eryansky.core.tag;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
@@ -14,7 +16,7 @@ import java.io.IOException;
  * 数据字典标签
  * @author 尔演&Eryan eryanwcp@gmail.com
  * @date 2014-3-29 下午8:02:39
-  */
+ */
 @SuppressWarnings("serial")
 public class DictionaryTag extends TagSupport {
 
@@ -63,6 +65,11 @@ public class DictionaryTag extends TagSupport {
      * 是否多选 默认值:否
      */
     private boolean multiple = false;
+    /**
+     * 默认值
+     */
+    private String value = "";
+
 
 
     @Override
@@ -105,7 +112,7 @@ public class DictionaryTag extends TagSupport {
             buffer.append(" name=\"" + this.name + "\" ");
         }
 
-        buffer.append(" data-options=\"url:'").append(contextPath).append("/sys/dictionary!")
+        buffer.append(" data-options=\"url:'").append(contextPath).append("/sys/dictionary/")
                 .append(method)
                 .append(".action?dictionaryTypeCode=")
                 .append(this.code);
@@ -119,15 +126,17 @@ public class DictionaryTag extends TagSupport {
         if(this.width != null){
             buffer.append(",width:'").append(this.width).append("'");
         }
+        if(StringUtils.isNotBlank(this.value)){
+            buffer.append(",value:'").append(this.value).append("'");
+        }
 
         if(!"".equals(validType)){
             buffer.append(",validType:").append(this.validType);
         }
         buffer.append(",valueField:'value',textField:'text'")
-            .append("\"");
+                .append("\"");
 
         buffer.append(" />");
-        System.out.println(buffer);
         return buffer.toString();
     }
 
@@ -209,5 +218,13 @@ public class DictionaryTag extends TagSupport {
 
     public void setMultiple(boolean multiple) {
         this.multiple = multiple;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
